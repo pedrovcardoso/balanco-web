@@ -1,0 +1,285 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <title>Simulador Orçamentário MG 2025 | Balanço Cidadão MG</title>
+    <link
+      rel="stylesheet"
+      href="../../shared/styles/fonts.css"
+    />
+    <script
+      src="../../../public/vendor/iconify/iconify-icon.min.js"
+      defer
+    ></script>
+    <script src="../../shared/accessibility/a11y.js" defer></script>
+    <script src="../../shared/layout/background.js" defer></script>
+    <script src="../../shared/layout/footer.js" defer></script>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo-principal">Pular para o conteúdo</a>
+    <main id="conteudo-principal" tabindex="-1" class="page-shell">
+      <div class="app-shell">
+        <nav aria-label="Navegação da página" class="top-nav">
+          <a class="nav-pill" href="../"
+            ><iconify-icon aria-hidden="true" icon="fa6-solid:arrow-left"></iconify-icon>Voltar
+            para Jogos</a
+          >
+        </nav>
+        <section
+          id="welcomeScreen"
+          class="welcome-screen"
+          aria-labelledby="welcomeTitle"
+        >
+          <header class="soft-card sim-hero landing-hero">
+            <div class="sim-badge">
+              <iconify-icon
+                icon="solar:calculator-minimalistic-bold-duotone"
+                aria-hidden="true"
+              ></iconify-icon
+              >Simulador de Gestão Pública
+            </div>
+            <h1 id="welcomeTitle" tabindex="-1">
+              Se Você Fosse o Governador...
+            </h1>
+            <p>
+              Em 2025, o Governo de Minas Gerais liquidou cerca de
+              <strong id="heroTotal">R$ 127,11 bilhões</strong> em recursos
+              públicos. Defina como você investiria essa verba nas áreas
+              essenciais do Estado!
+            </p>
+            <p class="hero-stage-hint">
+              Primeiro monte sua proposta. Depois, compare suas escolhas com a
+              execução oficial de 2025.
+            </p>
+            <div
+              class="start-choice hero-start-choice"
+              role="group"
+              aria-labelledby="heroStartLabel"
+            >
+              <strong id="heroStartLabel">Como deseja iniciar?</strong>
+              <div class="choice-buttons">
+                <button
+                  type="button"
+                  class="choice-btn is-active"
+                  data-start-mode="zero"
+                  aria-pressed="true"
+                >
+                  Valores zerados</button
+                ><button
+                  type="button"
+                  class="choice-btn"
+                  data-start-mode="real"
+                  aria-pressed="false"
+                >
+                  Valores reais
+                </button>
+              </div>
+            </div>
+            <aside class="global-method-alert hero-method-alert" role="note">
+              <iconify-icon aria-hidden="true" icon="fa6-solid:circle-info"></iconify-icon><span
+                ><strong>A leitura do simulador é apenas educativa.</strong> Os
+                resultados apresentam cenários para reflexão e podem depender de
+                critérios, bases de cálculo e classificações próprios de cada
+                política pública.</span
+              >
+            </aside>
+            <div class="source-always-visible">
+              <iconify-icon aria-hidden="true" icon="fa6-solid:database"></iconify-icon>
+              <p>
+                <strong>Fonte dos dados:</strong> RREO, Anexo 2, Estado de Minas
+                Gerais, janeiro a dezembro de 2025. Valores liquidados e
+                categorias agrupadas para fins didáticos.
+              </p>
+            </div>
+            <div class="welcome-actions">
+              <button type="button" class="sim-btn start-btn" id="startBtn">
+                Iniciar simulação
+                <iconify-icon aria-hidden="true" icon="fa6-solid:arrow-right"></iconify-icon></button
+              ><small
+                >Você poderá alterar os valores e revisar a distribuição antes
+                da comparação.</small
+              >
+            </div>
+          </header>
+        </section>
+        <div id="simulatorFlow" hidden>
+          <ol class="stepper" aria-label="Etapas do simulador">
+            <li class="is-active" id="step1Indicator">
+              <span>1</span><strong>Sua proposta</strong>
+            </li>
+            <li id="step2Indicator">
+              <span>2</span><strong>Comparação</strong>
+            </li>
+          </ol>
+          <section id="stage1">
+            <section aria-label="Painel do orçamento" class="budget-dashboard">
+              <div class="dash-grid">
+                <div class="dash-metric">
+                  <small>Total disponível</small
+                  ><strong id="totalBudgetLabel">—</strong>
+                </div>
+                <div class="dash-metric">
+                  <small>Você distribuiu</small
+                  ><strong id="allocatedBudgetLabel">—</strong>
+                </div>
+                <div class="dash-metric">
+                  <small id="balanceTitle">Ainda disponível</small
+                  ><strong id="remainingBudgetLabel">—</strong>
+                </div>
+              </div>
+              <div class="budget-progress-wrap">
+                <div
+                  class="budget-progress-bar"
+                  role="progressbar"
+                  aria-label="Percentual distribuído"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  aria-valuenow="0"
+                >
+                  <div
+                    id="budgetProgressFill"
+                    class="budget-progress-fill bg-normal"
+                  ></div>
+                </div>
+                <div class="budget-status-msg">
+                  <span id="budgetStatusText" aria-live="polite"
+                    >Comece sua distribuição.</span
+                  ><span id="budgetPercentText">0% alocado</span>
+                </div>
+              </div>
+            </section>
+            <section
+              aria-labelledby="cat-section-title"
+              class="soft-card category-section"
+            >
+              <div class="section-topline">
+                <div>
+                  <span class="section-kicker">Momento 1</span>
+                  <h2 id="cat-section-title" tabindex="-1">
+                    Monte sua proposta
+                  </h2>
+                </div>
+                <div class="section-buttons">
+                  <button
+                    type="button"
+                    class="sim-btn secondary compact-action"
+                    id="backToHeroBtn"
+                  >
+                    <iconify-icon aria-hidden="true" icon="fa6-solid:arrow-left"></iconify-icon>Voltar ao início</button
+                  ><button
+                    type="button"
+                    class="sim-btn secondary"
+                    id="resetBtn"
+                  >
+                    <iconify-icon aria-hidden="true" icon="fa6-solid:rotate-left"></iconify-icon>Reiniciar
+                  </button>
+                </div>
+              </div>
+              <p class="section-intro">
+                Informe uma porcentagem ou um valor para cada categoria. Os
+                números reais só serão mostrados na próxima etapa.
+              </p>
+              <div
+                class="start-choice moment-start-choice"
+                role="group"
+                aria-labelledby="momentStartLabel"
+              >
+                <div>
+                  <strong id="momentStartLabel">Como deseja começar?</strong
+                  ><small>Você poderá alterar todos os valores depois.</small>
+                </div>
+                <div class="choice-buttons">
+                  <button
+                    type="button"
+                    class="choice-btn is-active"
+                    data-start-mode="zero"
+                    aria-pressed="true"
+                  >
+                    Valores zerados</button
+                  ><button
+                    type="button"
+                    class="choice-btn"
+                    data-start-mode="real"
+                    aria-pressed="false"
+                  >
+                    Valores reais
+                  </button>
+                </div>
+              </div>
+              <div class="cat-grid" id="categoriesGrid"></div>
+              <div class="sim-actions">
+                <button type="button" class="sim-btn" id="compareBtn">
+                  Comparar com a execução de 2025
+                  <iconify-icon aria-hidden="true" icon="fa6-solid:arrow-right"></iconify-icon>
+                </button>
+              </div>
+            </section>
+          </section>
+          <section id="stage2" hidden>
+            <section class="soft-card result-hero">
+              <span class="section-kicker">Momento 2</span>
+              <h2>Suas escolhas e a execução real</h2>
+              <p id="resultSummary" tabindex="-1"></p>
+              <nav
+                class="stage2-actions stage2-top-actions"
+                aria-label="Ações do resultado"
+              >
+                <button
+                  type="button"
+                  class="sim-btn stage2-action restart-simulation-btn"
+                >
+                  <iconify-icon aria-hidden="true" icon="fa6-solid:rotate-left"></iconify-icon>Iniciar novamente</button
+                ><a class="sim-btn secondary stage2-action" href="../"
+                  ><iconify-icon aria-hidden="true" icon="fa6-solid:map"></iconify-icon>Voltar para
+                  o mapa de fases</a
+                >
+              </nav>
+            </section>
+            <section
+              class="soft-card legal-section"
+              aria-labelledby="legalTitle"
+            >
+              <div class="legal-heading">
+                <span class="section-kicker">Leitura da proposta</span>
+                <h2 id="legalTitle">Alertas gerais</h2>
+              </div>
+              <div id="generalAlertsGrid" class="general-alerts-grid"></div>
+            </section>
+            <section
+              aria-labelledby="comparisonTitle"
+              class="soft-card comparison-section"
+            >
+              <h2 id="comparisonTitle">Comparação por categoria</h2>
+              <p class="section-intro">
+                Diferenças não representam, por si só, acerto, erro ou
+                julgamento moral. Elas apoiam uma reflexão sobre prioridades,
+                limites e possíveis efeitos das escolhas.
+              </p>
+              <div id="comparisonGrid" class="comparison-grid"></div>
+            </section>
+            <nav
+              class="stage2-actions stage2-final-actions"
+              aria-label="Ações finais"
+            >
+              <button
+                type="button"
+                class="sim-btn stage2-action restart-simulation-btn"
+              >
+                <iconify-icon aria-hidden="true" icon="fa6-solid:rotate-left"></iconify-icon>Iniciar novamente</button
+              ><a class="sim-btn secondary stage2-action" href="../"
+                ><iconify-icon aria-hidden="true" icon="fa6-solid:map"></iconify-icon>Voltar para o
+                mapa de fases</a
+              >
+            </nav>
+          </section>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

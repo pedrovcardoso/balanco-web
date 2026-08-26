@@ -1,0 +1,1096 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Balanço Cidadão MG — Apresentação executiva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              navy: "#071827",
+              ink: "#102838",
+              lime: "#2563EB",
+              mint: "#0EA5E9",
+              coral: "#334155",
+              ice: "#ECF8F7",
+              sand: "#F4E9D3",
+            },
+            fontFamily: { sans: ["Inter", "Segoe UI", "sans-serif"] },
+          },
+        },
+      };
+    </script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #071827;
+        color: #0f172a;
+      }
+      body {
+        font-family:
+          Inter,
+          Segoe UI,
+          sans-serif;
+        padding-top: 50px;
+      }
+      .deck {
+        height: 100%;
+      }
+      .slide {
+        position: absolute;
+        inset: 0;
+        display: none;
+        overflow: hidden;
+        background: #ffffff;
+      }
+      .slide.active {
+        display: block;
+        animation: in 0.55s cubic-bezier(0.22, 0.8, 0.22, 1);
+      }
+      @keyframes in {
+        from {
+          opacity: 0;
+          transform: scale(0.985);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .noise {
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+      }
+      .eyebrow {
+        font-size: 0.72rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        font-weight: 800;
+      }
+      .display {
+        font-weight: 800;
+        letter-spacing: -0.055em;
+        line-height: 0.93;
+      }
+      .frame {
+        background: #fff;
+        border: 1px solid rgba(16, 40, 56, 0.12);
+        box-shadow: 0 30px 90px rgba(7, 24, 39, 0.18);
+      }
+      iframe {
+        background: white;
+      }
+      .navzone {
+        position: fixed;
+        z-index: 50;
+        top: 0;
+        bottom: 0;
+        width: 10vw;
+        cursor: pointer;
+      }
+      .navzone.left {
+        left: 0;
+      }
+      .navzone.right {
+        right: 0;
+      }
+      .navzone:focus-visible {
+        outline: 3px solid #b7e43b;
+        outline-offset: -8px;
+      }
+      .rail {
+        position: fixed;
+        z-index: 60;
+        left: 2.5rem;
+        right: 2.5rem;
+        bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        pointer-events: none;
+      }
+      .progress {
+        height: 2px;
+        background: rgba(255, 255, 255, 0.25);
+        flex: 1;
+      }
+      .progress > i {
+        display: block;
+        height: 100%;
+        background: #b7e43b;
+        transition: 0.4s;
+      }
+      .counter {
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        margin-left: 1rem;
+      }
+      .light .progress {
+        background: rgba(7, 24, 39, 0.15);
+      }
+      .light .counter {
+        color: #071827;
+      }
+      .orb {
+        position: absolute;
+        border-radius: 999px;
+        filter: blur(2px);
+      }
+      .card {
+        border: 1px solid rgba(16, 40, 56, 0.1);
+        background: rgba(255, 255, 255, 0.78);
+        backdrop-filter: blur(12px);
+      }
+      .timeline {
+        position: relative;
+        margin-top: 2.5rem;
+        height: 57vh;
+      }
+      .timeline-line {
+        position: absolute;
+        left: 5%;
+        right: 5%;
+        bottom: 18%;
+        height: 2px;
+        background: #94a3b8;
+      }
+      .timeline-years {
+        position: absolute;
+        left: 5%;
+        right: 5%;
+        bottom: calc(18% - 16px);
+        display: flex;
+        justify-content: space-between;
+      }
+      .tick {
+        width: 1px;
+        height: 32px;
+        background: #94a3b8;
+        position: relative;
+      }
+      .tick b {
+        position: absolute;
+        top: 38px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.8rem;
+        color: #64748b;
+      }
+      .event {
+        position: absolute;
+        bottom: 18%;
+        transform: translateX(-50%);
+        width: 16%;
+      }
+      .event .dot {
+        width: 12px;
+        height: 12px;
+        background: #2563eb;
+        border: 3px solid #f7faf9;
+        border-radius: 50%;
+        margin: auto;
+        position: relative;
+        z-index: 2;
+        box-shadow: 0 0 0 2px #2563eb;
+      }
+      .event .stem {
+        width: 1px;
+        background: #64748b;
+        margin: auto;
+      }
+      .event .box {
+        padding: 14px 15px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+        min-height: 86px;
+      }
+      .event .year {
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 800;
+        color: #64748b;
+      }
+      .event .state {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-top: 5px;
+      }
+      .event.transform .dot {
+        background: #2563eb;
+        box-shadow: 0 0 0 4px #bfdbfe;
+      }
+      .event.transform .box {
+        background: #eff6ff;
+        border-color: #93c5fd;
+      }
+      .pill {
+        border-radius: 999px;
+        padding: 0.42rem 0.75rem;
+        font-size: 0.72rem;
+        font-weight: 800;
+      }
+      .quote {
+        quotes: "“" "”";
+      }
+      .quote:before {
+        content: open-quote;
+        color: #b7e43b;
+        font-size: 6rem;
+        line-height: 0;
+        vertical-align: -0.45em;
+        margin-right: 0.08em;
+      }
+      @media (max-width: 900px) {
+        .desktop {
+          grid-template-columns: 1fr !important;
+        }
+        .hide-mobile {
+          display: none;
+        }
+        .slide {
+          overflow: auto;
+        }
+        .timeline {
+          height: auto;
+          display: grid;
+          gap: 12px;
+          margin-top: 2rem;
+        }
+        .timeline-line {
+          display: none;
+        }
+        .event {
+          position: relative !important;
+          top: auto !important;
+          left: auto !important;
+          transform: none !important;
+          width: auto !important;
+          display: block !important;
+        }
+        .event .dot,
+        .event .stem {
+          display: none;
+        }
+        .rail {
+          left: 1rem;
+          right: 1rem;
+        }
+      }
+      @media print {
+        html,
+        body {
+          overflow: visible;
+        }
+        .slide {
+          position: relative;
+          display: block !important;
+          height: 100vh;
+          page-break-after: always;
+        }
+        .navzone,
+        .rail {
+          display: none;
+        }
+      }
+    </style>
+    <script src="./a11y/a11y.js"></script>
+  </head>
+  <body>
+    <br aria-hidden="true" />
+    <main class="deck" id="deck">
+      <section
+        class="slide active noise bg-slate-950 text-white"
+        data-theme="dark"
+        aria-label="Capa"
+      >
+        <div
+          class="h-full grid desktop grid-cols-[.62fr_1.38fr] items-center gap-9 px-[5vw] py-[6vh]"
+        >
+          <div>
+            <div class="eyebrow text-blue-300">PROPOSTA</div>
+            <h1 class="display text-[clamp(4rem,7vw,7.5rem)] mt-5">
+              Balanço<br />Cidadão<br /><span class="text-blue-300">2026</span>
+            </h1>
+          </div>
+          <div
+            class="h-[82vh] overflow-hidden rounded-2xl shadow-2xl bg-slate-900"
+          >
+            <img
+              src="assets/balanco.png"
+              alt="Tela inicial do Balanço Cidadão"
+              class="w-full h-full object-cover object-center"
+            />
+          </div>
+        </div>
+      </section>
+      <section class="slide noise light" data-theme="light">
+        <div class="h-full px-[6vw] py-[6vh] flex flex-col justify-center">
+          <div class="eyebrow text-slate-600">Panorama nacional</div>
+          <div class="flex items-end justify-between gap-6 mt-2">
+            <h2 class="display text-[clamp(3rem,4.5vw,4.7rem)]">
+              Evolução dos Balanços Cidadão
+            </h2>
+            <div
+              class="shrink-0 rounded-2xl border-2 border-blue-200 bg-blue-50 px-6 py-4 text-right"
+            >
+              <div class="text-3xl font-black text-blue-800">9/27</div>
+              <div
+                class="text-xs font-extrabold uppercase tracking-[.14em] text-slate-600"
+              >
+                estados
+              </div>
+            </div>
+          </div>
+          <div
+            class="mt-10 rounded-3xl border border-slate-200 bg-white px-8 py-7 shadow-sm"
+          >
+            <div class="relative h-[43vh]">
+              <div
+                class="absolute left-0 right-0 bottom-12 h-1 bg-slate-300 rounded-full"
+              ></div>
+              <div class="absolute bottom-12 -translate-x-1/2" style="left: 0%">
+                <span
+                  class="relative z-20 block w-4 h-4 translate-y-[6px] rounded-full bg-slate-500 ring-4 ring-white"
+                ></span
+                ><b
+                  class="absolute top-8 left-1/2 -translate-x-1/2 text-xs text-slate-600"
+                  >2017</b
+                >
+              </div>
+              <div
+                class="absolute bottom-12 -translate-x-1/2"
+                style="left: 11.1111%"
+              >
+                <span
+                  class="relative z-20 block w-4 h-4 translate-y-[6px] rounded-full bg-slate-500 ring-4 ring-white"
+                ></span
+                ><b
+                  class="absolute top-8 left-1/2 -translate-x-1/2 text-xs text-slate-600"
+                  >2018</b
+                >
+              </div>
+              <div
+                class="absolute bottom-12 -translate-x-1/2"
+                style="left: 22.2222%"
+              >
+                <span
+                  class="relative z-20 block w-4 h-4 translate-y-[6px] rounded-full bg-slate-500 ring-4 ring-white"
+                ></span
+                ><b
+                  class="absolute top-8 left-1/2 -translate-x-1/2 text-xs text-slate-600"
+                  >2019</b
+                >
+              </div>
+              <div
+                class="absolute bottom-12 -translate-x-1/2"
+                style="left: 33.3333%"
+              >
+                <span
+                  class="relative z-20 block w-4 h-4 translate-y-[6px] rounded-full bg-slate-500 ring-4 ring-white"
+                ></span
+                ><b
+                  class="absolute top-8 left-1/2 -translate-x-1/2 text-xs text-slate-600"
+                  >2020</b
+                >
+              </div>
+              <div
+                class="absolute bottom-12 -translate-x-1/2"
+                style="left: 44.4444%"
+              >
+                <span
+                  class="relative z-20 block w-4 h-4 translate-y-[6px] rounded-full bg-slate-500 ring-4 ring-white"
+                ></span
+                ><b
+                  class="absolute top-8 left-1/2 -translate-x-1/2 text-xs text-slate-600"
+                  >2021</b
+                >
+              </div>
+              <div
+                class="absolute bottom-12 -translate-x-1/2"
+                style="left: 55.5556%"
+              >
+                <span
+                  class="relative z-20 block w-4 h-4 translate-y-[6px] rounded-full bg-slate-500 ring-4 ring-white"
+                ></span
+                ><b
+                  class="absolute top-8 left-1/2 -translate-x-1/2 text-xs text-slate-600"
+                  >2022</b
+                >
+              </div>
+              <div
+                class="absolute bottom-12 -translate-x-1/2"
+                style="left: 66.6667%"
+              >
+                <span
+                  class="relative z-20 block w-4 h-4 translate-y-[6px] rounded-full bg-slate-500 ring-4 ring-white"
+                ></span
+                ><b
+                  class="absolute top-8 left-1/2 -translate-x-1/2 text-xs text-slate-600"
+                  >2023</b
+                >
+              </div>
+              <div
+                class="absolute bottom-12 -translate-x-1/2"
+                style="left: 77.7778%"
+              >
+                <span
+                  class="relative z-20 block w-4 h-4 translate-y-[6px] rounded-full bg-slate-500 ring-4 ring-white"
+                ></span
+                ><b
+                  class="absolute top-8 left-1/2 -translate-x-1/2 text-xs text-slate-600"
+                  >2024</b
+                >
+              </div>
+              <div
+                class="absolute bottom-12 -translate-x-1/2"
+                style="left: 88.8889%"
+              >
+                <span
+                  class="relative z-20 block w-4 h-4 translate-y-[6px] rounded-full bg-slate-500 ring-4 ring-white"
+                ></span
+                ><b
+                  class="absolute top-8 left-1/2 -translate-x-1/2 text-xs text-slate-600"
+                  >2025</b
+                >
+              </div>
+              <div
+                class="absolute bottom-12 -translate-x-1/2"
+                style="left: 100%"
+              >
+                <span
+                  class="relative z-20 block w-4 h-4 translate-y-[6px] rounded-full bg-slate-500 ring-4 ring-white"
+                ></span
+                ><b
+                  class="absolute top-8 left-1/2 -translate-x-1/2 text-xs text-slate-600"
+                  >2026</b
+                >
+              </div>
+              <div class="absolute bottom-12" style="left: 0%; width: 15%">
+                <div
+                  class="absolute bottom-0 left-0 border-l-2 border-blue-800"
+                  style="height: 9vh"
+                ></div>
+                <div
+                  class="absolute left-0 rounded-xl border border-slate-300 bg-white p-4 shadow-sm"
+                  style="bottom: 9vh; width: 100%"
+                >
+                  <span class="text-xs font-bold text-blue-800">2017</span
+                  ><b class="block mt-1">Santa Catarina</b>
+                </div>
+              </div>
+              <div
+                class="absolute bottom-12 -translate-x-1/2"
+                style="left: 33.3333%; width: 16%"
+              >
+                <div
+                  class="absolute bottom-0 left-1/2 border-l-2 border-blue-800"
+                  style="height: 15vh"
+                ></div>
+                <div
+                  class="absolute left-1/2 -translate-x-1/2 rounded-xl border border-slate-300 bg-white p-4 shadow-sm"
+                  style="bottom: 15vh; width: 100%"
+                >
+                  <span class="text-xs font-bold text-blue-800">2020</span
+                  ><b class="block mt-1">Rondônia</b>
+                </div>
+              </div>
+              <div
+                class="absolute bottom-12 -translate-x-1/2"
+                style="left: 55.5556%; width: 16%"
+              >
+                <div
+                  class="absolute bottom-0 left-1/2 border-l-2 border-blue-800"
+                  style="height: 8vh"
+                ></div>
+                <div
+                  class="absolute left-1/2 -translate-x-1/2 rounded-xl border border-slate-300 bg-white p-4 shadow-sm"
+                  style="bottom: 8vh; width: 100%"
+                >
+                  <span class="text-xs font-bold text-blue-800">2022</span
+                  ><b class="block mt-1 leading-snug">Goiás<br />Sergipe</b>
+                </div>
+              </div>
+              <div
+                class="absolute bottom-12 -translate-x-1/2"
+                style="left: 77.7778%; width: 14%"
+              >
+                <div
+                  class="absolute bottom-0 left-1/2 border-l-2 border-blue-800"
+                  style="height: 17vh"
+                ></div>
+                <div
+                  class="absolute left-1/2 -translate-x-1/2 rounded-xl border border-blue-300 bg-blue-50 p-4 shadow-sm"
+                  style="bottom: 17vh; width: 100%"
+                >
+                  <span class="text-xs font-bold text-blue-800">2024</span
+                  ><b class="block mt-1 leading-snug"
+                    >Minas Gerais<br />Espírito Santo<br />Paraná</b
+                  >
+                </div>
+              </div>
+              <div
+                class="absolute bottom-12 -translate-x-1/2"
+                style="left: 88.8889%; width: 16%"
+              >
+                <div
+                  class="absolute bottom-0 left-1/2 border-l-2 border-blue-800"
+                  style="height: 9vh"
+                ></div>
+                <div
+                  class="absolute left-1/2 -translate-x-1/2 rounded-xl border border-slate-300 bg-white p-4 shadow-sm"
+                  style="bottom: 9vh; width: 100%"
+                >
+                  <span class="text-xs font-bold text-blue-800">2025</span
+                  ><b class="block mt-1 leading-snug">Alagoas<br />Maranhão</b>
+                </div>
+              </div>
+              <div class="absolute bottom-12" style="right: 0; width: 17%">
+                <div
+                  class="absolute bottom-0 right-0 border-l-2 border-blue-800"
+                  style="height: 27vh"
+                ></div>
+                <div
+                  class="absolute right-0 rounded-xl border-2 border-dashed border-slate-400 bg-slate-50 text-right p-4 shadow-none"
+                  style="bottom: 27vh; width: 100%"
+                >
+                  <span class="text-xs font-bold text-slate-600"
+                    >2026 • OBSERVAÇÃO</span
+                  ><b class="block mt-1">Pernambuco</b
+                  ><small class="block mt-1 text-slate-600"
+                    >Iniciativa em estruturação</small
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="slide noise light" data-theme="light">
+        <div class="h-full px-[6vw] py-[5vh] flex flex-col justify-center">
+          <div class="eyebrow text-slate-600">Próxima etapa • 2026</div>
+          <div class="flex items-end justify-between mt-2">
+            <h2 class="display text-[clamp(3.4rem,5.2vw,5.6rem)]">
+              Um novo salto
+            </h2>
+            <p class="max-w-md text-right text-slate-600">
+              De uma publicação em linguagem simples para uma plataforma
+              contínua de educação fiscal.
+            </p>
+          </div>
+          <div class="grid desktop grid-cols-4 gap-4 mt-8">
+            <div
+              class="rounded-2xl border-2 border-slate-300 bg-white p-7 h-[31vh] flex flex-col"
+            >
+              <span class="text-sm font-black text-slate-500">01</span
+              ><span
+                class="iconify text-5xl text-blue-800 mt-8"
+                data-icon="ph:translate-bold"
+              ></span>
+              <h3 class="text-2xl font-extrabold mt-auto">Linguagem simples</h3>
+              <p class="text-sm text-slate-600 mt-2">
+                Conteúdo técnico convertido em informação compreensível.
+              </p>
+            </div>
+            <div
+              class="rounded-2xl border-2 border-slate-300 bg-white p-7 h-[31vh] flex flex-col"
+            >
+              <span class="text-sm font-black text-slate-500">02</span
+              ><span
+                class="iconify text-5xl text-blue-800 mt-8"
+                data-icon="ph:person-arms-spread-bold"
+              ></span>
+              <h3 class="text-2xl font-extrabold mt-auto">Acessibilidade</h3>
+              <p class="text-sm text-slate-600 mt-2">
+                Acesso inclusivo em diferentes dispositivos e formas de
+                interação.
+              </p>
+            </div>
+            <div
+              class="rounded-2xl border-2 border-slate-300 bg-white p-7 h-[31vh] flex flex-col"
+            >
+              <span class="text-sm font-black text-slate-500">03</span
+              ><span
+                class="iconify text-5xl text-blue-800 mt-8"
+                data-icon="ph:chart-line-up-bold"
+              ></span>
+              <h3 class="text-2xl font-extrabold mt-auto">Dados e notícias</h3>
+              <p class="text-sm text-slate-600 mt-2">
+                Materialidade, contexto e leitura territorial das contas
+                públicas.
+              </p>
+            </div>
+            <div
+              class="rounded-2xl border-2 border-slate-300 bg-white p-7 h-[31vh] flex flex-col"
+            >
+              <span class="text-sm font-black text-slate-500">04</span
+              ><span
+                class="iconify text-5xl text-blue-800 mt-8"
+                data-icon="ph:game-controller-bold"
+              ></span>
+              <h3 class="text-2xl font-extrabold mt-auto">Gamificação</h3>
+              <p class="text-sm text-slate-600 mt-2">
+                Interesse, progressão, aprendizado e retenção.
+              </p>
+            </div>
+          </div>
+          <div
+            class="mt-5 rounded-2xl bg-slate-200 border border-slate-300 px-7 py-5 flex items-center gap-5"
+          >
+            <span
+              class="iconify text-4xl text-slate-700"
+              data-icon="ph:buildings-bold"
+            ></span>
+            <div>
+              <div class="eyebrow text-slate-500">Projeto futuro</div>
+              <b class="text-lg text-slate-800"
+                >Adesão e integração ao Programa de Educação Fiscal</b
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="slide noise light" data-theme="light">
+        <div class="h-full px-[6vw] py-[6vh]">
+          <div class="eyebrow text-slate-600">Acessibilidade digital</div>
+          <div class="flex justify-between items-end mt-2">
+            <h2 class="display text-[clamp(3rem,4.8vw,5rem)]">
+              Escala e referência técnica
+            </h2>
+          </div>
+          <div
+            class="grid desktop grid-cols-[.8fr_1.25fr_.95fr] gap-5 mt-8 h-[63vh]"
+          >
+            <div
+              class="rounded-2xl bg-slate-50 text-slate-900 border-2 border-slate-200 p-6 flex flex-col"
+            >
+              <div class="eyebrow text-blue-800 mb-5">
+                Acessibilidade em números
+              </div>
+              <div class="text-6xl font-black text-blue-800">14,4 mi</div>
+              <p class="text-slate-600 mt-2">
+                pessoas com deficiência no Brasil
+              </p>
+              <div class="mt-4 rounded-xl bg-white border border-slate-200 p-4">
+                <div class="text-5xl font-black text-blue-800">7,3%</div>
+                <p class="text-sm font-bold text-slate-700 mt-1">
+                  da população de Minas Gerais
+                </p>
+              </div>
+              <div class="h-px bg-slate-200 my-5"></div>
+              <div class="text-6xl font-black">2,9%</div>
+              <p class="text-slate-600 mt-2">
+                dos sites avaliados são adaptados a acessibilidade
+              </p>
+            </div>
+            <div class="grid grid-cols-3 gap-4">
+              <div
+                class="rounded-2xl bg-white border-2 border-slate-200 p-5 flex flex-col items-center justify-center"
+              >
+                <img
+                  src="https://abnt.org.br/wp-content/uploads/2023/11/logo-1024x437.png"
+                  class="w-full h-24 object-contain"
+                  alt="Marca ABNT"
+                /><b class="mt-5 text-center">NBR 17225:2025</b>
+              </div>
+              <div
+                class="rounded-2xl bg-white border-2 border-slate-200 p-5 flex flex-col items-center justify-center"
+              >
+                <img
+                  src="https://www.w3.org/WAI/WCAG22/wcag2.2AA-blue"
+                  class="w-full h-24 object-contain"
+                  alt="Marca de conformidade WCAG 2.2"
+                /><b class="mt-5 text-center">WCAG 2.2</b>
+              </div>
+              <div
+                class="rounded-2xl bg-white border-2 border-slate-200 p-5 flex flex-col items-center justify-center"
+              >
+                <img
+                  src="https://cta.ifrs.edu.br/wp-content/uploads/sites/3/2018/12/eMAG.png"
+                  class="w-full h-24 object-contain"
+                  alt="Marca eMAG 3.1"
+                /><b class="mt-5 text-center">eMAG 3.1</b>
+              </div>
+              <div
+                class="col-span-3 rounded-2xl bg-blue-50 border-2 border-blue-200 p-5 flex items-center justify-center min-h-[96px]"
+              >
+                <p class="font-bold text-center leading-relaxed">
+                  No Governo Federal, acessibilidade é regra: o eMAG orienta a
+                  aplicação padronizada e não admite exceções no cumprimento das
+                  recomendações.
+                </p>
+              </div>
+            </div>
+            <div
+              class="rounded-2xl border-2 border-blue-700 bg-blue-50 overflow-hidden flex flex-col"
+            >
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNrYbnozYUyXuUVbRPLPdQyWBKWDrTnOYuVYSLYpmpVg&s=10"
+                alt="Ilustração de layout responsivo em múltiplos dispositivos"
+                class="w-full h-[64%] object-contain bg-blue-100/60 p-5"
+              />
+              <div class="p-5 border-t border-slate-200">
+                <b class="text-xl text-blue-950">Responsividade</b>
+                <p class="text-sm text-slate-700 mt-2">
+                  Acesso consistente em computador, tablet e celular,
+                  preservando leitura, navegação e interação.
+                </p>
+                <div class="flex gap-2 mt-4">
+                  <span class="pill bg-slate-100">Desktop</span
+                  ><span class="pill bg-slate-100">Tablet</span
+                  ><span class="pill bg-slate-100">Mobile</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="slide noise light" data-theme="light">
+        <div class="h-full px-[6vw] py-[6vh]">
+          <div class="eyebrow text-slate-600">Públicos contemplados</div>
+          <h2 class="display text-[clamp(3rem,4.8vw,5rem)] mt-3">
+            Acesso por diferentes formas de interação
+          </h2>
+          <div class="grid desktop grid-cols-3 gap-4 mt-9">
+            <div class="rounded-2xl border-2 border-slate-200 p-6 bg-white">
+              <span
+                class="iconify text-5xl text-blue-700"
+                data-icon="ph:eye-bold"
+              ></span>
+              <h3 class="text-xl font-extrabold mt-6">Deficiência Visual</h3>
+              <p class="text-slate-600 mt-2">
+                Leitor de tela, textos alternativos, zoom, contraste e foco
+                visível.
+              </p>
+            </div>
+            <div class="rounded-2xl border-2 border-slate-200 p-6 bg-white">
+              <span
+                class="iconify text-5xl text-blue-700"
+                data-icon="ph:ear-slash-bold"
+              ></span>
+              <h3 class="text-xl font-extrabold mt-6">Deficiência Auditiva</h3>
+              <p class="text-slate-600 mt-2">
+                Alternativas textuais, legendas e informação não dependente de
+                áudio.
+              </p>
+            </div>
+            <div class="rounded-2xl border-2 border-slate-200 p-6 bg-white">
+              <span
+                class="iconify text-5xl text-blue-700"
+                data-icon="ph:keyboard-bold"
+              ></span>
+              <h3 class="text-xl font-extrabold mt-6">Deficiência Motora</h3>
+              <p class="text-slate-600 mt-2">
+                Operação completa por teclado, foco lógico e áreas de
+                acionamento adequadas.
+              </p>
+            </div>
+            <div class="rounded-2xl border-2 border-slate-200 p-6 bg-white">
+              <span
+                class="iconify text-5xl text-blue-700"
+                data-icon="ph:brain-bold"
+              ></span>
+              <h3 class="text-xl font-extrabold mt-6">
+                Deficiência Intelectual
+              </h3>
+              <p class="text-slate-600 mt-2">
+                Linguagem direta, interface previsível e apoio à compreensão.
+              </p>
+            </div>
+            <div class="rounded-2xl border-2 border-slate-200 p-6 bg-white">
+              <span
+                class="iconify text-5xl text-blue-700"
+                data-icon="ph:books-bold"
+              ></span>
+              <h3 class="text-xl font-extrabold mt-6">
+                Transtornos Cognitivos
+              </h3>
+              <p class="text-slate-600 mt-2">
+                TDAH, dislexia e outras necessidades: redução de movimento,
+                legibilidade e organização.
+              </p>
+            </div>
+            <div
+              class="rounded-2xl border-2 border-blue-700 p-5 bg-blue-50 grid grid-cols-[1fr_110px] gap-3 items-center"
+            >
+              <div>
+                <h3 class="text-xl font-extrabold">Libras</h3>
+                <p class="text-slate-700 mt-2">
+                  Integração do VLibras para ampliar o acesso ao conteúdo em
+                  língua de sinais.
+                </p>
+              </div>
+              <img
+                src="https://www.gov.br/governodigital/pt-br/acessibilidade-e-usuario/vlibras/imagens/avatar.png"
+                alt="Avatar do componente VLibras"
+                class="w-[110px] h-[130px] object-contain object-bottom"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+      <section
+        class="slide noise light bg-slate-100 text-slate-900"
+        data-theme="light"
+      >
+        <div
+          class="h-full px-[6vw] py-[5vh] grid desktop grid-cols-[1.25fr_.75fr] gap-9 items-center"
+        >
+          <div
+            class="rounded-2xl border border-slate-300 bg-white p-2 shadow-xl"
+          >
+            <div class="aspect-[1365/643] w-full">
+              <img
+                src="assets/mapa.png"
+                alt="Mapa de Minas Gerais com execução orçamentária por região e ranking das maiores execuções"
+                class="w-full h-full object-contain rounded-xl"
+              />
+            </div>
+          </div>
+          <div>
+            <div class="eyebrow text-blue-800">Nova trilha</div>
+            <h2 class="display text-[clamp(3.4rem,5vw,5.5rem)] mt-4">
+              Balanço<br />em dados
+            </h2>
+            <p class="text-xl text-slate-700 mt-6">
+              Gráficos, números e notícias dão materialidade à execução pública.
+            </p>
+            <div class="mt-8 space-y-3">
+              <div
+                class="rounded-xl bg-white border border-slate-300 p-4 flex gap-4 items-center"
+              >
+                <span
+                  class="iconify text-3xl text-blue-800"
+                  data-icon="ph:map-pin-area-fill"
+                ></span>
+                <div>
+                  <b>Território</b>
+                  <p class="text-sm text-slate-600">
+                    Leitura regional e comparações visuais.
+                  </p>
+                </div>
+              </div>
+              <div
+                class="rounded-xl bg-white border border-slate-300 p-4 flex gap-4 items-center"
+              >
+                <span
+                  class="iconify text-3xl text-blue-800"
+                  data-icon="ph:database-fill"
+                ></span>
+                <div>
+                  <b>SIGPLAN</b>
+                  <p class="text-sm text-slate-600">
+                    Planejamento complementando dados contábeis.
+                  </p>
+                </div>
+              </div>
+              <div
+                class="rounded-xl bg-white border border-slate-300 p-4 flex gap-4 items-center"
+              >
+                <span
+                  class="iconify text-3xl text-blue-800"
+                  data-icon="ph:newspaper-clipping-fill"
+                ></span>
+                <div>
+                  <b>Notícias</b>
+                  <p class="text-sm text-slate-600">
+                    Contexto para entregas, fatos e impactos.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section
+        class="slide noise light bg-slate-100 text-slate-900"
+        data-theme="light"
+      >
+        <div
+          class="h-full px-[6vw] py-[5vh] grid desktop grid-cols-[.78fr_1.22fr] gap-9 items-center"
+        >
+          <div>
+            <div class="eyebrow text-blue-800">Engajamento e retenção</div>
+            <h2 class="display text-[clamp(3.4rem,5vw,5.4rem)] mt-4">
+              Gamificação
+            </h2>
+            <p class="text-lg text-slate-700 mt-5">
+              Uma jornada educativa com variedade, progressão e reconhecimento.
+            </p>
+            <div class="grid grid-cols-2 gap-3 mt-7">
+              <div class="rounded-xl bg-white border border-slate-300 p-4">
+                <span
+                  class="iconify text-3xl text-blue-800"
+                  data-icon="ph:game-controller-fill"
+                ></span
+                ><b class="block mt-3">8 modos de jogo</b>
+                <p class="text-xs text-slate-600 mt-1">
+                  Formatos diferentes de interação
+                </p>
+              </div>
+              <div class="rounded-xl bg-white border border-slate-300 p-4">
+                <span
+                  class="iconify text-3xl text-blue-800"
+                  data-icon="ph:flag-checkered-fill"
+                ></span
+                ><b class="block mt-3">16 fases</b>
+                <p class="text-xs text-slate-600 mt-1">
+                  Progressão ao longo da jornada
+                </p>
+              </div>
+              <div class="rounded-xl bg-white border border-slate-300 p-4">
+                <span
+                  class="iconify text-3xl text-blue-800"
+                  data-icon="ph:path-fill"
+                ></span
+                ><b class="block mt-3">4 trilhas temáticas</b>
+                <p class="text-xs text-slate-600 mt-1">
+                  Conteúdo organizado por assunto
+                </p>
+              </div>
+              <div class="rounded-xl bg-blue-950 text-white p-4">
+                <span
+                  class="iconify text-3xl text-blue-300"
+                  data-icon="ph:medal-fill"
+                ></span
+                ><b class="block mt-3">Medalhas e certificado</b>
+                <p class="text-xs text-slate-300 mt-1">
+                  Reconhecimento pela conclusão
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="h-[82vh] flex items-center justify-center">
+            <div
+              class="h-full aspect-[920/812] rounded-2xl border border-slate-300 bg-white p-2 shadow-xl"
+            >
+              <img
+                src="assets/jogos.png"
+                alt="Tela da sessão de jogos com trilha, fases e estrelas"
+                class="w-full h-full object-contain rounded-xl"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="slide noise bg-slate-950 text-white" data-theme="dark">
+        <div class="h-full px-[8vw] py-[7vh] flex items-center justify-center">
+          <div
+            class="w-full max-w-6xl grid desktop grid-cols-[1fr_.9fr] gap-16 items-center"
+          >
+            <div>
+              <div class="eyebrow text-blue-300">Demonstração</div>
+              <h2 class="display text-[clamp(4.4rem,7vw,7.4rem)] mt-5">
+                Acesse<br />o MVP
+              </h2>
+              <p class="text-2xl text-slate-300 mt-8 max-w-lg">
+                Explore a experiência completa do Balanço Cidadão.
+              </p>
+              <a
+                href="https://lepipe.org/balanco-web/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mt-10 inline-flex items-center gap-3 bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-500"
+                ><span
+                  class="iconify text-2xl"
+                  data-icon="ph:arrow-square-out-bold"
+                ></span
+                >Acessar</a
+              >
+            </div>
+            <div class="flex flex-col items-center">
+              <div
+                class="bg-white p-7 rounded-[2rem] shadow-2xl w-[min(38vh,400px)]"
+              >
+                <img
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&amp;data=https%3A%2F%2Flepipe.org%2Fbalanco-web%2F"
+                  alt="QR Code para acessar o MVP do Balanço Cidadão"
+                  class="w-full aspect-square object-contain"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <button
+      class="navzone left"
+      aria-label="Página anterior"
+      onclick="move(-1)"
+    ></button
+    ><button
+      class="navzone right"
+      aria-label="Próxima página"
+      onclick="move(1)"
+    ></button>
+    <div class="rail">
+      <div class="progress"><i id="bar"></i></div>
+      <div class="counter" id="count"></div>
+    </div>
+    <script>
+      const slides = [...document.querySelectorAll(".slide")];
+      let index = 0,
+        locked = false;
+      function show(n) {
+        index = Math.max(0, Math.min(slides.length - 1, n));
+        slides.forEach((s, i) => s.classList.toggle("active", i === index));
+        bar.style.width = ((index + 1) / slides.length) * 100 + "%";
+        count.textContent =
+          String(index + 1).padStart(2, "0") +
+          " / " +
+          String(slides.length).padStart(2, "0");
+        document
+          .querySelector(".rail")
+          .classList.toggle("light", slides[index].dataset.theme === "light");
+      }
+      function move(d) {
+        show(index + d);
+      }
+      document.addEventListener("keydown", (e) => {
+        if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(e.key)) {
+          e.preventDefault();
+          move(1);
+        }
+        if (["ArrowLeft", "ArrowUp", "PageUp"].includes(e.key)) {
+          e.preventDefault();
+          move(-1);
+        }
+        if (e.key === "Home") show(0);
+        if (e.key === "End") show(slides.length - 1);
+      });
+      document.addEventListener(
+        "wheel",
+        (e) => {
+          if (locked) return;
+          locked = true;
+          move(e.deltaY > 0 ? 1 : -1);
+          setTimeout(() => (locked = false), 650);
+        },
+        { passive: true },
+      );
+      let sx = 0;
+      document.addEventListener(
+        "touchstart",
+        (e) => (sx = e.touches[0].clientX),
+      );
+      document.addEventListener("touchend", (e) => {
+        let dx = e.changedTouches[0].clientX - sx;
+        if (Math.abs(dx) > 60) move(dx < 0 ? 1 : -1);
+      });
+      show(0);
+    </script>
+  </body>
+</html>

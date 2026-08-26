@@ -1,0 +1,200 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Configuração da História</title>
+    <link
+      rel="stylesheet"
+      href="../../shared/styles/fonts.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body data-pages="15" data-image-base="../../../assets/images/historia/">
+    <header class="app-header">
+      <div>
+        <small>FERRAMENTA INTERNA</small>
+        <h1>Mapeamento acessível da HQ</h1>
+        <p>Desenhe uma região e use o editor rápido ao lado dela.</p>
+      </div>
+      <nav class="header-actions" aria-label="Ações do JSON">
+        <button id="importBtn" class="btn">Importar JSON</button>
+        <input
+          id="importFile"
+          type="file"
+          accept=".json,application/json"
+          hidden
+        />
+        <button id="copyBtn" class="btn">
+          <i class="fa-solid fa-copy"></i>Copiar JSON
+        </button>
+        <button id="downloadBtn" class="btn primary">
+          <i class="fa-solid fa-download"></i>Baixar historia.json
+        </button>
+      </nav>
+    </header>
+    <main id="conteudo-principal">
+      <aside class="sidebar">
+        <section class="panel">
+          <h2>Página</h2>
+          <div class="page-nav">
+            <button id="prevPage" class="icon-btn" aria-label="Página anterior">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <select id="pageSelect" aria-label="Selecionar página"></select>
+            <button id="nextPage" class="icon-btn" aria-label="Próxima página">
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+          <label class="field"
+            >Descrição alternativa da página<textarea
+              id="pageAlt"
+              rows="3"
+            ></textarea>
+          </label>
+        </section>
+        <section class="panel">
+          <div class="panel-title">
+            <h2>Ordem da página</h2>
+            <span id="count">0 regiões</span>
+          </div>
+          <ol id="regionList" class="region-list"></ol>
+        </section>
+      </aside>
+      <section class="workspace">
+        <div class="instructions">
+          <i class="fa-solid fa-vector-square"></i
+          ><strong>Criar:</strong> clique e arraste.
+          <strong>Editar:</strong> clique na região.
+        </div>
+        <div id="viewport" class="viewport">
+          <div id="stage" class="stage">
+            <img id="image" alt="" draggable="false" />
+            <div id="layer" class="mapping-layer"></div>
+          </div>
+        </div>
+        <footer class="workspace-footer">
+          <span id="status" role="status" aria-live="polite"
+            >Alterações salvas automaticamente.</span
+          ><button id="clearBtn" class="btn danger">
+            <i class="fa-solid fa-eraser"></i>Limpar página
+          </button>
+        </footer>
+      </section>
+    </main>
+
+    <section
+      id="floatingEditor"
+      class="floating-editor"
+      hidden
+      aria-label="Editor rápido da região"
+    >
+      <div class="floating-head">
+        <div>
+          <small>EDIÇÃO RÁPIDA</small><strong id="badge">Ordem 1</strong>
+        </div>
+        <button
+          id="closeEditor"
+          class="close-btn"
+          type="button"
+          aria-label="Fechar editor"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="quick-section">
+        <span class="quick-label">Tipo</span>
+        <div
+          id="typeButtons"
+          class="quick-grid type-grid"
+          role="group"
+          aria-label="Tipo da região"
+        >
+          <button type="button" data-value="title">
+            <i class="fa-solid fa-heading"></i><span>Título</span>
+          </button>
+          <button type="button" data-value="narration">
+            <i class="fa-solid fa-book-open"></i><span>Narração</span>
+          </button>
+          <button type="button" data-value="speech">
+            <i class="fa-solid fa-comment"></i><span>Balão de fala</span>
+          </button>
+          <button type="button" data-value="sound">
+            <i class="fa-solid fa-volume-high"></i><span>Efeito sonoro</span>
+          </button>
+          <button type="button" data-value="other">
+            <i class="fa-solid fa-font"></i><span>Outro texto</span>
+          </button>
+        </div>
+      </div>
+
+      <label id="characterField" class="field"
+        >Personagem
+        <div class="combo-wrap">
+          <input
+            id="character"
+            type="text"
+            list="characterOptions"
+            autocomplete="off"
+            placeholder="Selecione ou digite um novo nome"
+          />
+          <datalist id="characterOptions"></datalist>
+        </div>
+      </label>
+
+      <div class="quick-section">
+        <span class="quick-label">Formato</span>
+        <div
+          id="shapeButtons"
+          class="shape-buttons"
+          role="group"
+          aria-label="Formato da região"
+        >
+          <button type="button" data-value="rectangle">
+            <span class="shape-preview rectangle"></span>Quadrado
+          </button>
+          <button type="button" data-value="oval">
+            <span class="shape-preview oval"></span>Redondo
+          </button>
+        </div>
+      </div>
+
+      <label class="field"
+        >Texto<textarea
+          id="text"
+          rows="4"
+          placeholder="Digite o texto da região"
+        ></textarea>
+      </label>
+
+      <div class="order-row">
+        <span class="quick-label">Ordem de leitura</span>
+        <div class="order-control">
+          <button id="orderDown" type="button" aria-label="Diminuir ordem">
+            <i class="fa-solid fa-minus"></i>
+          </button>
+          <input
+            id="order"
+            type="number"
+            min="1"
+            inputmode="numeric"
+            aria-label="Ordem de leitura"
+          />
+          <button id="orderUp" type="button" aria-label="Aumentar ordem">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="editor-actions">
+        <span class="autosave"
+          ><i class="fa-solid fa-cloud-arrow-up"></i>Salvamento automático</span
+        ><button id="deleteBtn" class="btn danger">
+          <i class="fa-solid fa-trash"></i>Excluir
+        </button>
+      </div>
+    </section>
+  </body>
+</html>

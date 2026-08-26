@@ -1,0 +1,3670 @@
+﻿<!doctype html>
+
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+      name="viewport"
+    />
+    <title>Balanço Cidadão MG</title>
+    <link
+      href="../../../public/images/favicon.ico"
+      rel="icon"
+      type="image/png"
+    />
+    <link
+      href="../../shared/styles/fonts.css"
+      rel="stylesheet"
+    />
+    <script
+      defer=""
+      src="../../../public/vendor/iconify/iconify-icon.min.js"
+    ></script>
+    <script defer="" src="../../shared/accessibility/a11y.js"></script>
+    <script defer="" src="../../shared/layout/footer.js"></script>
+    <script defer="" src="../../shared/services/apiLegado.js"></script>
+    <script defer="" src="../../shared/layout/background.js"></script>
+    <link href="styles.css" rel="stylesheet" />
+    <script defer="" src="script.js"></script>
+  </head>
+  <body
+    data-reader-slug="balanco-2025"
+    data-title="Balanço Cidadão 2025"
+    data-trail-slug="conteudo-balanco"
+  >
+    <a class="skip-link" href="#conteudo-principal">Pular para o conteúdo</a>
+    <div
+      aria-busy="true"
+      aria-live="polite"
+      class="api-loading"
+      id="readerLoading"
+    >
+      <div class="api-loading-box">
+        <iconify-icon aria-hidden="true" icon="fa6-solid:circle-notch"></iconify-icon><span
+          ><strong>Carregando Balanço</strong
+          ><small id="loadingText">Preparando a leitura...</small></span
+        >
+      </div>
+    </div>
+    <main id="conteudo-principal" tabindex="-1">
+      <div class="app-shell">
+        <nav aria-label="Navegação da página" class="top-nav">
+          <a class="nav-pill" href="../home/"
+            ><iconify-icon aria-hidden="true" icon="fa6-solid:arrow-left"></iconify-icon>Voltar
+            para início</a
+          >
+          <a class="nav-pill" href="../historia/"
+            ><iconify-icon aria-hidden="true" icon="fa6-solid:book-open"></iconify-icon>Voltar para
+            História</a
+          >
+        </nav>
+        <header class="hero-card">
+          <span class="bolt bolt-tl"></span><span class="bolt bolt-tr"></span
+          ><span class="bolt bolt-bl"></span><span class="bolt bolt-br"></span>
+          <div class="trail-badge">
+            <iconify-icon aria-hidden="true" icon="fa6-solid:scale-balanced"></iconify-icon>Trilha
+            2 · Balanço
+          </div>
+          <h1>Balanço Cidadão 2025</h1>
+          <p>
+            Conheça Minas Gerais por meio de uma experiência de leitura
+            acessível, organizada e interativa.
+          </p>
+        </header>
+        <section aria-labelledby="reader-title" class="book-card">
+          <div class="reader-topline">
+            <div>
+              <span class="reader-kicker">Caderno interativo</span>
+              <h2 id="reader-title">Caderno de Minas Gerais</h2>
+            </div>
+            <button
+              aria-controls="sectionMenu"
+              aria-expanded="false"
+              aria-label="Abrir navegação por capítulos e seções"
+              class="book-btn menu-button floating-navigator"
+              id="sectionMenuButton"
+              type="button"
+            >
+              <iconify-icon aria-hidden="true" icon="fa6-solid:compass"></iconify-icon>
+              <span class="floating-nav-copy"
+                ><small>Navegação</small
+                ><strong id="currentSectionLabel">Sumário</strong></span
+              >
+            </button>
+          </div>
+          <div
+            aria-label="Ferramentas de leitura"
+            class="reading-tools"
+            role="group"
+          >
+            <button aria-label="Diminuir texto" id="fontDown" type="button">
+              A−</button
+            ><output id="fontValue">100%</output
+            ><button aria-label="Aumentar texto" id="fontUp" type="button">
+              A+
+            </button>
+            <button id="fontReset" type="button">
+              <iconify-icon aria-hidden="true" icon="fa6-solid:rotate-left"></iconify-icon><span>Restaurar</span>
+            </button>
+            <button aria-pressed="false" id="focusMode" type="button">
+              <iconify-icon aria-hidden="true" icon="fa6-solid:highlighter"></iconify-icon><span>Modo foco</span>
+            </button>
+          </div>
+          <div class="reader-layout">
+            <aside
+              aria-label="Navegação por capítulos e seções"
+              aria-modal="true"
+              class="section-menu navigation-command"
+              id="sectionMenu"
+              role="dialog"
+            >
+              <div class="section-menu-head">
+                <div>
+                  <small>Mapa do conteúdo</small
+                  ><strong>Escolha um capítulo ou seção</strong>
+                </div>
+                <button
+                  aria-label="Fechar navegação"
+                  id="sectionMenuClose"
+                  type="button"
+                >
+                  <iconify-icon aria-hidden="true" icon="fa6-solid:xmark"></iconify-icon>
+                </button>
+              </div>
+              <nav aria-label="Seções do capítulo">
+                <div class="chapter-details-list">
+                  <details class="chapter-details" id="chapter-1-nav">
+                    <summary>
+                      <span class="chapter-summary-copy"
+                        ><small>Capítulo 1</small
+                        ><strong>Minas Gerais</strong></span
+                      ><iconify-icon
+                        aria-hidden="true" icon="fa6-solid:chevron-down"></iconify-icon>
+                    </summary>
+                    <ol>
+                      <li>
+                        <a href="#boas-vindas"
+                          ><span>01</span><b>Oh! Minas Gerais</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#identidade"
+                          ><span>02</span><b>Identidade mineira</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#dados-gerais"
+                          ><span>03</span><b>Dados gerais</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#indicadores"
+                          ><span>04</span><b>Indicadores</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#historia"><span>05</span><b>História</b></a>
+                      </li>
+                      <li>
+                        <a href="#cultura"
+                          ><span>06</span><b>Cultura e gastronomia</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#tradicao-fe"
+                          ><span>07</span><b>Tradição e fé</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#patrimonio-arte"
+                          ><span>08</span><b>Patrimônio e arte</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#minas-pais"
+                          ><span>09</span><b>Um “país” chamado Minas</b></a
+                        >
+                      </li>
+                    </ol>
+                  </details>
+                  <details class="chapter-details" id="chapter-2-nav">
+                    <summary>
+                      <span class="chapter-summary-copy"
+                        ><small>Capítulo 2</small
+                        ><strong>Administração Pública</strong></span
+                      ><iconify-icon
+                        aria-hidden="true" icon="fa6-solid:chevron-down"></iconify-icon>
+                    </summary>
+                    <ol>
+                      <li>
+                        <a href="#administracao-publica"
+                          ><span>10</span><b>Administração Pública</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#esferas-poderes"
+                          ><span>11</span><b>Esferas e Poderes</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#poderes-estado"
+                          ><span>12</span><b>Poderes do Estado</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#recurso-publico"
+                          ><span>13</span><b>O Recurso Público</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#ciclo-orcamentario"
+                          ><span>14</span><b>Ciclo Orçamentário</b></a
+                        >
+                      </li>
+                    </ol>
+                  </details>
+                  <details class="chapter-details" id="chapter-3-nav">
+                    <summary>
+                      <span class="chapter-summary-copy"
+                        ><small>Capítulo 3</small
+                        ><strong
+                          >Demonstrativos e Relatórios Fiscais</strong
+                        ></span
+                      ><iconify-icon
+                        aria-hidden="true" icon="fa6-solid:chevron-down"></iconify-icon>
+                    </summary>
+                    <ol>
+                      <li>
+                        <a href="#balanco-geral"
+                          ><span>15</span><b>Balanço Geral do Estado</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#receitas-despesas"
+                          ><span>16</span><b>Receitas e despesas</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#conceitos-fiscais"
+                          ><span>17</span><b>Conceitos fiscais</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#rgf"
+                          ><span>18</span><b>Relatório de Gestão Fiscal</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#rgf-pessoal"
+                          ><span>19</span><b>RGF: despesa com pessoal</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#rgf-divida"
+                          ><span>20</span><b>RGF: dívida consolidada</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#rgf-garantias"
+                          ><span>21</span><b>RGF: garantias e crédito</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#rgf-caixa"
+                          ><span>22</span
+                          ><b>RGF: disponibilidade de caixa</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#despesas-funcao"
+                          ><span>23</span><b>Despesas por função</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#indices-constitucionais"
+                          ><span>24</span><b>Índices constitucionais</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#saude-educacao"
+                          ><span>25</span><b>Saúde e educação</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#fundeb-pesquisa"
+                          ><span>26</span><b>FUNDEB e pesquisa</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#painel-indicadores"
+                          ><span>27</span><b>Painel de indicadores</b></a
+                        >
+                      </li>
+                    </ol>
+                  </details>
+                  <details class="chapter-details" id="chapter-4-nav">
+                    <summary>
+                      <span class="chapter-summary-copy"
+                        ><small>Capítulo 4</small
+                        ><strong
+                          >Controle, Cidadania e Accountability</strong
+                        ></span
+                      ><iconify-icon
+                        aria-hidden="true" icon="fa6-solid:chevron-down"></iconify-icon>
+                    </summary>
+                    <ol>
+                      <li>
+                        <a href="#controle-accountability"
+                          ><span>28</span><b>Controle e accountability</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#direitos-deveres"
+                          ><span>29</span><b>Direitos e deveres</b></a
+                        >
+                      </li>
+                      <li>
+                        <a href="#controle-social"
+                          ><span>30</span
+                          ><b>Ferramentas de controle social</b></a
+                        >
+                      </li>
+                    </ol>
+                  </details>
+                </div>
+              </nav>
+              <div class="section-progress">
+                <span id="progressText">Início</span>
+                <div class="progress-track"><div id="progressBar"></div></div>
+              </div>
+            </aside>
+            <button
+              aria-label="Fechar navegação"
+              class="section-menu-backdrop"
+              id="sectionMenuBackdrop"
+              tabindex="-1"
+              type="button"
+            ></button>
+            <article class="web-content">
+              <section
+                aria-labelledby="intro-title"
+                class="content-section intro-section"
+                id="boas-vindas"
+              >
+                <div class="intro-copy">
+                  <span class="chapter-label">Capítulo 1 · Minas Gerais</span>
+                  <h3 id="intro-title"><span>Oh!</span> Minas Gerais</h3>
+                  <p class="anthem">
+                    <iconify-icon
+                      aria-hidden="true"
+                      icon="solar:music-notes-bold"
+                    ></iconify-icon>
+                    “Oh! Minas Gerais, quem te conhece não esquece jamais.”
+                  </p>
+                  <p class="lead">
+                    Um território de histórias, sotaques, sabores e movimentos
+                    que ajudam a construir o país.
+                  </p>
+                </div>
+                <figure class="state-map">
+                  <img
+                    alt="Mapa tridimensional de Minas Gerais dividido em regiões, com o triângulo vermelho da bandeira estadual."
+                    height="720"
+                    src="../../../public/images/balanco/1_minasgerais3d.png"
+                    width="900"
+                  />
+                  <figcaption>
+                    Minas Gerais: diversidade em cada região.
+                  </figcaption>
+                </figure>
+              </section>
+              <section
+                aria-labelledby="identity-title"
+                class="content-section identity-section"
+                id="identidade"
+              >
+                <div class="section-heading">
+                  <span>Identidade mineira</span>
+                  <h3 id="identity-title">Muitas histórias em um só estado</h3>
+                  <p>
+                    Conheça alguns elementos que fazem parte da experiência de
+                    viver e conhecer Minas.
+                  </p>
+                </div>
+                <div class="feature-grid">
+                  <article class="feature-card">
+                    <span class="icon-box"
+                      ><iconify-icon
+                        aria-hidden="true"
+                        icon="solar:pallete-2-bold-duotone"
+                      ></iconify-icon
+                    ></span>
+                    <h4>História e cultura</h4>
+                    <p>Em Minas, história, arte, fé e cultura se cruzam.</p>
+                  </article>
+                  <article class="feature-card">
+                    <span class="icon-box"
+                      ><iconify-icon
+                        aria-hidden="true"
+                        icon="game-icons:mountains"
+                      ></iconify-icon
+                    ></span>
+                    <h4>Território e tradição</h4>
+                    <p>
+                      Entre montanhas e cidades nasceram tradições, sabores e
+                      movimentos.
+                    </p>
+                  </article>
+                  <article class="feature-card">
+                    <span class="icon-box"
+                      ><iconify-icon
+                        aria-hidden="true"
+                        icon="solar:cup-hot-bold-duotone"
+                      ></iconify-icon
+                    ></span>
+                    <h4>Acolhimento</h4>
+                    <p>
+                      Uma boa prosa, um “cafezin” e tempo para compartilhar
+                      histórias.
+                    </p>
+                  </article>
+                  <article class="feature-card quote-card">
+                    <span class="icon-box"
+                      ><iconify-icon
+                        aria-hidden="true"
+                        icon="solar:chat-round-dots-bold-duotone"
+                      ></iconify-icon
+                    ></span>
+                    <h4>Sotaque único</h4>
+                    <p>Expressões que já viraram patrimônio afetivo.</p>
+                    <strong>“Uai, sô! Trem bão!”</strong>
+                  </article>
+                </div>
+                <p class="statement">
+                  Minas é história viva.
+                  <span>Minas é futuro em construção.</span>
+                </p>
+              </section>
+              <section
+                aria-labelledby="data-title"
+                class="content-section data-section"
+                id="dados-gerais"
+              >
+                <div class="section-heading centered">
+                  <span>Dados gerais</span>
+                  <h3 id="data-title">Minas são muitas</h3>
+                  <p>Em cada canto, existe uma Minas diferente.</p>
+                </div>
+                <div class="editorial-grid">
+                  <div class="story-card">
+                    <iconify-icon
+                      aria-hidden="true"
+                      icon="solar:map-point-wave-bold-duotone"
+                    ></iconify-icon>
+                    <p>
+                      A Minas das montanhas e do cerrado. A Minas das cidades
+                      modernas e das vilas históricas. A Minas do agronegócio,
+                      da mineração e da indústria em expansão.
+                    </p>
+                  </div>
+                  <div class="story-card">
+                    <iconify-icon
+                      aria-hidden="true"
+                      icon="solar:users-group-rounded-bold-duotone"
+                    ></iconify-icon>
+                    <p>
+                      Cada região tem seu jeito de falar, de cozinhar, de viver
+                      e de contar histórias. Minas nasceu da história, cresceu
+                      com trabalho e segue se reinventando todos os dias.
+                    </p>
+                  </div>
+                </div>
+                <div class="location-panel">
+                  <div class="location-main">
+                    <div>
+                      <iconify-icon
+                        aria-hidden="true"
+                        icon="solar:map-point-bold-duotone"
+                      ></iconify-icon
+                      ><span
+                        ><small>Localização</small
+                        ><strong>Região Sudeste</strong></span
+                      >
+                    </div>
+                    <div>
+                      <iconify-icon
+                        aria-hidden="true"
+                        icon="solar:buildings-2-bold-duotone"
+                      ></iconify-icon
+                      ><span
+                        ><small>Municípios</small><strong>853</strong></span
+                      >
+                    </div>
+                    <div>
+                      <iconify-icon
+                        aria-hidden="true"
+                        icon="solar:city-bold-duotone"
+                      ></iconify-icon
+                      ><span
+                        ><small>Capital</small
+                        ><strong>Belo Horizonte</strong></span
+                      >
+                    </div>
+                  </div>
+                  <aside
+                    aria-label="Capitais históricas de Minas Gerais"
+                    class="history-note"
+                  >
+                    <iconify-icon
+                      aria-hidden="true"
+                      icon="solar:paperclip-2-bold"
+                    ></iconify-icon>
+                    <h4>Já foram capitais de MG</h4>
+                    <ul>
+                      <li>Mariana <span>1696–1745</span></li>
+                      <li>Vila Rica/Ouro Preto <span>1720/1821–1897</span></li>
+                    </ul>
+                  </aside>
+                </div>
+              </section>
+              <section
+                aria-labelledby="metrics-title"
+                class="content-section metrics-section"
+                id="indicadores"
+              >
+                <div class="section-heading">
+                  <span>Minas em números</span>
+                  <h3 id="metrics-title">Indicadores do estado</h3>
+                </div>
+                <div class="metrics-grid">
+                  <article class="metric-card">
+                    <iconify-icon
+                      aria-hidden="true"
+                      icon="solar:ruler-angular-bold-duotone"
+                    ></iconify-icon>
+                    <div>
+                      <span>Área territorial</span
+                      ><strong>586.513,984 km²</strong><small>Censo 2024</small>
+                    </div>
+                  </article>
+                  <article class="metric-card">
+                    <iconify-icon
+                      aria-hidden="true"
+                      icon="solar:users-group-two-rounded-bold-duotone"
+                    ></iconify-icon>
+                    <div>
+                      <span>População</span><strong>20.539.989</strong
+                      ><small>habitantes · Censo 2022</small>
+                    </div>
+                  </article>
+                  <article class="metric-card wide">
+                    <iconify-icon
+                      aria-hidden="true"
+                      icon="solar:chart-2-bold-duotone"
+                    ></iconify-icon>
+                    <div>
+                      <span>Produto Interno Bruto</span
+                      ><strong>R$ 1,157 trilhão</strong
+                      ><small
+                        >2025 · Fundação João Pinheiro · crescimento real de
+                        1,4% em relação ao mesmo período de 2024</small
+                      >
+                    </div>
+                  </article>
+                </div>
+              </section>
+              <section
+                aria-labelledby="history-title"
+                class="content-section history-section"
+                id="historia"
+              >
+                <header class="history-hero">
+                  <figure class="tiradentes-figure">
+                    <img
+                      alt="Ilustração em traços pretos que acompanha a seção sobre a história de Minas Gerais."
+                      height="260"
+                      loading="lazy"
+                      src="../../../public/images/balanco/tiradentes.svg"
+                      width="260"
+                    />
+                  </figure>
+                  <div class="history-heading">
+                    <span class="section-tag">Linha do tempo</span>
+                    <h3 id="history-title">História</h3>
+                    <p>
+                      Da busca por ouro à diversificação da indústria mineira.
+                    </p>
+                  </div>
+                  <iconify-icon
+                    aria-hidden="true"
+                    class="parchment-icon"
+                    icon="game-icons:scroll-quill"
+                  ></iconify-icon>
+                </header>
+                <div
+                  aria-label="Linha do tempo da história econômica de Minas Gerais"
+                  class="timeline"
+                >
+                  <article class="timeline-item">
+                    <div class="timeline-marker">
+                      <iconify-icon
+                        aria-hidden="true"
+                        icon="game-icons:treasure-map"
+                      ></iconify-icon>
+                    </div>
+                    <div class="timeline-card">
+                      <span class="timeline-date">Século XVI</span>
+                      <h4>Expedições e busca por riquezas</h4>
+                      <p>
+                        A região que hoje corresponde ao estado de Minas Gerais
+                        foi inicialmente desbravada no século XVI pelos
+                        bandeirantes em busca de ouro e pedras preciosas.
+                      </p>
+                    </div>
+                  </article>
+                  <article class="timeline-item">
+                    <div class="timeline-marker">
+                      <iconify-icon
+                        aria-hidden="true"
+                        icon="game-icons:gold-bar"
+                      ></iconify-icon>
+                    </div>
+                    <div class="timeline-card">
+                      <span class="timeline-date">Século XVIII</span>
+                      <h4>Ocupação e centro econômico</h4>
+                      <p>
+                        No século XVIII, a região foi povoada e se tornou um
+                        importante centro econômico para Portugal.
+                      </p>
+                    </div>
+                  </article>
+                  <article class="timeline-item">
+                    <div class="timeline-marker">
+                      <iconify-icon
+                        aria-hidden="true"
+                        icon="game-icons:coins"
+                      ></iconify-icon>
+                    </div>
+                    <div class="timeline-card">
+                      <span class="timeline-date">Por volta de 1750</span>
+                      <h4>Queda do ouro e aumento dos impostos</h4>
+                      <p>
+                        A queda na produção de ouro, por volta de 1750, levou a
+                        Coroa a aumentar a cobrança de impostos sobre a
+                        mineração.
+                      </p>
+                    </div>
+                  </article>
+                  <article class="timeline-item timeline-highlight">
+                    <div class="timeline-marker">
+                      <iconify-icon
+                        aria-hidden="true"
+                        icon="game-icons:liberty-wing"
+                      ></iconify-icon>
+                    </div>
+                    <div class="timeline-card">
+                      <span class="timeline-date">1789</span>
+                      <h4>Inconfidência Mineira</h4>
+                      <p>
+                        O descontentamento com essa rigidez desencadeou o
+                        movimento político conhecido como Inconfidência Mineira,
+                        em 1789, que teve como principal personagem Joaquim José
+                        da Silva Xavier, o Tiradentes.
+                      </p>
+                    </div>
+                  </article>
+                  <article class="timeline-item">
+                    <div class="timeline-marker">
+                      <iconify-icon
+                        aria-hidden="true"
+                        icon="game-icons:coffee-beans"
+                      ></iconify-icon>
+                    </div>
+                    <div class="timeline-card">
+                      <span class="timeline-date">Século XIX</span>
+                      <h4>Expansão da cafeicultura</h4>
+                      <p>
+                        A predominância da mineração na economia do estado
+                        inibiu outras atividades, fazendo com que a cafeicultura
+                        despontasse somente no século XIX, quando passou a ser a
+                        principal atividade econômica da província, resultando
+                        em um período de prosperidade.
+                      </p>
+                    </div>
+                  </article>
+                  <article class="timeline-item">
+                    <div class="timeline-marker">
+                      <iconify-icon
+                        aria-hidden="true"
+                        icon="game-icons:factory"
+                      ></iconify-icon>
+                    </div>
+                    <div class="timeline-card">
+                      <span class="timeline-date">1929–1930</span>
+                      <h4>Crise do café e avanço industrial</h4>
+                      <p>
+                        A crise de 1929 e a Revolução de 1930 afetaram a
+                        produção de café e estimularam o avanço da indústria
+                        siderúrgica e da exploração mineral.
+                      </p>
+                    </div>
+                  </article>
+                  <article class="timeline-item">
+                    <div class="timeline-marker">
+                      <iconify-icon
+                        aria-hidden="true"
+                        icon="game-icons:gears"
+                      ></iconify-icon>
+                    </div>
+                    <div class="timeline-card">
+                      <span class="timeline-date">Década de 1950</span>
+                      <h4>Substituição de importações</h4>
+                      <p>
+                        A indústria ganhou força com a política de substituição
+                        de importações, na década de 1950.
+                      </p>
+                    </div>
+                  </article>
+                  <article class="timeline-item timeline-final">
+                    <div class="timeline-marker">
+                      <iconify-icon
+                        aria-hidden="true"
+                        icon="game-icons:modern-city"
+                      ></iconify-icon>
+                    </div>
+                    <div class="timeline-card">
+                      <span class="timeline-date">Anos 1970</span>
+                      <h4>Diversificação industrial</h4>
+                      <p>
+                        Os anos 1970 marcaram um grande surto de
+                        industrialização em Minas Gerais, com diversificação e
+                        fortalecimento de novos setores industriais.
+                      </p>
+                    </div>
+                  </article>
+                </div>
+              </section>
+              <section
+                aria-labelledby="culture-title"
+                class="content-section culture-section"
+                id="cultura"
+              >
+                <header class="culture-hero">
+                  <div class="culture-title-wrap">
+                    <span class="section-tag">Cultura mineira</span>
+                    <h3 id="culture-title">Minas Gerais</h3>
+                  </div>
+                  <p class="culture-script">
+                    Onde religiosidade,<br />hospitalidade e gastronomia<br />se
+                    cruzam.
+                  </p>
+                </header>
+                <div class="culture-intro">
+                  <iconify-icon
+                    aria-hidden="true"
+                    class="culture-church"
+                    focusable="false"
+                    icon="mdi:church"
+                  ></iconify-icon>
+                  <img
+                    alt="Ilustração de um queijo Minas com uma fatia retirada."
+                    class="cheese-illustration"
+                    height="180"
+                    loading="lazy"
+                    src="../../../public/images/balanco/queijo.webp"
+                    width="220"
+                  />
+                  <p>
+                    A cultura de Minas Gerais é uma das mais ricas e singulares
+                    do Brasil, moldada por uma história que remonta ao ciclo do
+                    ouro e caracterizada por uma identidade que mescla
+                    religiosidade, hospitalidade e uma gastronomia de renome
+                    mundial.
+                  </p>
+                  <aside
+                    aria-label="Convite para um café"
+                    class="coffee-invitation"
+                  >
+                    <iconify-icon
+                      aria-hidden="true"
+                      class="coffee-cup"
+                      focusable="false"
+                      icon="solar:cup-hot-bold-duotone"
+                    ></iconify-icon>
+                    <p>
+                      <strong>Fica mais um pouco.</strong
+                      ><span>Vai ter café!</span>
+                    </p>
+                  </aside>
+                </div>
+                <div class="culture-layout">
+                  <section aria-labelledby="table-title" class="photo-journal">
+                    <div aria-hidden="true" class="journal-rings">
+                      <i></i><i></i><i></i><i></i><i></i>
+                    </div>
+                    <span class="tape-label" id="table-title"
+                      >Gastronomia e mineiridade</span
+                    >
+                    <figure class="main-photo">
+                      <img
+                        alt="Mesa com diferentes pratos da culinária mineira em um ambiente doméstico."
+                        height="620"
+                        loading="lazy"
+                        src="../../../public/images/balanco/foto_mesa.png"
+                        width="760"
+                      />
+                      <figcaption>
+                        A mesa mineira como espaço de encontro e convivência.
+                      </figcaption>
+                    </figure>
+                    <div class="small-photos">
+                      <figure>
+                        <img
+                          alt="Produção artesanal de queijo em Minas Gerais."
+                          height="340"
+                          loading="lazy"
+                          src="../../../public/images/balanco/foto_queijo.png"
+                          width="400"
+                        />
+                        <figcaption>Queijo artesanal</figcaption>
+                      </figure>
+                      <figure>
+                        <img
+                          alt="Garrafas que representam a produção artesanal de cachaça em Minas Gerais."
+                          height="340"
+                          loading="lazy"
+                          src="../../../public/images/balanco/foto_cachaca.png"
+                          width="400"
+                        />
+                        <figcaption>Cachaça artesanal</figcaption>
+                      </figure>
+                    </div>
+                  </section>
+                  <div class="culture-copy">
+                    <blockquote>
+                      <iconify-icon
+                        aria-hidden="true"
+                        icon="solar:chat-square-quote-bold-duotone"
+                      ></iconify-icon>
+                      <p>
+                        A mesa mineira é o centro da vida social, refletindo a
+                        hospitalidade de seu povo.
+                      </p>
+                    </blockquote>
+                    <div class="gastronomy-note">
+                      <iconify-icon
+                        aria-hidden="true"
+                        class="paperclip"
+                        icon="solar:paperclip-2-bold"
+                      ></iconify-icon>
+                      <div class="food-topic">
+                        <iconify-icon
+                          aria-hidden="true"
+                          icon="game-icons:cheese-wedge"
+                        ></iconify-icon>
+                        <p>
+                          <strong>Patrimônio cultural.</strong> O Queijo Minas é
+                          reconhecido como patrimônio imaterial brasileiro pelo
+                          IPHAN.
+                        </p>
+                      </div>
+                      <div class="food-topic">
+                        <iconify-icon
+                          aria-hidden="true"
+                          icon="game-icons:meal"
+                        ></iconify-icon>
+                        <p>
+                          <strong>Pratos ícones.</strong> Destacam-se o pão de
+                          queijo, o feijão tropeiro, o frango com quiabo, o tutu
+                          à mineira e doces como o doce de leite e a goiabada
+                          com queijo.
+                        </p>
+                      </div>
+                      <div class="food-topic">
+                        <iconify-icon
+                          aria-hidden="true"
+                          icon="game-icons:bottle-vapors"
+                        ></iconify-icon>
+                        <p>
+                          <strong>Bebidas.</strong> O estado é famoso pela
+                          produção de cachaças artesanais e café de alta
+                          qualidade.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <section
+                aria-labelledby="faith-title"
+                class="content-section faith-section"
+                id="tradicao-fe"
+              >
+                <header class="faith-heading">
+                  <span class="section-tag">Patrimônio e devoção</span>
+                  <h3 id="faith-title">Tradição e Fé</h3>
+                  <p>
+                    Expressões coletivas que unem memória, arte, religiosidade e
+                    participação comunitária.
+                  </p>
+                </header>
+                <article
+                  aria-labelledby="congado-title"
+                  class="tradition-feature congada-feature"
+                >
+                  <div class="feature-copy">
+                    <span aria-hidden="true" class="feature-number">01</span>
+                    <div>
+                      <h4 id="congado-title">Congado</h4>
+                      <p>
+                        O Congado é uma das expressões mais fortes, misturando
+                        elementos africanos e católicos em devoção a Nossa
+                        Senhora do Rosário.
+                      </p>
+                    </div>
+                    <iconify-icon
+                      aria-hidden="true"
+                      class="feature-symbol"
+                      focusable="false"
+                      icon="game-icons:drum"
+                    ></iconify-icon>
+                  </div>
+                  <div
+                    aria-label="Registros visuais do Congado"
+                    class="congada-gallery"
+                  >
+                    <figure class="gallery-card gallery-main">
+                      <img
+                        alt="Participantes de uma celebração do Congado tocando tambores em espaço público."
+                        decoding="async"
+                        height="560"
+                        loading="lazy"
+                        src="../../../public/images/balanco/congado_tambor.png"
+                        width="760"
+                      />
+                      <figcaption>
+                        O tambor marca o ritmo e acompanha a celebração.
+                      </figcaption>
+                    </figure>
+                    <figure class="gallery-card gallery-secondary">
+                      <img
+                        alt="Cortejo do Congado com participantes caminhando juntos durante a celebração."
+                        decoding="async"
+                        height="560"
+                        loading="lazy"
+                        src="../../../public/images/balanco/congado.png"
+                        width="760"
+                      />
+                      <figcaption>
+                        O cortejo reúne devoção, música e participação
+                        comunitária.
+                      </figcaption>
+                    </figure>
+                  </div>
+                </article>
+                <div aria-hidden="true" class="faith-divider">
+                  <iconify-icon
+                    focusable="false"
+                    icon="game-icons:rosary"
+                  ></iconify-icon>
+                  <span></span>
+                  <iconify-icon
+                    focusable="false"
+                    icon="game-icons:flower-star"
+                  ></iconify-icon>
+                </div>
+                <article
+                  aria-labelledby="carpet-title"
+                  class="tradition-feature carpet-feature"
+                >
+                  <div class="feature-copy aqua-copy">
+                    <span aria-hidden="true" class="feature-number">02</span>
+                    <div>
+                      <h4 id="carpet-title">Tapetes devocionais</h4>
+                      <p>
+                        Os Tapetes Devocionais são um dos símbolos mais
+                        marcantes da Semana Santa e de Corpus Christi em Minas
+                        Gerais. A tradição vem desde o século XVIII e acontece
+                        em praticamente todos os municípios e distritos
+                        mineiros, especialmente Ouro Preto, Mariana e Sabará.
+                      </p>
+                      <p>
+                        Os tapetes são confeccionados com serragem colorida,
+                        flores, farinha, entre outros materiais. É a mais pura
+                        arte da fé. Fiéis, famílias, crianças, pessoas idosas e
+                        turistas se unem para preparar os caminhos por onde
+                        passará a procissão.
+                      </p>
+                    </div>
+                    <iconify-icon
+                      aria-hidden="true"
+                      class="feature-symbol"
+                      focusable="false"
+                      icon="game-icons:flower-pot"
+                    ></iconify-icon>
+                  </div>
+                  <figure class="carpet-photo">
+                    <img
+                      alt="Rua histórica decorada com extensos tapetes devocionais coloridos formando desenhos florais e geométricos."
+                      decoding="async"
+                      height="680"
+                      loading="lazy"
+                      src="../../../public/images/balanco/tapetes.png"
+                      width="1200"
+                    />
+                    <figcaption>
+                      Tapetes devocionais preparados ao longo de uma rua
+                      histórica de Minas Gerais.
+                    </figcaption>
+                  </figure>
+                </article>
+              </section>
+              <section
+                aria-labelledby="heritage-title"
+                class="content-section heritage-section"
+                id="patrimonio-arte"
+              >
+                <header class="heritage-heading">
+                  <span class="section-tag">Acervo mineiro</span>
+                  <h3 id="heritage-title">Patrimônio e Arte</h3>
+                  <p>
+                    Arquitetura, escultura e literatura conectam memória,
+                    território e criação.
+                  </p>
+                </header>
+                <div class="heritage-summary">
+                  <iconify-icon
+                    aria-hidden="true"
+                    focusable="false"
+                    icon="solar:buildings-3-bold-duotone"
+                  ></iconify-icon>
+                  <p>
+                    Minas detém cerca de 60% do patrimônio histórico tombado do
+                    Brasil, com cidades que funcionam como museus a céu aberto.
+                  </p>
+                </div>
+                <div class="heritage-topics">
+                  <article>
+                    <span class="topic-icon"
+                      ><iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="game-icons:church"
+                      ></iconify-icon
+                    ></span>
+                    <div>
+                      <h4>Barroco mineiro</h4>
+                      <p>
+                        Estilo artístico que floresceu no século XVIII, com
+                        destaque para as obras de Aleijadinho em cidades como
+                        Ouro Preto, Congonhas e Diamantina.
+                      </p>
+                    </div>
+                  </article>
+                  <article>
+                    <span class="topic-icon"
+                      ><iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:medal-ribbon-star-bold-duotone"
+                      ></iconify-icon
+                    ></span>
+                    <div>
+                      <h4>Patrimônios da Humanidade</h4>
+                      <p>
+                        Incluem o Centro Histórico de Ouro Preto, o Santuário do
+                        Bom Jesus de Matosinhos, em Congonhas, o Centro
+                        Histórico de Diamantina e o Conjunto Arquitetônico da
+                        Pampulha, em Belo Horizonte.
+                      </p>
+                    </div>
+                  </article>
+                  <article>
+                    <span class="topic-icon"
+                      ><iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:book-2-bold-duotone"
+                      ></iconify-icon
+                    ></span>
+                    <div>
+                      <h4>Literatura</h4>
+                      <p>
+                        Berço de nomes como Adélia Prado, Carlos Drummond de
+                        Andrade, Carolina Maria de Jesus e Guimarães Rosa, que
+                        utilizaram as paisagens e os conflitos mineiros como
+                        cenário universal.
+                      </p>
+                    </div>
+                  </article>
+                </div>
+                <div
+                  aria-label="Galeria de patrimônio e arte de Minas Gerais"
+                  class="heritage-gallery"
+                >
+                  <figure class="heritage-photo pampulha">
+                    <img
+                      alt="Vista do conjunto arquitetônico da Igrejinha da Pampulha junto à água e à paisagem arborizada."
+                      decoding="async"
+                      height="480"
+                      loading="lazy"
+                      src="../../../public/images/balanco/igrejinha_pampulha.png"
+                      width="700"
+                    />
+                    <figcaption>Conjunto Arquitetônico da Pampulha</figcaption>
+                  </figure>
+                  <figure class="heritage-photo aleijadinho">
+                    <img
+                      alt="Esculturas históricas atribuídas ao conjunto artístico associado a Aleijadinho, com paisagem urbana ao fundo."
+                      decoding="async"
+                      height="480"
+                      loading="lazy"
+                      src="../../../public/images/balanco/aleijadinho.png"
+                      width="700"
+                    />
+                    <figcaption>Obras associadas ao barroco mineiro</figcaption>
+                  </figure>
+                  <figure class="heritage-photo book">
+                    <img
+                      alt="Capa do livro Grande Sertão: Veredas, de João Guimarães Rosa."
+                      decoding="async"
+                      height="650"
+                      loading="lazy"
+                      src="../../../public/images/balanco/grande_sertao_veredas.png"
+                      width="500"
+                    />
+                    <figcaption>Literatura mineira</figcaption>
+                  </figure>
+                  <figure class="heritage-photo church">
+                    <img
+                      alt="Conjunto urbano histórico com igreja de duas torres em Minas Gerais."
+                      decoding="async"
+                      height="480"
+                      loading="lazy"
+                      src="../../../public/images/balanco/igreja.png"
+                      width="700"
+                    />
+                    <figcaption>
+                      Arquitetura religiosa e paisagem urbana
+                    </figcaption>
+                  </figure>
+                  <figure class="heritage-photo statues">
+                    <img
+                      alt="Conjunto de esculturas expostas em ambiente cultural."
+                      decoding="async"
+                      height="480"
+                      loading="lazy"
+                      src="../../../public/images/balanco/estatuas.png"
+                      width="700"
+                    />
+                    <figcaption>Escultura e imaginário religioso</figcaption>
+                  </figure>
+                  <figure class="heritage-photo churches">
+                    <img
+                      alt="Fachadas de igrejas históricas sob céu azul."
+                      decoding="async"
+                      height="480"
+                      loading="lazy"
+                      src="../../../public/images/balanco/igrejas.png"
+                      width="700"
+                    />
+                    <figcaption>Igrejas históricas mineiras</figcaption>
+                  </figure>
+                </div>
+                <div class="heritage-closing">
+                  <iconify-icon
+                    aria-hidden="true"
+                    focusable="false"
+                    icon="solar:gallery-wide-bold-duotone"
+                  ></iconify-icon>
+                  <div>
+                    <h4>Arte em diálogo com o futuro</h4>
+                    <p>
+                      Em harmonioso contraste com a herança colonial, o estado
+                      abriga o Instituto Inhotim, em Brumadinho. Reconhecido
+                      como um dos maiores museus a céu aberto do planeta, o
+                      espaço projeta Minas Gerais para o futuro ao fundir um
+                      acervo botânico exuberante com obras de arte contemporânea
+                      de relevância mundial.
+                    </p>
+                    <p>
+                      Para além da arquitetura, arte e literatura, Minas se
+                      destaca na musicalidade de Clara Nunes e de movimentos
+                      como o Clube da Esquina.
+                    </p>
+                  </div>
+                </div>
+              </section>
+              <section
+                aria-labelledby="country-title"
+                class="content-section country-section"
+                id="minas-pais"
+              >
+                <header class="country-heading">
+                  <span class="section-tag">Dimensão e identidade</span>
+                  <h3 id="country-title">
+                    Um “país” chamado<br />Minas Gerais
+                  </h3>
+                  <p>
+                    Um estado de escala continental, economia diversificada e
+                    identidade própria.
+                  </p>
+                </header>
+                <div class="country-notes">
+                  <article class="paper-note green-note">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:map-bold-duotone"
+                    ></iconify-icon>
+                    <h4>Território e população</h4>
+                    <p>
+                      Com mais de 20 milhões de habitantes e uma área
+                      territorial superior à de países como França ou Espanha,
+                      Minas é o quarto maior estado em extensão territorial e o
+                      segundo mais populoso do Brasil.
+                    </p>
+                  </article>
+                  <article class="paper-note blue-note">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:chart-2-bold-duotone"
+                    ></iconify-icon>
+                    <h4>Força econômica</h4>
+                    <p>
+                      Se fosse um país, o estado teria uma economia superior à
+                      de nações como Marrocos, Tunísia, Croácia e Bolívia.
+                    </p>
+                    <p>
+                      A mineração, o agronegócio e as indústrias siderúrgica e
+                      automotiva são pilares econômicos.
+                    </p>
+                  </article>
+                  <article class="paper-note white-note">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:cup-hot-bold-duotone"
+                    ></iconify-icon>
+                    <h4>Identidade local</h4>
+                    <p>
+                      O mineiro possui modo de vida, culinária e vocabulário
+                      próprios — o “mineirês” — que geram forte sentimento de
+                      identidade local, reforçado pela cultura do cafezinho, do
+                      “trem” e do acolhimento.
+                    </p>
+                  </article>
+                  <article class="paper-note yellow-note">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:city-bold-duotone"
+                    ></iconify-icon>
+                    <h4>Complexidade administrativa</h4>
+                    <p>
+                      Minas Gerais possui 853 municípios, mais do que muitos
+                      países independentes, o que cria uma complexidade
+                      administrativa interna própria.
+                    </p>
+                  </article>
+                </div>
+                <aside aria-labelledby="admin-title" class="public-admin-note">
+                  <iconify-icon
+                    aria-hidden="true"
+                    focusable="false"
+                    icon="solar:buildings-2-bold-duotone"
+                  ></iconify-icon>
+                  <div>
+                    <h4 id="admin-title">
+                      Por que a Administração Pública é essencial?
+                    </h4>
+                    <p>
+                      Para cuidar de um estado tão grande e diverso, é preciso
+                      organização, planejamento e responsabilidade. É necessária
+                      uma estrutura que promova acesso à saúde, educação,
+                      segurança, estradas e oportunidades.
+                      <strong
+                        >Essa estrutura é chamada de Administração
+                        Pública.</strong
+                      >
+                    </p>
+                    <p>
+                      É por meio dela que o governo planeja ações, oferece
+                      serviços e cuida do que é de todos.
+                    </p>
+                  </div>
+                </aside>
+              </section>
+              <div
+                aria-labelledby="chapter-two-title"
+                class="chapter-divider"
+                role="separator"
+              >
+                <span>Capítulo 2</span>
+                <h3 id="chapter-two-title">Administração Pública</h3>
+                <p>
+                  Como o Estado se organiza para atender aos interesses
+                  coletivos e prestar serviços públicos.
+                </p>
+              </div>
+              <section
+                aria-labelledby="admin-section-title"
+                class="content-section admin-section"
+                id="administracao-publica"
+              >
+                <header class="admin-heading">
+                  <span class="section-tag"
+                    >Conceito, estrutura e princípios</span
+                  >
+                  <h3 id="admin-section-title">Administração Pública</h3>
+                </header>
+                <article aria-labelledby="concept-title" class="concept-card">
+                  <div class="concept-icon">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:magnifer-bold-duotone"
+                    ></iconify-icon>
+                  </div>
+                  <div>
+                    <h4 id="concept-title">Conceito</h4>
+                    <p>
+                      Refere-se tanto ao conjunto de órgãos, entidades e agentes
+                      estatais que executam atividades visando aos interesses
+                      coletivos e à prestação de serviços públicos — aspecto
+                      formal — como à atividade exercida propriamente dita:
+                      prestação de serviços, poder de polícia, fomento e
+                      intervenção — aspecto material.
+                    </p>
+                  </div>
+                </article>
+                <div class="admin-columns">
+                  <section
+                    aria-labelledby="structure-title"
+                    class="structure-panel"
+                  >
+                    <div class="panel-title">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:structure-bold-duotone"
+                      ></iconify-icon>
+                      <h4 id="structure-title">Estrutura</h4>
+                    </div>
+                    <article class="structure-item">
+                      <span class="structure-label">Administração Direta</span>
+                      <p>
+                        Órgãos ligados diretamente aos entes federativos —
+                        União, estados e municípios — como ministérios e
+                        secretarias.
+                      </p>
+                    </article>
+                    <article class="structure-item">
+                      <span class="structure-label"
+                        >Administração Indireta</span
+                      >
+                      <p>
+                        Entidades com personalidade jurídica própria,
+                        descentralizadas para executar atividades específicas:
+                        autarquias, fundações públicas, empresas públicas e
+                        sociedades de economia mista.
+                      </p>
+                    </article>
+                  </section>
+                  <section
+                    aria-labelledby="principles-title"
+                    class="principles-panel"
+                  >
+                    <div class="panel-title">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:lightbulb-bolt-bold-duotone"
+                      ></iconify-icon>
+                      <h4 id="principles-title">Princípios</h4>
+                    </div>
+                    <p>
+                      De acordo com o artigo 37 da Constituição Federal, a
+                      Administração Pública deve seguir cinco pilares:
+                    </p>
+                    <ol
+                      aria-label="Princípios constitucionais da Administração Pública"
+                      class="limpe-list"
+                    >
+                      <li>
+                        <span aria-hidden="true">L</span>
+                        <div>
+                          <strong>Legalidade</strong>
+                          <p>Atuar estritamente conforme a lei.</p>
+                        </div>
+                      </li>
+                      <li>
+                        <span aria-hidden="true">I</span>
+                        <div>
+                          <strong>Impessoalidade</strong>
+                          <p>
+                            Tratamento igualitário e sem promoção pessoal de
+                            agentes.
+                          </p>
+                        </div>
+                      </li>
+                      <li>
+                        <span aria-hidden="true">M</span>
+                        <div>
+                          <strong>Moralidade</strong>
+                          <p>Ética e boa-fé na conduta administrativa.</p>
+                        </div>
+                      </li>
+                      <li>
+                        <span aria-hidden="true">P</span>
+                        <div>
+                          <strong>Publicidade</strong>
+                          <p>Transparência nos atos e nas contas públicas.</p>
+                        </div>
+                      </li>
+                      <li>
+                        <span aria-hidden="true">E</span>
+                        <div>
+                          <strong>Eficiência</strong>
+                          <p>Busca pelo melhor resultado com o menor custo.</p>
+                        </div>
+                      </li>
+                    </ol>
+                  </section>
+                </div>
+              </section>
+              <section
+                aria-labelledby="government-title"
+                class="content-section government-section"
+                id="esferas-poderes"
+              >
+                <header class="government-heading">
+                  <span class="section-tag">Organização do Estado</span>
+                  <h3 id="government-title">
+                    Esferas da Administração Pública
+                  </h3>
+                  <p>
+                    O Estado brasileiro se organiza em níveis autônomos e em
+                    poderes com funções distintas.
+                  </p>
+                </header>
+                <aside class="federalism-note">
+                  <iconify-icon
+                    aria-hidden="true"
+                    focusable="false"
+                    icon="solar:lightbulb-minimalistic-bold-duotone"
+                  ></iconify-icon>
+                  <p>
+                    Para compreender a dinâmica da Administração Pública
+                    brasileira, é preciso considerar três esferas ou níveis de
+                    governo: Federal, Estadual e Municipal. As três representam
+                    a descentralização do poder para atender melhor aos
+                    interesses dos cidadãos, sendo autônomas entre si, conforme
+                    definido na Constituição Federal, artigo 18.
+                  </p>
+                </aside>
+                <div
+                  aria-label="Três esferas da Administração Pública"
+                  class="spheres-grid"
+                >
+                  <article class="sphere-card federal-card">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:flag-2-bold-duotone"
+                    ></iconify-icon>
+                    <span class="sphere-level">Federal</span>
+                    <h4>União</h4>
+                    <p>
+                      Responsável por questões de interesse nacional, como
+                      defesa, emissão de moeda e relações exteriores.
+                    </p>
+                  </article>
+                  <article class="sphere-card state-card">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:map-point-wave-bold-duotone"
+                    ></iconify-icon>
+                    <span class="sphere-level">Estadual</span>
+                    <h4>Estados e Distrito Federal</h4>
+                    <p>
+                      Foca em interesses regionais, como segurança pública,
+                      saúde, educação e transporte intermunicipal.
+                    </p>
+                  </article>
+                  <article class="sphere-card municipal-card">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:city-bold-duotone"
+                    ></iconify-icon>
+                    <span class="sphere-level">Municipal</span>
+                    <h4>Municípios</h4>
+                    <p>
+                      Trata de questões locais, como transporte coletivo urbano,
+                      limpeza pública e educação infantil.
+                    </p>
+                  </article>
+                </div>
+                <section aria-labelledby="powers-title" class="powers-panel">
+                  <div class="powers-intro">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:pen-new-square-bold-duotone"
+                    ></iconify-icon>
+                    <div>
+                      <h4 id="powers-title">Três Poderes</h4>
+                      <p>
+                        Para que tudo funcione com equilíbrio e justiça, o
+                        Estado é dividido em três poderes. Cada poder tem uma
+                        missão diferente, mas todos trabalham em harmonia para o
+                        bem da população.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="powers-list">
+                    <article>
+                      <span>E</span>
+                      <div>
+                        <h5>Poder Executivo</h5>
+                        <p>Governa e administra.</p>
+                      </div>
+                    </article>
+                    <article>
+                      <span>L</span>
+                      <div>
+                        <h5>Poder Legislativo</h5>
+                        <p>Cria as leis e fiscaliza.</p>
+                      </div>
+                    </article>
+                    <article>
+                      <span>J</span>
+                      <div>
+                        <h5>Poder Judiciário</h5>
+                        <p>Garante que as leis sejam cumpridas.</p>
+                      </div>
+                    </article>
+                  </div>
+                </section>
+              </section>
+              <section
+                aria-labelledby="state-powers-title"
+                class="content-section state-powers-section"
+                id="poderes-estado"
+              >
+                <header class="state-powers-heading">
+                  <span class="section-tag">Independentes e harmônicos</span>
+                  <h3 id="state-powers-title">Poderes do Estado</h3>
+                  <p>
+                    A Constituição Federal, em seu artigo 2º, estabelece que são
+                    Poderes da União, independentes e harmônicos entre si, o
+                    Legislativo, o Executivo e o Judiciário.
+                  </p>
+                </header>
+                <div class="power-detail-list">
+                  <article class="power-detail executive-detail">
+                    <div class="power-detail-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:buildings-2-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <div class="power-detail-body">
+                      <span class="power-kicker">Administração e execução</span>
+                      <h4>Poder Executivo</h4>
+                      <p>
+                        O Poder Executivo administra o Estado. Por meio do Poder
+                        Executivo são construídas escolas e hospitais; são
+                        cuidadas as estradas; são organizados os serviços de
+                        saúde; são pagos os servidores públicos; e são colocados
+                        em prática os programas de governo. Na esfera federal, o
+                        Poder Executivo é liderado pela Presidência da
+                        República; na estadual, pelos governos estaduais; e na
+                        municipal, pelas prefeituras.
+                      </p>
+                      <aside class="everyday-example">
+                        <iconify-icon
+                          aria-hidden="true"
+                          focusable="false"
+                          icon="solar:pin-bold-duotone"
+                        ></iconify-icon>
+                        <div>
+                          <strong>Exemplos do cotidiano</strong>
+                          <ul>
+                            <li>Uma escola é reformada.</li>
+                            <li>Um hospital recebe novos equipamentos.</li>
+                            <li>Uma estrada é asfaltada.</li>
+                          </ul>
+                          <p>O Executivo transforma os planos em realidade.</p>
+                        </div>
+                      </aside>
+                    </div>
+                  </article>
+                  <article class="power-detail legislative-detail">
+                    <div class="power-detail-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:document-text-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <div class="power-detail-body">
+                      <span class="power-kicker">Leis e fiscalização</span>
+                      <h4>Poder Legislativo</h4>
+                      <p>
+                        O Poder Legislativo cria as leis que organizam a vida da
+                        sociedade. Além disso, acompanha e fiscaliza o governo,
+                        verifica se o dinheiro público está sendo bem utilizado
+                        e se o governo está cumprindo as leis.
+                      </p>
+                      <aside class="everyday-example">
+                        <iconify-icon
+                          aria-hidden="true"
+                          focusable="false"
+                          icon="solar:pin-bold-duotone"
+                        ></iconify-icon>
+                        <div>
+                          <strong>Exemplos do cotidiano</strong>
+                          <ul>
+                            <li>Uma lei é criada para melhorar a educação.</li>
+                            <li>Os gastos do governo são analisados.</li>
+                          </ul>
+                          <p>
+                            O Legislativo representa a população e ajuda a
+                            garantir que tudo seja feito corretamente.
+                          </p>
+                        </div>
+                      </aside>
+                    </div>
+                  </article>
+                  <article class="power-detail judiciary-detail">
+                    <div class="power-detail-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:scale-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <div class="power-detail-body">
+                      <span class="power-kicker">Direitos e justiça</span>
+                      <h4>Poder Judiciário</h4>
+                      <p>
+                        O Poder Judiciário resolve conflitos, garante que as
+                        leis sejam cumpridas, protege os direitos das pessoas e
+                        decide quando alguém age de forma errada.
+                      </p>
+                      <aside class="everyday-example">
+                        <iconify-icon
+                          aria-hidden="true"
+                          focusable="false"
+                          icon="solar:pin-bold-duotone"
+                        ></iconify-icon>
+                        <div>
+                          <strong>Exemplos do cotidiano</strong>
+                          <ul>
+                            <li>Uma pessoa busca seus direitos na Justiça.</li>
+                            <li>Crimes são julgados.</li>
+                          </ul>
+                          <p>
+                            O Judiciário existe para manter a ordem e a justiça
+                            na sociedade.
+                          </p>
+                        </div>
+                      </aside>
+                    </div>
+                  </article>
+                </div>
+              </section>
+              <section
+                aria-labelledby="resource-title"
+                class="content-section public-resource-section"
+                id="recurso-publico"
+              >
+                <header class="resource-heading">
+                  <span class="section-tag">Do plano à política pública</span>
+                  <h3 id="resource-title">O Recurso Público</h3>
+                  <p>
+                    Para que o Poder Executivo coloque em prática os programas
+                    do governo, o Estado precisa de dinheiro: o chamado recurso
+                    público.
+                  </p>
+                </header>
+                <article
+                  aria-labelledby="planning-title"
+                  class="planning-panel"
+                >
+                  <div class="planning-visual">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:map-arrow-square-bold-duotone"
+                    ></iconify-icon>
+                  </div>
+                  <div>
+                    <h4 id="planning-title">Planejamento</h4>
+                    <p>
+                      Para que o recurso seja liberado e transformado
+                      efetivamente em ações para a sociedade, é necessário
+                      planejar: definir o que se pretende realizar e quanto será
+                      necessário para isso.
+                    </p>
+                  </div>
+                </article>
+                <div
+                  aria-label="Fluxo de autorização do recurso público"
+                  class="resource-flow"
+                >
+                  <article>
+                    <span>1</span
+                    ><iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:notes-bold-duotone"
+                    ></iconify-icon>
+                    <h4>Plano</h4>
+                    <p>
+                      O governo organiza a necessidade e define a ação pública.
+                    </p>
+                  </article>
+                  <iconify-icon
+                    aria-hidden="true"
+                    class="flow-arrow"
+                    focusable="false"
+                    icon="solar:arrow-right-linear"
+                  ></iconify-icon>
+                  <article>
+                    <span>2</span
+                    ><iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:document-add-bold-duotone"
+                    ></iconify-icon>
+                    <h4>Projeto de lei</h4>
+                    <p>
+                      O plano é convertido em uma proposta e enviado ao Poder
+                      Legislativo.
+                    </p>
+                  </article>
+                  <iconify-icon
+                    aria-hidden="true"
+                    class="flow-arrow"
+                    focusable="false"
+                    icon="solar:arrow-right-linear"
+                  ></iconify-icon>
+                  <article>
+                    <span>3</span
+                    ><iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:check-circle-bold-duotone"
+                    ></iconify-icon>
+                    <h4>Autorização</h4>
+                    <p>
+                      Após a aprovação, o recurso é autorizado e a política
+                      pública pode sair do papel.
+                    </p>
+                  </article>
+                </div>
+                <article aria-labelledby="pte-title" class="pte-case">
+                  <div class="pte-badge">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:bus-bold-duotone"
+                    ></iconify-icon
+                    ><span>Exemplo real</span>
+                  </div>
+                  <div class="pte-copy">
+                    <h4 id="pte-title">
+                      Programa Estadual de Transporte Escolar — PTE/MG
+                    </h4>
+                    <p>
+                      Por meio do PTE/MG, a Secretaria de Estado de Educação
+                      repassa recursos aos municípios para garantir o transporte
+                      de estudantes da rede estadual que moram na zona rural.
+                    </p>
+                    <p>
+                      Embora o programa exista desde 2015, os recursos continuam
+                      sendo analisados e aprovados a cada ano pela Assembleia
+                      Legislativa. Esse processo permite que o serviço continue
+                      funcionando e atendendo quem precisa.
+                    </p>
+                  </div>
+                  <div class="pte-investment">
+                    <small>Investimento em 2025</small
+                    ><strong>R$ 980,32 milhões</strong>
+                  </div>
+                </article>
+              </section>
+              <section
+                aria-labelledby="budget-cycle-title"
+                class="content-section budget-cycle-section"
+                id="ciclo-orcamentario"
+              >
+                <header class="budget-cycle-heading">
+                  <span class="section-tag"
+                    >Planejar, aprovar, executar e controlar</span
+                  >
+                  <h3 id="budget-cycle-title">O Ciclo Orçamentário</h3>
+                  <p>
+                    O orçamento público percorre quatro etapas conectadas. Cada
+                    etapa transforma prioridades governamentais em serviços,
+                    obras e políticas públicas acompanhadas pela sociedade.
+                  </p>
+                </header>
+                <aside aria-labelledby="pmdi-title" class="pmdi-note">
+                  <iconify-icon
+                    aria-hidden="true"
+                    focusable="false"
+                    icon="solar:map-arrow-up-bold-duotone"
+                  ></iconify-icon>
+                  <div>
+                    <h4 id="pmdi-title">
+                      Planejamento de longo prazo em Minas Gerais
+                    </h4>
+                    <p>
+                      A Constituição mineira prevê o Plano Mineiro de
+                      Desenvolvimento Integrado — PMDI. O instrumento define
+                      grandes escolhas estratégicas, visão de futuro e
+                      prioridades para um horizonte de vários anos.
+                    </p>
+                  </div>
+                </aside>
+                <ol
+                  aria-label="Quatro etapas do ciclo orçamentário"
+                  class="budget-steps"
+                >
+                  <li class="budget-step planning-step">
+                    <span class="step-number">Etapa 01</span>
+                    <div class="step-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:calendar-mark-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <div class="step-content">
+                      <h4>Planejamento e elaboração</h4>
+                      <p>
+                        O Poder Executivo faz as contas e desenha a proposta. A
+                        Constituição Federal de 1988, nos artigos 165 a 169,
+                        institui o PPA, a LDO e a LOA.
+                      </p>
+                      <div class="budget-tools">
+                        <article>
+                          <strong>PPA</strong><span>Plano Plurianual</span>
+                          <p>
+                            É a visão de médio prazo. O governo planeja o que
+                            pretende realizar nos próximos quatro anos.
+                          </p>
+                        </article>
+                        <article>
+                          <strong>LDO</strong
+                          ><span>Lei de Diretrizes Orçamentárias</span>
+                          <p>
+                            Define prioridades e metas para o ano seguinte e
+                            orienta a elaboração do orçamento.
+                          </p>
+                        </article>
+                        <article>
+                          <strong>LOA</strong
+                          ><span>Lei Orçamentária Anual</span>
+                          <p>
+                            Detalha quanto será destinado, no ano seguinte, a
+                            hospitais, escolas, rodovias e outras ações.
+                          </p>
+                        </article>
+                      </div>
+                      <small
+                        >Em Minas Gerais, o PPA corresponde ao PPAG — Plano
+                        Plurianual de Ação Governamental.</small
+                      >
+                    </div>
+                  </li>
+                  <li class="budget-step approval-step">
+                    <span class="step-number">Etapa 02</span>
+                    <div class="step-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:chat-round-check-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <div class="step-content">
+                      <h4>Análise, debate e aprovação</h4>
+                      <p>
+                        O governo não aprova o próprio plano. A proposta é
+                        enviada ao Poder Legislativo — em Minas Gerais, à
+                        Assembleia Legislativa de Minas Gerais. Representantes
+                        eleitos analisam, debatem, sugerem mudanças, chamadas
+                        emendas, e votam o projeto de lei.
+                      </p>
+                    </div>
+                  </li>
+                  <li class="budget-step execution-step">
+                    <span class="step-number">Etapa 03</span>
+                    <div class="step-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:hand-money-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <div class="step-content">
+                      <h4>Execução: o planejamento sai do papel</h4>
+                      <p>
+                        Após a aprovação da lei e o início do novo ano, começa a
+                        execução. O governo arrecada impostos, como IPVA e ICMS,
+                        paga contas e servidores, compra medicamentos e realiza
+                        obras, seguindo o que foi autorizado na LOA.
+                      </p>
+                    </div>
+                  </li>
+                  <li class="budget-step control-step compact-budget-step">
+                    <span class="step-number">Etapa 04</span>
+                    <div class="step-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:chart-2-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <div class="step-content">
+                      <h4>Controle e avaliação</h4>
+                      <p>
+                        O governo e os órgãos de controle acompanham a execução,
+                        verificam riscos, resultados e o uso correto dos
+                        recursos.
+                      </p>
+                      <p>
+                        A avaliação baseada em evidências utiliza dados e
+                        indicadores para identificar o que funciona e
+                        aperfeiçoar as políticas públicas.
+                      </p>
+                      <div class="evaluation-evidence">
+                        <span
+                          ><iconify-icon
+                            aria-hidden="true"
+                            focusable="false"
+                            icon="solar:database-bold-duotone"
+                          ></iconify-icon
+                          >Dados</span
+                        ><span
+                          ><iconify-icon
+                            aria-hidden="true"
+                            focusable="false"
+                            icon="solar:chart-square-bold-duotone"
+                          ></iconify-icon
+                          >Indicadores</span
+                        ><span
+                          ><iconify-icon
+                            aria-hidden="true"
+                            focusable="false"
+                            icon="solar:target-bold-duotone"
+                          ></iconify-icon
+                          >Resultados</span
+                        >
+                      </div>
+                    </div>
+                  </li>
+                  <li
+                    class="budget-step accountability-step compact-budget-step"
+                  >
+                    <span class="step-number">Etapa 05</span>
+                    <div class="step-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:document-text-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <div class="step-content">
+                      <h4>Prestação de contas</h4>
+                      <p>
+                        A Administração Pública apresenta o que arrecadou,
+                        gastou e realizou, permitindo a fiscalização da gestão.
+                      </p>
+                      <p>
+                        Essas informações são organizadas em
+                        <strong>relatórios e demonstrativos</strong>, como
+                        veremos no próximo capítulo.
+                      </p>
+                      <p class="next-chapter-note">
+                        <strong
+                          >Esses relatórios e demonstrativos serão apresentados
+                          no próximo capítulo.</strong
+                        >
+                      </p>
+                    </div>
+                  </li>
+                </ol>
+              </section>
+              <div
+                aria-labelledby="chapter-three-title"
+                class="chapter-divider reports-divider"
+                role="separator"
+              >
+                <span>Capítulo 3</span>
+                <h3 id="chapter-three-title">
+                  Demonstrativos e Relatórios Fiscais
+                </h3>
+                <p>
+                  Balanços e relatórios da Lei de Responsabilidade Fiscal
+                  traduzem a gestão pública em dados que podem ser acompanhados
+                  pela sociedade.
+                </p>
+              </div>
+              <section
+                aria-labelledby="balance-title"
+                class="content-section balance-section"
+                id="balanco-geral"
+              >
+                <header class="balance-heading">
+                  <span class="section-tag">Prestação de contas</span>
+                  <h3 id="balance-title">Balanço Geral do Estado</h3>
+                  <p>Um dos documentos mais importantes da gestão pública.</p>
+                </header>
+                <div class="balance-intro">
+                  <div class="balance-icon">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:alarm-bold-duotone"
+                    ></iconify-icon>
+                  </div>
+                  <div>
+                    <p>O Balanço Geral do Estado reúne, de forma organizada:</p>
+                    <ul>
+                      <li>tudo o que o Estado arrecadou;</li>
+                      <li>tudo o que foi gasto;</li>
+                      <li>onde o dinheiro foi aplicado.</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="transparency-message">
+                  <iconify-icon
+                    aria-hidden="true"
+                    focusable="false"
+                    icon="solar:eye-scan-bold-duotone"
+                  ></iconify-icon>
+                  <div>
+                    <h4>Transparência que se transforma em cidadania</h4>
+                    <p>
+                      O Balanço mostra se os recursos públicos foram utilizados
+                      com responsabilidade e permite que qualquer pessoa
+                      acompanhe e fiscalize a gestão.
+                    </p>
+                  </div>
+                </div>
+                <a
+                  aria-describedby="balance-link-note"
+                  class="balance-access"
+                  href="https://www.fazenda.mg.gov.br/governo/contadoria_geral/relatorio_contabil/"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <iconify-icon
+                    aria-hidden="true"
+                    focusable="false"
+                    icon="solar:link-circle-bold-duotone"
+                  ></iconify-icon>
+                  <span
+                    ><strong
+                      >Acessar o Balanço Geral do Estado de Minas Gerais</strong
+                    ><small id="balance-link-note"
+                      >O endereço será aberto em uma nova guia.</small
+                    ></span
+                  >
+                  <iconify-icon
+                    aria-hidden="true"
+                    focusable="false"
+                    icon="solar:arrow-right-up-linear"
+                  ></iconify-icon>
+                </a>
+              </section>
+              <section
+                aria-labelledby="revenue-title"
+                class="content-section revenue-section"
+                id="receitas-despesas"
+              >
+                <header class="revenue-heading">
+                  <span class="section-tag">Você sabia?</span>
+                  <h3 id="revenue-title">Arrecadação e despesa</h3>
+                  <p>
+                    Receitas registram a entrada de recursos. Despesas mostram a
+                    aplicação desses recursos na manutenção do Estado e na
+                    prestação de serviços públicos.
+                  </p>
+                </header>
+                <div class="money-concepts">
+                  <article class="money-card income-card">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:wallet-money-bold-duotone"
+                    ></iconify-icon>
+                    <div>
+                      <span>Arrecadação</span>
+                      <p>
+                        É quando o dinheiro sai da conta do contribuinte —
+                        pessoa ou instituição — e entra na conta do governo por
+                        meio das receitas. O governo deve declarar e classificar
+                        cada centavo recebido.
+                      </p>
+                    </div>
+                  </article>
+                  <article class="money-card expense-card">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:hand-money-bold-duotone"
+                    ></iconify-icon>
+                    <div>
+                      <span>Despesa</span>
+                      <p>
+                        É a aplicação do dinheiro arrecadado para manter o
+                        funcionamento do Estado e a prestação de serviços
+                        públicos para a sociedade.
+                      </p>
+                    </div>
+                  </article>
+                </div>
+                <div
+                  aria-label="Resumo das receitas e despesas de Minas Gerais em 2025"
+                  class="fiscal-numbers"
+                >
+                  <article>
+                    <span class="metric-label">Receitas em 2025</span
+                    ><strong>R$ 132,67 bilhões</strong>
+                    <ul>
+                      <li>Impostos e taxas: R$ 73,43 bilhões</li>
+                      <li>Transferências correntes: R$ 24,27 bilhões</li>
+                      <li>Receita patrimonial: R$ 8,34 bilhões</li>
+                    </ul>
+                  </article>
+                  <article>
+                    <span class="metric-label">Despesas em 2025</span
+                    ><strong>R$ 131,56 bilhões</strong>
+                    <ul>
+                      <li>
+                        Pessoal e encargos sociais: R$ 83,06 bilhões — 69,6%
+                      </li>
+                      <li>
+                        Juros e encargos da dívida: R$ 3,42 bilhões — 2,87%
+                      </li>
+                      <li>
+                        Outras despesas correntes: R$ 32,89 bilhões — 27,6%
+                      </li>
+                    </ul>
+                  </article>
+                </div>
+                <aside class="surplus-callout">
+                  <iconify-icon
+                    aria-hidden="true"
+                    focusable="false"
+                    icon="solar:chart-square-bold-duotone"
+                  ></iconify-icon>
+                  <div>
+                    <small>Resultado orçamentário de 2025</small
+                    ><strong>Superávit de R$ 1,11 bilhão</strong>
+                    <p>Minas Gerais arrecadou mais do que gastou.</p>
+                  </div>
+                </aside>
+              </section>
+              <section
+                aria-labelledby="fiscal-title"
+                class="content-section fiscal-concepts-section"
+                id="conceitos-fiscais"
+              >
+                <header class="fiscal-heading">
+                  <span class="section-tag">Glossário fiscal</span>
+                  <h3 id="fiscal-title">Conceitos importantes</h3>
+                  <p>
+                    Termos utilizados nos demonstrativos contábeis e nos
+                    relatórios previstos pela Lei de Responsabilidade Fiscal.
+                  </p>
+                </header>
+                <dl class="fiscal-glossary">
+                  <div>
+                    <dt>
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:bill-list-bold-duotone"
+                      ></iconify-icon
+                      >Despesas obrigatórias
+                    </dt>
+                    <dd>
+                      Despesas que o Estado tem obrigação de pagar, como
+                      pessoal, previdência, repasses para municípios e despesas
+                      com saúde e educação.
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:banknote-2-bold-duotone"
+                      ></iconify-icon
+                      >Dívida pública
+                    </dt>
+                    <dd>
+                      Valor total das obrigações financeiras — empréstimos,
+                      emissão de títulos públicos ou precatórios — assumidas
+                      pelo Estado com terceiros para complementar o caixa e
+                      realizar políticas públicas.
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:calendar-date-bold-duotone"
+                      ></iconify-icon
+                      >Restos a pagar
+                    </dt>
+                    <dd>
+                      Despesas empenhadas em um ano, mas não pagas naquele
+                      exercício, que ficam registradas para pagamento no ano ou
+                      nos anos seguintes.
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:calculator-minimalistic-bold-duotone"
+                      ></iconify-icon
+                      >Receita Corrente Líquida — RCL
+                    </dt>
+                    <dd>
+                      Valor restante das receitas arrecadadas após a aplicação
+                      das deduções referentes a receitas com vinculações
+                      específicas.
+                    </dd>
+                    <p>
+                      A RCL é utilizada como base para calcular limites
+                      previstos na Lei de Responsabilidade Fiscal, como despesas
+                      com pessoal e dívida consolidada líquida.
+                    </p>
+                  </div>
+                </dl>
+              </section>
+              <section
+                aria-labelledby="rgf-title"
+                class="content-section rgf-section"
+                id="rgf"
+              >
+                <header class="rgf-heading">
+                  <span class="section-tag"
+                    >Lei de Responsabilidade Fiscal</span
+                  >
+                  <h3 id="rgf-title">Relatório de Gestão Fiscal</h3>
+                  <p>
+                    O RGF permite verificar se o governo utiliza os recursos
+                    públicos dentro dos limites e das regras fiscais.
+                  </p>
+                </header>
+                <div class="rgf-overview">
+                  <div class="rgf-law">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:document-text-bold-duotone"
+                    ></iconify-icon>
+                    <div>
+                      <h4>Obrigatório pela LRF</h4>
+                      <p>
+                        A elaboração e a divulgação do Relatório de Gestão
+                        Fiscal são exigidas pela Lei Complementar nº 101/2000 —
+                        Lei de Responsabilidade Fiscal.
+                      </p>
+                    </div>
+                  </div>
+                  <p>
+                    O relatório apresenta a situação fiscal da Administração
+                    Pública e demonstra se os limites legais relacionados a
+                    despesas com pessoal, dívida pública, operações de crédito,
+                    concessão de garantias e disponibilidade de caixa ao final
+                    do exercício estão sendo cumpridos.
+                  </p>
+                </div>
+                <div
+                  aria-label="Aspectos acompanhados pelo Relatório de Gestão Fiscal"
+                  class="rgf-checks"
+                >
+                  <article>
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:users-group-rounded-bold-duotone"
+                    ></iconify-icon
+                    ><span>Despesa com pessoal</span>
+                  </article>
+                  <article>
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:banknote-2-bold-duotone"
+                    ></iconify-icon
+                    ><span>Dívida pública</span>
+                  </article>
+                  <article>
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:card-transfer-bold-duotone"
+                    ></iconify-icon
+                    ><span>Operações de crédito</span>
+                  </article>
+                  <article>
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:shield-check-bold-duotone"
+                    ></iconify-icon
+                    ><span>Garantias concedidas</span>
+                  </article>
+                  <article>
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:wallet-money-bold-duotone"
+                    ></iconify-icon
+                    ><span>Disponibilidade de caixa</span>
+                  </article>
+                </div>
+                <aside class="rgf-citizenship">
+                  <iconify-icon
+                    aria-hidden="true"
+                    focusable="false"
+                    icon="solar:eye-scan-bold-duotone"
+                  ></iconify-icon>
+                  <p>
+                    O RGF permite que a sociedade acompanhe se o governo
+                    administra os recursos com transparência, responsabilidade e
+                    respeito às regras previstas em lei.
+                  </p>
+                </aside>
+                <a
+                  aria-describedby="rgf-link-note"
+                  class="rgf-access"
+                  href="https://www.fazenda.mg.gov.br/governo/contadoria_geral/gestaofiscal/2025/3quadrimestre2025.pdf"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  ><iconify-icon
+                    aria-hidden="true"
+                    focusable="false"
+                    icon="solar:document-bold-duotone"
+                  ></iconify-icon
+                  ><span
+                    ><strong
+                      >Acessar o Relatório de Gestão Fiscal de 2025</strong
+                    ><small id="rgf-link-note"
+                      >Arquivo PDF aberto em uma nova guia.</small
+                    ></span
+                  ><iconify-icon
+                    aria-hidden="true"
+                    focusable="false"
+                    icon="solar:arrow-right-up-linear"
+                  ></iconify-icon
+                ></a>
+              </section>
+              <section
+                aria-labelledby="rgf-personnel-title"
+                class="content-section rgf-concepts-section"
+                id="rgf-pessoal"
+              >
+                <header class="rgf-concepts-heading">
+                  <span class="section-tag">RGF — Conceitos</span>
+                  <h3 id="rgf-personnel-title">Despesa com pessoal</h3>
+                  <p>
+                    Três medidas ajudam a verificar o comprometimento das
+                    receitas com servidores, aposentadorias, pensões e encargos.
+                  </p>
+                </header>
+                <div class="formula-cards">
+                  <article class="formula-card gross-card">
+                    <div class="formula-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:users-group-two-rounded-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <span class="formula-code">DB</span>
+                    <h4>Despesa Bruta com Pessoal</h4>
+                    <p>
+                      Total gasto com servidores ativos, aposentadorias,
+                      pensões, gratificações e encargos previdenciários.
+                    </p>
+                    <aside>
+                      <strong>Por que importa?</strong>
+                      <p>
+                        Existe limite legal para esse gasto. Quando o limite é
+                        ultrapassado, aplicam-se restrições.
+                      </p>
+                    </aside>
+                  </article>
+                  <article class="formula-card excluded-card">
+                    <div class="formula-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:filter-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <span class="formula-code">DNC</span>
+                    <h4>Despesas Não Computadas</h4>
+                    <p>
+                      Gastos com pessoal que não entram no cálculo do limite da
+                      LRF, como indenizações, decisões judiciais específicas e
+                      programas de desligamento incentivado.
+                    </p>
+                    <aside>
+                      <strong>Por que importa?</strong>
+                      <p>
+                        As despesas existem, mas não são consideradas para
+                        verificar o limite legal.
+                      </p>
+                    </aside>
+                  </article>
+                  <article class="formula-card net-card">
+                    <div class="formula-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:calculator-minimalistic-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <span class="formula-code">DL</span>
+                    <h4>Despesa Líquida com Pessoal</h4>
+                    <p>
+                      É a despesa bruta com pessoal menos as despesas não
+                      computadas.
+                    </p>
+                    <div
+                      aria-label="Despesa líquida igual a despesa bruta menos despesas não computadas"
+                      class="formula"
+                    >
+                      DL = DB − DNC
+                    </div>
+                    <aside>
+                      <strong>Por que importa?</strong>
+                      <p>
+                        Esse valor é comparado com a Receita Corrente Líquida
+                        para verificar o cumprimento do limite legal.
+                      </p>
+                    </aside>
+                  </article>
+                </div>
+              </section>
+              <section
+                aria-labelledby="rgf-debt-title"
+                class="content-section rgf-concepts-section debt-section"
+                id="rgf-divida"
+              >
+                <header class="rgf-concepts-heading">
+                  <span class="section-tag">RGF — Conceitos</span>
+                  <h3 id="rgf-debt-title">Dívida consolidada</h3>
+                  <p>
+                    Os indicadores de dívida mostram as obrigações de longo
+                    prazo e os recursos disponíveis para reduzi-las.
+                  </p>
+                </header>
+                <div class="formula-cards">
+                  <article class="formula-card consolidated-card">
+                    <div class="formula-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:bill-list-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <span class="formula-code">DC</span>
+                    <h4>Dívida Consolidada</h4>
+                    <p>
+                      Total das dívidas de longo prazo, acima de 12 meses.
+                      Inclui empréstimos, financiamentos, parcelamentos
+                      previdenciários e precatórios parcelados.
+                    </p>
+                    <aside>
+                      <strong>Por que importa?</strong>
+                      <p>
+                        Mostra o tamanho do estoque da dívida governamental.
+                      </p>
+                    </aside>
+                  </article>
+                  <article class="formula-card deductions-card">
+                    <div class="formula-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:safe-square-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <span class="formula-code">D</span>
+                    <h4>Deduções</h4>
+                    <p>
+                      Valor que o Estado possui em caixa ou em aplicações
+                      financeiras e que pode ser considerado para pagar suas
+                      obrigações.
+                    </p>
+                    <aside>
+                      <strong>Por que importa?</strong>
+                      <p>
+                        Ajuda a calcular quanto o governo efetivamente deve,
+                        considerando os recursos disponíveis.
+                      </p>
+                    </aside>
+                  </article>
+                  <article class="formula-card liquid-debt-card">
+                    <div class="formula-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:chart-square-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <span class="formula-code">DCL</span>
+                    <h4>Dívida Consolidada Líquida</h4>
+                    <p>É a dívida consolidada menos as deduções permitidas.</p>
+                    <div
+                      aria-label="Dívida consolidada líquida igual a dívida consolidada menos deduções"
+                      class="formula"
+                    >
+                      DCL = DC − D
+                    </div>
+                    <aside>
+                      <strong>Por que importa?</strong>
+                      <p>
+                        É o principal indicador utilizado para avaliar o nível
+                        de endividamento de estados e municípios.
+                      </p>
+                    </aside>
+                  </article>
+                </div>
+              </section>
+              <section
+                aria-labelledby="rgf-guarantees-title"
+                class="content-section rgf-concepts-section guarantees-section"
+                id="rgf-garantias"
+              >
+                <header class="rgf-concepts-heading">
+                  <span class="section-tag">RGF — Conceitos</span>
+                  <h3 id="rgf-guarantees-title">
+                    Garantias e operações de crédito
+                  </h3>
+                  <p>
+                    Esses indicadores mostram compromissos assumidos pelo
+                    governo, mecanismos de proteção e recursos obtidos por
+                    financiamento.
+                  </p>
+                </header>
+                <div class="formula-cards">
+                  <article class="formula-card guarantees-card">
+                    <div class="formula-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:shield-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <span class="formula-code">GC</span>
+                    <h4>Garantias Concedidas</h4>
+                    <p>
+                      Ocorrem quando o governo assume o compromisso de pagar uma
+                      dívida caso outra entidade não cumpra a obrigação.
+                    </p>
+                    <aside>
+                      <strong>Por que importa?</strong>
+                      <p>
+                        A concessão de garantia representa risco potencial para
+                        as contas públicas.
+                      </p>
+                    </aside>
+                  </article>
+                  <article class="formula-card counter-card">
+                    <div class="formula-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:shield-check-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <span class="formula-code">CR</span>
+                    <h4>Contragarantias Recebidas</h4>
+                    <p>
+                      São garantias exigidas pelo governo para proteção caso
+                      seja necessário pagar a dívida garantida.
+                    </p>
+                    <aside>
+                      <strong>Por que importa?</strong>
+                      <p>Reduzem o risco de prejuízo aos cofres públicos.</p>
+                    </aside>
+                  </article>
+                  <article class="formula-card credit-card">
+                    <div class="formula-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:card-transfer-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <span class="formula-code">OC</span>
+                    <h4>Operações de Crédito</h4>
+                    <p>
+                      São empréstimos ou financiamentos contratados pelo
+                      governo.
+                    </p>
+                    <aside>
+                      <strong>Por que importa?</strong>
+                      <p>
+                        O recurso entra no presente, mas deverá ser pago
+                        futuramente.
+                      </p>
+                    </aside>
+                  </article>
+                </div>
+              </section>
+              <section
+                aria-labelledby="rgf-cash-title"
+                class="content-section rgf-concepts-section cash-section"
+                id="rgf-caixa"
+              >
+                <header class="rgf-concepts-heading">
+                  <span class="section-tag">RGF — Conceitos</span>
+                  <h3 id="rgf-cash-title">Disponibilidade de caixa</h3>
+                  <p>
+                    O indicador compara os recursos disponíveis no fim do
+                    exercício com as obrigações que ainda precisam ser pagas.
+                  </p>
+                </header>
+                <div class="formula-cards cash-formula-cards">
+                  <article class="formula-card gross-cash-card">
+                    <div class="formula-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:wallet-money-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <span class="formula-code">DCB</span>
+                    <h4>Disponibilidade de Caixa Bruta</h4>
+                    <p>
+                      Total de dinheiro disponível em caixa e em contas
+                      bancárias no encerramento do ano.
+                    </p>
+                    <aside>
+                      <strong>Por que importa?</strong>
+                      <p>Mostra quanto o governo possui disponível.</p>
+                    </aside>
+                  </article>
+                  <article class="formula-card payable-card">
+                    <div class="formula-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:bill-list-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <span class="formula-code">OP</span>
+                    <h4>Obrigações a Pagar</h4>
+                    <p>
+                      Despesas empenhadas ou contratadas que não foram pagas até
+                      o fim do ano e outros valores que deveriam ter sido pagos
+                      no exercício.
+                    </p>
+                    <div class="cash-types">
+                      <strong>Tipos</strong>
+                      <ul>
+                        <li>
+                          Restos a pagar processados: o serviço ou bem já foi
+                          entregue.
+                        </li>
+                        <li>
+                          Restos a pagar não processados: a entrega ainda
+                          ocorrerá.
+                        </li>
+                      </ul>
+                    </div>
+                    <aside>
+                      <strong>Por que importa?</strong>
+                      <p>
+                        Mostra quanto ficou pendente para pagamento no ano
+                        seguinte.
+                      </p>
+                    </aside>
+                  </article>
+                  <article class="formula-card liquid-cash-card">
+                    <div class="formula-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:calculator-minimalistic-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <span class="formula-code">DCL</span>
+                    <h4>Disponibilidade de Caixa Líquida</h4>
+                    <p>
+                      É o dinheiro disponível após descontar as obrigações a
+                      pagar.
+                    </p>
+                    <div
+                      aria-label="Disponibilidade de caixa líquida igual a disponibilidade de caixa bruta menos obrigações a pagar"
+                      class="formula"
+                    >
+                      DCL = DCB − OP
+                    </div>
+                    <div class="cash-warning">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:danger-triangle-bold-duotone"
+                      ></iconify-icon>
+                      <p>
+                        <strong>Atenção:</strong> quando o resultado é negativo,
+                        existem mais contas pendentes do que recursos
+                        disponíveis.
+                      </p>
+                    </div>
+                    <aside>
+                      <strong>Por que importa?</strong>
+                      <p>
+                        Mostra se o governo deixou dinheiro suficiente para
+                        quitar as obrigações já assumidas.
+                      </p>
+                    </aside>
+                  </article>
+                </div>
+              </section>
+              <section
+                aria-labelledby="function-expenses-title"
+                class="content-section function-expenses-section"
+                id="despesas-funcao"
+              >
+                <header class="function-heading">
+                  <span class="section-tag">Destino do recurso público</span>
+                  <h3 id="function-expenses-title">
+                    Execução das Despesas por Função
+                  </h3>
+                  <p>
+                    A classificação por função e subfunção mostra em qual área
+                    pública o recurso foi aplicado, independentemente do órgão
+                    que realizou o gasto.
+                  </p>
+                </header>
+                <article class="function-explanation">
+                  <iconify-icon
+                    aria-hidden="true"
+                    focusable="false"
+                    icon="solar:route-bold-duotone"
+                  ></iconify-icon>
+                  <div>
+                    <h4>O foco está na finalidade</h4>
+                    <p>
+                      Imagine que o governo compre uma frota de ambulâncias por
+                      meio de um órgão de infraestrutura. Como as ambulâncias
+                      atendem diretamente à saúde, a despesa recebe a
+                      classificação de <strong>Função Saúde</strong>.
+                    </p>
+                    <p>
+                      Essa organização permite verificar quanto foi efetivamente
+                      investido em cada área, sem depender de qual órgão
+                      executou a política pública.
+                    </p>
+                  </div>
+                </article>
+                <div
+                  aria-label="Principais despesas por função em Minas Gerais em 2025"
+                  class="function-values"
+                >
+                  <article>
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:square-academic-cap-bold-duotone"
+                    ></iconify-icon
+                    ><span>Educação</span><strong>R$ 21,301 bilhões</strong>
+                  </article>
+                  <article>
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:health-bold-duotone"
+                    ></iconify-icon
+                    ><span>Saúde</span><strong>R$ 18,340 bilhões</strong>
+                  </article>
+                  <article>
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:shield-user-bold-duotone"
+                    ></iconify-icon
+                    ><span>Segurança Pública</span
+                    ><strong>R$ 25,378 bilhões</strong>
+                  </article>
+                  <article>
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:users-group-rounded-bold-duotone"
+                    ></iconify-icon
+                    ><span>Previdência Social</span
+                    ><strong>R$ 25,818 bilhões</strong>
+                  </article>
+                  <article>
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:document-text-bold-duotone"
+                    ></iconify-icon
+                    ><span>Encargos Especiais</span
+                    ><strong>R$ 8,479 bilhões</strong>
+                  </article>
+                  <article>
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:test-tube-minimalistic-bold-duotone"
+                    ></iconify-icon
+                    ><span>Ciência e Tecnologia</span
+                    ><strong>R$ 615,85 milhões</strong>
+                  </article>
+                  <article>
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:bus-bold-duotone"
+                    ></iconify-icon
+                    ><span>Transporte</span><strong>R$ 1,728 bilhão</strong>
+                  </article>
+                  <article>
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:pallete-2-bold-duotone"
+                    ></iconify-icon
+                    ><span>Cultura</span><strong>R$ 381,15 milhões</strong>
+                  </article>
+                  <article>
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:waterdrops-bold-duotone"
+                    ></iconify-icon
+                    ><span>Saneamento</span><strong>R$ 81,008 milhões</strong>
+                  </article>
+                </div>
+              </section>
+              <section
+                aria-labelledby="constitutional-title"
+                class="content-section constitutional-section"
+                id="indices-constitucionais"
+              >
+                <header class="constitutional-heading">
+                  <span class="section-tag"
+                    >Investimentos mínimos obrigatórios</span
+                  >
+                  <h3 id="constitutional-title">Índices Constitucionais</h3>
+                  <p>
+                    As constituições Federal e Estadual estabelecem aplicações
+                    mínimas para proteger áreas prioritárias e garantir a
+                    continuidade dos serviços públicos.
+                  </p>
+                </header>
+                <div class="constitutional-copy">
+                  <p>
+                    O governo não pode concentrar todos os recursos em apenas
+                    uma área. Os índices constitucionais funcionam como
+                    obrigações legais de investimento mínimo.
+                  </p>
+                  <p>
+                    Cada índice possui critérios próprios de cálculo e define
+                    quais despesas podem ser aceitas. Isso evita, por exemplo,
+                    que uma despesa de propaganda seja classificada como
+                    investimento em saúde ou educação.
+                  </p>
+                </div>
+                <ol class="constitutional-index-list">
+                  <li>
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:health-bold-duotone"
+                    ></iconify-icon
+                    ><span>Ações e Serviços Públicos de Saúde</span>
+                  </li>
+                  <li>
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:square-academic-cap-bold-duotone"
+                    ></iconify-icon
+                    ><span>Manutenção e Desenvolvimento do Ensino</span>
+                  </li>
+                  <li>
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="mdi:account-school"
+                    ></iconify-icon
+                    ><span>Valorização de Profissionais da Educação</span>
+                  </li>
+                  <li>
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:test-tube-minimalistic-bold-duotone"
+                    ></iconify-icon
+                    ><span>Pesquisa e Tecnologia</span>
+                  </li>
+                </ol>
+              </section>
+              <section
+                aria-labelledby="social-index-title"
+                class="content-section social-index-section"
+                id="saude-educacao"
+              >
+                <header class="social-index-heading">
+                  <span class="section-tag">Aplicação em 2025</span>
+                  <h3 id="social-index-title">Saúde e educação</h3>
+                  <p>
+                    Dois índices mostram como os recursos vinculados sustentam
+                    serviços essenciais para a população.
+                  </p>
+                </header>
+                <div class="social-index-grid">
+                  <article class="social-index-card health-index">
+                    <div class="social-index-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:heart-pulse-2-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <span class="index-code">ASPS</span>
+                    <h4>Índice da Saúde</h4>
+                    <p class="index-name">Ações e Serviços Públicos de Saúde</p>
+                    <p>
+                      Garante que parte relevante dos impostos seja aplicada no
+                      cuidado, no bem-estar e na assistência à população,
+                      incluindo hospitais, medicamentos e profissionais.
+                    </p>
+                    <dl>
+                      <div>
+                        <dt>Base legal</dt>
+                        <dd>
+                          Artigo 198 da Constituição Federal e Lei Complementar
+                          nº 141/2012.
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>Aplicação mínima</dt>
+                        <dd>12% das receitas de impostos e transferências.</dd>
+                      </div>
+                    </dl>
+                    <div class="index-result">
+                      <small>Aplicado em 2025</small
+                      ><strong>R$ 11,52 bilhões</strong
+                      ><span
+                        >12,3% da arrecadação de impostos e transferências</span
+                      >
+                    </div>
+                  </article>
+                  <article class="social-index-card education-index">
+                    <div class="social-index-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:diploma-verified-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <span class="index-code">MDE</span>
+                    <h4>Índice da Educação</h4>
+                    <p class="index-name">
+                      Manutenção e Desenvolvimento do Ensino
+                    </p>
+                    <p>
+                      Garante recursos para o funcionamento das escolas, desde
+                      materiais didáticos até a infraestrutura das salas de
+                      aula, com critérios definidos para a aplicação na
+                      educação.
+                    </p>
+                    <dl>
+                      <div>
+                        <dt>Base legal</dt>
+                        <dd>
+                          Artigo 212 da Constituição Federal e Lei nº 9.394/1996
+                          — LDB.
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>Aplicação mínima</dt>
+                        <dd>25% das receitas de impostos e transferências.</dd>
+                      </div>
+                    </dl>
+                    <div class="index-result">
+                      <small>Aplicado em 2025</small
+                      ><strong>R$ 23,93 bilhões</strong
+                      ><span
+                        >25,5% da arrecadação de impostos e transferências</span
+                      >
+                    </div>
+                  </article>
+                </div>
+              </section>
+              <section
+                aria-labelledby="fundeb-research-title"
+                class="content-section social-index-section"
+                id="fundeb-pesquisa"
+              >
+                <header class="social-index-heading">
+                  <span class="section-tag">Aplicação em 2025</span>
+                  <h3 id="fundeb-research-title">
+                    Educação, pesquisa e inovação
+                  </h3>
+                  <p>
+                    Os índices protegem recursos destinados à valorização
+                    profissional, à ciência, à tecnologia e à inovação em Minas
+                    Gerais.
+                  </p>
+                </header>
+                <div class="social-index-grid">
+                  <article class="social-index-card fundeb-index">
+                    <div class="social-index-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="mdi:account-school"
+                      ></iconify-icon>
+                    </div>
+                    <span class="index-code">FUNDEB</span>
+                    <h4>Valorização dos Profissionais da Educação</h4>
+                    <p class="index-name">
+                      Fundo de Manutenção e Desenvolvimento da Educação Básica
+                    </p>
+                    <p>
+                      Garante que a maior parte dos recursos do principal fundo
+                      da educação básica seja utilizada para remunerar
+                      profissionais que atuam diretamente no ensino.
+                    </p>
+                    <dl>
+                      <div>
+                        <dt>Base legal</dt>
+                        <dd>
+                          Artigo 212-A, inciso XI, da Constituição Federal e Lei
+                          nº 14.113/2020 — Novo FUNDEB.
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>Aplicação mínima</dt>
+                        <dd>70% dos recursos recebidos do FUNDEB.</dd>
+                      </div>
+                    </dl>
+                    <div class="index-result">
+                      <small>Aplicado em 2025</small
+                      ><strong>R$ 12,57 bilhões</strong
+                      ><span>97,5% dos recursos recebidos do FUNDEB</span>
+                    </div>
+                  </article>
+                  <article class="social-index-card research-index">
+                    <div class="social-index-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:test-tube-minimalistic-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <span class="index-code">FAPEMIG</span>
+                    <h4>Pesquisa e Inovação</h4>
+                    <p class="index-name">
+                      Fundação de Amparo à Pesquisa do Estado de Minas Gerais
+                    </p>
+                    <p>
+                      Índice específico de Minas Gerais que garante recursos
+                      para ciência, tecnologia, inovação e projetos de pesquisa
+                      realizados no Estado.
+                    </p>
+                    <dl>
+                      <div>
+                        <dt>Base legal</dt>
+                        <dd>
+                          Artigo 212 da Constituição do Estado de Minas Gerais e
+                          Decreto nº 47.937/2020.
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>Aplicação mínima</dt>
+                        <dd>1% da Receita Corrente Ordinária do Estado.</dd>
+                      </div>
+                    </dl>
+                    <div class="index-result">
+                      <small>Repassado em 2025</small
+                      ><strong>R$ 573,67 milhões</strong
+                      ><span>100,56% do valor mínimo destinado à pesquisa</span>
+                    </div>
+                  </article>
+                </div>
+              </section>
+              <section
+                aria-labelledby="dashboard-title"
+                class="content-section indicators-dashboard-section"
+                id="painel-indicadores"
+              >
+                <header class="dashboard-heading">
+                  <span class="section-tag">Para ficar de olho</span>
+                  <h3 id="dashboard-title">Painel de indicadores</h3>
+                  <p>
+                    Resumo dos principais resultados orçamentários, fiscais e
+                    constitucionais apresentados neste capítulo.
+                  </p>
+                </header>
+                <div
+                  aria-label="Legenda de situação dos indicadores"
+                  class="status-legend"
+                >
+                  <span class="status-ok"
+                    ><iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:check-circle-bold"
+                    ></iconify-icon
+                    >Dentro do limite legal</span
+                  >
+                  <span class="status-warning"
+                    ><iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:danger-circle-bold"
+                    ></iconify-icon
+                    >No limite prudencial</span
+                  >
+                  <span class="status-danger"
+                    ><iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:close-circle-bold"
+                    ></iconify-icon
+                    >Fora do limite legal</span
+                  >
+                </div>
+                <div class="dashboard-grid">
+                  <div class="dashboard-column">
+                    <article class="dashboard-card compact-metric">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:wallet-money-bold-duotone"
+                      ></iconify-icon
+                      ><span>Receita Corrente Líquida</span
+                      ><strong>R$ 111,74 bilhões</strong>
+                    </article>
+                    <article class="dashboard-card cash-summary">
+                      <h4>Disponibilidade de caixa</h4>
+                      <dl>
+                        <div>
+                          <dt>Caixa bruta</dt>
+                          <dd>R$ 21,13 bi</dd>
+                        </div>
+                        <div>
+                          <dt>
+                            Obrigações financeiras e restos a pagar não
+                            processados
+                          </dt>
+                          <dd>R$ 15,81 bi</dd>
+                        </div>
+                        <div>
+                          <dt>Caixa líquida</dt>
+                          <dd>R$ 5,32 bi</dd>
+                        </div>
+                      </dl>
+                    </article>
+                    <article class="dashboard-card indicator-summary">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:users-group-rounded-bold-duotone"
+                      ></iconify-icon>
+                      <div>
+                        <span>Gastos com pessoal</span
+                        ><strong>R$ 53,87 bi</strong
+                        ><small>48,22% da RCL</small>
+                      </div>
+                      <span class="indicator-status prudent"
+                        ><span class="sr-only"
+                          >Situação: no limite prudencial</span
+                        ><iconify-icon
+                          aria-hidden="true"
+                          focusable="false"
+                          icon="solar:danger-circle-bold"
+                        ></iconify-icon
+                      ></span>
+                    </article>
+                    <article class="dashboard-card budget-chart-card">
+                      <h4>Balanço orçamentário</h4>
+                      <div
+                        aria-label="Receitas realizadas de 132,67 bilhões de reais; despesas realizadas de 131,56 bilhões; superávit orçamentário de 1,11 bilhão."
+                        class="accessible-bars"
+                        role="img"
+                      >
+                        <div>
+                          <span>Receitas</span><i style="--bar: 100%"></i
+                          ><strong>132,67</strong>
+                        </div>
+                        <div>
+                          <span>Despesas</span><i style="--bar: 99.16%"></i
+                          ><strong>131,56</strong>
+                        </div>
+                        <div class="surplus-bar">
+                          <span>Superávit</span><i style="--bar: 8%"></i
+                          ><strong>1,11</strong>
+                        </div>
+                      </div>
+                      <small>Valores em bilhões de reais</small>
+                    </article>
+                  </div>
+                  <div class="dashboard-column">
+                    <article class="dashboard-card compact-metric">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:bill-list-bold-duotone"
+                      ></iconify-icon
+                      ><span>Restos a Pagar</span
+                      ><strong>R$ 16,55 bilhões</strong>
+                    </article>
+                    <article class="dashboard-card indicator-summary">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:banknote-2-bold-duotone"
+                      ></iconify-icon>
+                      <div>
+                        <span>Dívida Consolidada Líquida</span
+                        ><strong>R$ 187,10 bi</strong
+                        ><small>167,46% da RCL</small>
+                      </div>
+                      <span class="indicator-status ok"
+                        ><span class="sr-only"
+                          >Situação: dentro do limite legal</span
+                        ><iconify-icon
+                          aria-hidden="true"
+                          focusable="false"
+                          icon="solar:check-circle-bold"
+                        ></iconify-icon
+                      ></span>
+                    </article>
+                    <article class="dashboard-card social-results">
+                      <h4>Índices constitucionais</h4>
+                      <div>
+                        <iconify-icon
+                          aria-hidden="true"
+                          focusable="false"
+                          icon="solar:square-academic-cap-bold-duotone"
+                        ></iconify-icon
+                        ><span
+                          >Manutenção e Desenvolvimento do Ensino<small
+                            >R$ 23,93 bi · 25,5%</small
+                          ></span
+                        ><b class="status-ok"
+                          ><span class="sr-only">Dentro do limite legal</span
+                          ><iconify-icon
+                            aria-hidden="true"
+                            focusable="false"
+                            icon="solar:check-circle-bold"
+                          ></iconify-icon
+                        ></b>
+                      </div>
+                      <div>
+                        <iconify-icon
+                          aria-hidden="true"
+                          focusable="false"
+                          icon="mdi:account-school"
+                        ></iconify-icon
+                        ><span
+                          >Profissionais da Educação Básica<small
+                            >R$ 12,57 bi · 97,5%</small
+                          ></span
+                        ><b class="status-ok"
+                          ><span class="sr-only">Dentro do limite legal</span
+                          ><iconify-icon
+                            aria-hidden="true"
+                            focusable="false"
+                            icon="solar:check-circle-bold"
+                          ></iconify-icon
+                        ></b>
+                      </div>
+                      <div>
+                        <iconify-icon
+                          aria-hidden="true"
+                          focusable="false"
+                          icon="solar:heart-pulse-2-bold-duotone"
+                        ></iconify-icon
+                        ><span
+                          >Ações e Serviços Públicos de Saúde<small
+                            >R$ 11,52 bi · 12,3%</small
+                          ></span
+                        ><b class="status-ok"
+                          ><span class="sr-only">Dentro do limite legal</span
+                          ><iconify-icon
+                            aria-hidden="true"
+                            focusable="false"
+                            icon="solar:check-circle-bold"
+                          ></iconify-icon
+                        ></b>
+                      </div>
+                      <div>
+                        <iconify-icon
+                          aria-hidden="true"
+                          focusable="false"
+                          icon="solar:test-tube-minimalistic-bold-duotone"
+                        ></iconify-icon
+                        ><span
+                          >Pesquisa e Inovação<small
+                            >R$ 573,67 mi · 100,56%</small
+                          ></span
+                        ><b class="status-ok"
+                          ><span class="sr-only">Dentro do limite legal</span
+                          ><iconify-icon
+                            aria-hidden="true"
+                            focusable="false"
+                            icon="solar:check-circle-bold"
+                          ></iconify-icon
+                        ></b>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              </section>
+              <div
+                aria-labelledby="chapter-four-title"
+                class="chapter-divider"
+                role="separator"
+              >
+                <span>Capítulo 4</span>
+                <h3 id="chapter-four-title">
+                  Controle, Cidadania e Accountability
+                </h3>
+                <p>
+                  Fiscalizar, informar, responder e participar são partes do
+                  compromisso democrático com a boa gestão pública.
+                </p>
+              </div>
+              <section
+                aria-labelledby="control-title"
+                class="content-section control-accountability-section"
+                id="controle-accountability"
+              >
+                <header class="control-heading">
+                  <span class="section-tag"
+                    >Quem controla a Administração Pública?</span
+                  >
+                  <h3 id="control-title">
+                    Controle interno e controle externo
+                  </h3>
+                  <p>
+                    Os mecanismos de controle atuam de forma complementar para
+                    prevenir falhas, avaliar resultados e proteger o patrimônio
+                    público.
+                  </p>
+                </header>
+                <div class="control-compare">
+                  <article class="control-card internal-control">
+                    <div class="control-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:shield-check-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <span class="control-label"
+                      >Dentro da própria estrutura</span
+                    >
+                    <h4>Controle interno</h4>
+                    <p>
+                      É realizado pela própria Administração em cada Poder.
+                      Acompanha processos, riscos, legalidade, eficiência e
+                      resultados para prevenir problemas e apoiar o
+                      aperfeiçoamento da gestão.
+                    </p>
+                    <ul>
+                      <li>orienta gestores e unidades;</li>
+                      <li>realiza auditorias e avaliações;</li>
+                      <li>monitora riscos e recomendações;</li>
+                      <li>
+                        apoia a integridade e a prevenção de irregularidades.
+                      </li>
+                    </ul>
+                  </article>
+                  <article class="control-card external-control">
+                    <div class="control-icon">
+                      <iconify-icon
+                        aria-hidden="true"
+                        focusable="false"
+                        icon="solar:scale-bold-duotone"
+                      ></iconify-icon>
+                    </div>
+                    <span class="control-label"
+                      >Fiscalização institucional independente</span
+                    >
+                    <h4>Controle externo</h4>
+                    <p>
+                      É exercido pelo Poder Legislativo com o auxílio dos
+                      Tribunais de Contas. Analisa a legalidade, a legitimidade,
+                      a economicidade, os resultados e a prestação de contas dos
+                      responsáveis por recursos públicos.
+                    </p>
+                    <ul>
+                      <li>examina contas e atos de gestão;</li>
+                      <li>realiza auditorias e inspeções;</li>
+                      <li>emite determinações e recomendações;</li>
+                      <li>
+                        produz informações para o Legislativo e para a
+                        sociedade.
+                      </li>
+                    </ul>
+                  </article>
+                </div>
+                <aside class="accountability-note">
+                  <iconify-icon
+                    aria-hidden="true"
+                    focusable="false"
+                    icon="solar:chat-square-check-bold-duotone"
+                  ></iconify-icon>
+                  <div>
+                    <h4>Accountability</h4>
+                    <p>
+                      O termo reúne transparência, prestação de contas,
+                      responsabilização e capacidade de resposta. Na prática,
+                      significa que agentes públicos devem informar o que
+                      fizeram, justificar decisões, demonstrar resultados e
+                      responder por falhas ou irregularidades.
+                    </p>
+                  </div>
+                </aside>
+              </section>
+              <section
+                aria-labelledby="rights-title"
+                class="content-section rights-section"
+                id="direitos-deveres"
+              >
+                <header class="rights-heading">
+                  <span class="section-tag"
+                    >Responsabilidade compartilhada</span
+                  >
+                  <h3 id="rights-title">Direitos e deveres</h3>
+                  <p>
+                    Estado e cidadania possuem responsabilidades complementares
+                    para que os serviços públicos funcionem com qualidade,
+                    integridade e participação.
+                  </p>
+                </header>
+                <div class="rights-grid">
+                  <article class="responsibility-card state-responsibility">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:buildings-3-bold-duotone"
+                    ></iconify-icon>
+                    <h4>Deveres do Estado</h4>
+                    <ul>
+                      <li>
+                        prestar serviços públicos e implementar políticas;
+                      </li>
+                      <li>
+                        agir conforme a lei, com impessoalidade, ética,
+                        transparência e eficiência;
+                      </li>
+                      <li>publicar informações compreensíveis e acessíveis;</li>
+                      <li>
+                        proteger direitos e tratar as pessoas com igualdade;
+                      </li>
+                      <li>prestar contas e corrigir falhas identificadas.</li>
+                    </ul>
+                  </article>
+                  <article class="responsibility-card citizen-rights">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:hand-stars-bold-duotone"
+                    ></iconify-icon>
+                    <h4>Direitos da pessoa cidadã</h4>
+                    <ul>
+                      <li>
+                        acessar informações públicas, ressalvadas as hipóteses
+                        legais de sigilo;
+                      </li>
+                      <li>
+                        receber serviços adequados e atendimento respeitoso;
+                      </li>
+                      <li>
+                        participar da formulação e avaliação de políticas;
+                      </li>
+                      <li>
+                        apresentar pedidos, reclamações, sugestões, elogios e
+                        denúncias;
+                      </li>
+                      <li>
+                        acompanhar receitas, despesas, contratos e resultados.
+                      </li>
+                    </ul>
+                  </article>
+                  <article class="responsibility-card citizen-duties">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:users-group-two-rounded-bold-duotone"
+                    ></iconify-icon>
+                    <h4>Deveres da pessoa cidadã</h4>
+                    <ul>
+                      <li>
+                        respeitar direitos coletivos e o patrimônio público;
+                      </li>
+                      <li>cumprir obrigações previstas em lei;</li>
+                      <li>
+                        usar os canais públicos com responsabilidade e boa-fé;
+                      </li>
+                      <li>verificar informações antes de compartilhá-las;</li>
+                      <li>participar e colaborar com o controle social.</li>
+                    </ul>
+                  </article>
+                </div>
+              </section>
+              <section
+                aria-labelledby="social-control-title"
+                class="content-section social-control-section"
+                id="controle-social"
+              >
+                <header class="social-control-heading">
+                  <span class="section-tag">Informação em ação</span>
+                  <h3 id="social-control-title">
+                    Ferramentas de controle social
+                  </h3>
+                  <p>
+                    Controle social é a participação da sociedade no
+                    acompanhamento das decisões, dos gastos e dos resultados da
+                    Administração Pública.
+                  </p>
+                </header>
+                <div class="social-tools-grid">
+                  <article class="social-tool-card">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:document-text-bold-duotone"
+                    ></iconify-icon>
+                    <h4>Relatórios contábeis e fiscais</h4>
+                    <p>
+                      Balanços, demonstrativos e relatórios da LRF permitem
+                      acompanhar arrecadação, despesas, patrimônio, dívida,
+                      limites e resultados.
+                    </p>
+                    <span
+                      >Use para comparar planejamento, execução e
+                      resultado.</span
+                    >
+                  </article>
+                  <article class="social-tool-card">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:magnifer-bold-duotone"
+                    ></iconify-icon>
+                    <h4>Lei de Acesso à Informação — LAI</h4>
+                    <p>
+                      Garante o direito de solicitar informações públicas. A
+                      transparência ativa publica dados sem solicitação; a
+                      transparência passiva responde aos pedidos do cidadão.
+                    </p>
+                    <span
+                      >Use quando a informação não estiver disponível ou
+                      precisar de detalhamento.</span
+                    >
+                  </article>
+                  <article class="social-tool-card">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:chart-2-bold-duotone"
+                    ></iconify-icon>
+                    <h4>Portal da Transparência</h4>
+                    <p>
+                      Reúne consultas sobre receitas, despesas, pessoal,
+                      contratos, convênios, planejamento, resultados, gestão
+                      fiscal e outros dados públicos.
+                    </p>
+                    <span
+                      >Use para pesquisar, filtrar, comparar e baixar
+                      dados.</span
+                    >
+                  </article>
+                  <article class="social-tool-card">
+                    <iconify-icon
+                      aria-hidden="true"
+                      focusable="false"
+                      icon="solar:chat-round-dots-bold-duotone"
+                    ></iconify-icon>
+                    <h4>Ouvidoria</h4>
+                    <p>
+                      Recebe manifestações sobre serviços e condutas públicas,
+                      como reclamações, solicitações, sugestões, elogios e
+                      denúncias.
+                    </p>
+                    <span
+                      >Use para comunicar experiências, propor melhorias ou
+                      informar possíveis irregularidades.</span
+                    >
+                  </article>
+                </div>
+                <div
+                  aria-label="Etapas sugeridas para exercer o controle social"
+                  class="social-control-flow"
+                >
+                  <span><b>1</b>Identifique a questão</span
+                  ><iconify-icon
+                    aria-hidden="true"
+                    focusable="false"
+                    icon="solar:arrow-right-linear"
+                  ></iconify-icon>
+                  <span><b>2</b>Consulte dados públicos</span
+                  ><iconify-icon
+                    aria-hidden="true"
+                    focusable="false"
+                    icon="solar:arrow-right-linear"
+                  ></iconify-icon>
+                  <span><b>3</b>Compare metas e resultados</span
+                  ><iconify-icon
+                    aria-hidden="true"
+                    focusable="false"
+                    icon="solar:arrow-right-linear"
+                  ></iconify-icon>
+                  <span><b>4</b>Use o canal adequado</span
+                  ><iconify-icon
+                    aria-hidden="true"
+                    focusable="false"
+                    icon="solar:arrow-right-linear"
+                  ></iconify-icon>
+                  <span><b>5</b>Acompanhe a resposta</span>
+                </div>
+              </section>
+              <footer class="content-footer footer-end">
+                <a href="#boas-vindas">Voltar ao início</a>
+              </footer>
+            </article>
+          </div>
+          <div aria-live="polite" class="sr-only" id="readerStatus"></div>
+        </section>
+      </div>
+    </main>
+    <div aria-hidden="true" class="focus-overlay" id="focusOverlay"></div>
+  </body>
+</html>

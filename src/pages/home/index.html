@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth bg-[#86cbed]" lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<title>Balanço Cidadão MG</title>
+<link href="../../../public/images/favicon.ico" rel="icon" type="image/png"/>
+<link href="../../shared/styles/fonts.css" rel="stylesheet"/>
+<script src="../../../public/vendor/iconify/iconify-icon.min.js"></script>
+<script src="../../../public/vendor/tailwindcss/tailwind.min.js"></script><style id="home-pseudo-animations">
+body::before{content:"";position:fixed;inset:0;background:#fff;z-index:9999;pointer-events:none;animation:reveal .7s ease forwards}
+.placa-colonial::before,.mission-box::before,.map-parchment::before{content:"";position:absolute;inset:8px;border:2px dashed rgba(139,94,60,.22);border-radius:inherit;pointer-events:none}
+.bolt::after{content:"";position:absolute;inset:3px;border-radius:999px;background:rgba(255,255,255,.38)}
+.trail-card[data-main-trail-slug]::after,.trail-card[data-bc-status]::after{content:none!important;display:none!important}
+@keyframes reveal{0%,55%{opacity:1}100%{opacity:0}}
+@keyframes content{to{opacity:1}}
+@keyframes fadeRiseSync{0%{opacity:0;transform:translate3d(0,56px,0) scale(.985)}100%{opacity:1;transform:translate3d(0,0,0) scale(1)}}
+@keyframes treasureMarch{to{stroke-dashoffset:-180}}
+@keyframes bcStatusSpin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+
+/* Detalhes da placa colonial que dependem de pseudo-elementos. */
+.placa-colonial{position:relative;overflow:visible!important}
+.placa-colonial::after{content:"";position:absolute;inset:7px;border:1.5px dashed rgba(139,105,20,.24);border-radius:19px;pointer-events:none}
+.bolt{overflow:visible}
+.bolt::after{content:"+";position:absolute;inset:0;display:grid;place-items:center;font-size:8px;line-height:1;color:rgba(93,42,0,.55);font-weight:900}
+</style><style id="home-complex-styles">
+/* Somente regras visuais complexas, pseudo-elementos, animações e estados.
+   Layout, dimensões, espaçamento e tipografia principal usam Tailwind. */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: #86cbed;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: #86cbed;
+  font-family: "Nunito", sans-serif;
+  color: #233324;
+  -webkit-font-smoothing: antialiased;
+}
+
+body:before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  z-index: 9999;
+  pointer-events: none;
+  animation: reveal 0.7s ease forwards;
+}
+
+@keyframes reveal {
+  0%,
+  55% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+main {
+  opacity: 0;
+  animation: content 0.75s ease 0.28s forwards;
+  will-change: opacity;
+}
+
+@keyframes content {
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in-up,
+.fade-rise {
+  opacity: 0;
+  transform: translate3d(0, 56px, 0) scale(0.985);
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+}
+
+.fade-in-up.is-visible,
+.fade-rise.is-visible {
+  animation: fadeRiseSync 1.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.fade-in-badge,
+.fade-in-placa,
+.fade-in-mission,
+.fade-in-map {
+  animation-delay: 0s !important;
+  animation-duration: 1.55s !important;
+}
+
+@keyframes fadeRiseSync {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 56px, 0) scale(0.985);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.home-shell,
+.map-parchment,
+.trail-card,
+.mission-box,
+.placa-colonial,
+.app-badge {
+  transform: translateZ(0);
+}
+
+main {
+  position: relative;
+  z-index: 10;
+  min-height: 90vh;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-shell {
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.intro-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.app-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.52rem 0.85rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #c0272d, #8f1e23);
+  color: white;
+  border: 2px solid #f5a800;
+  box-shadow: 0 12px 28px rgba(76, 38, 10, 0.18);
+  font-size: 0.66rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.105em;
+  text-align: center;
+}
+
+.placa-colonial {
+  background: linear-gradient(
+    135deg,
+    rgba(253, 246, 227, 0.98),
+    rgba(245, 230, 192, 0.96) 55%,
+    rgba(237, 217, 163, 0.96)
+  );
+  border: 3px solid #8b6914;
+  box-shadow:
+    0 14px 38px rgba(28, 44, 30, 0.25),
+    0 2px 8px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+}
+
+.bolt {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #e8c84a, #8b6914 70%);
+  border: 1.5px solid #6b4f0f;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+  z-index: 2;
+}
+
+.bolt:after {
+  content: "+";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 8px;
+  color: rgba(93, 42, 0, 0.55);
+  font-weight: 900;
+}
+
+.bolt-tl {
+  top: -7px;
+  left: -7px;
+}
+
+.bolt-tr {
+  top: -7px;
+  right: -7px;
+}
+
+.bolt-bl {
+  bottom: -7px;
+  left: -7px;
+}
+
+.bolt-br {
+  bottom: -7px;
+  right: -7px;
+}
+
+.mission-box {
+  width: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.94),
+    rgba(253, 246, 227, 0.91)
+  );
+  border: 2.5px solid #f5a800;
+  border-radius: 22px;
+  padding: 15px 18px;
+  box-shadow:
+    0 10px 28px rgba(70, 83, 45, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  position: relative;
+  backdrop-filter: blur(12px);
+}
+
+.mission-box:before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1.5px dashed rgba(245, 168, 0, 0.32);
+  border-radius: 16px;
+  pointer-events: none;
+}
+
+.xp-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f5a800;
+  animation: xpPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes xpPulse {
+  50% {
+    transform: scale(1.35);
+    opacity: 0.65;
+  }
+}
+
+.map-col {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-parchment {
+  background: linear-gradient(
+    135deg,
+    rgba(253, 246, 227, 0.96),
+    rgba(245, 234, 210, 0.93) 60%,
+    rgba(238, 222, 180, 0.95)
+  );
+  border: 3.5px solid #8b5e3c;
+  box-shadow:
+    0 22px 54px rgba(57, 75, 40, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  position: relative;
+  backdrop-filter: blur(10px);
+}
+
+.map-parchment:before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 2px dashed rgba(139, 94, 60, 0.25);
+  border-radius: 20px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.map-route {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.map-route path {
+  stroke: #8b5e3c;
+  stroke-width: 3.5;
+  stroke-dasharray: 8 12;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0.5;
+  filter: drop-shadow(0 1.5px 1px rgba(139, 94, 60, 0.12));
+  animation: treasureMarch 1.8s linear infinite;
+}
+
+@keyframes treasureMarch {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+.trail-stop {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 8px;
+}
+
+.trail-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 21px;
+  text-decoration: none;
+  position: relative;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+  border: 2.5px solid transparent;
+  box-shadow: 0 7px 20px rgba(0, 0, 0, 0.13);
+  width: 100%;
+  backdrop-filter: blur(2px);
+  min-height: 86px;
+}
+
+.trail-card:hover {
+  transform: translateY(-3px) scale(1.012);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.17);
+  border-color: #f5a800;
+}
+
+.trail-card:active {
+  transform: scale(0.985);
+}
+
+.trail-card-historia {
+  border-color: #f59e0b;
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
+}
+
+.trail-card-conteudo {
+  border-color: #3b82f6;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+}
+
+.trail-card-game {
+  border-color: #a855f7;
+  background: linear-gradient(135deg, #fdf4ff, #f3e8ff);
+}
+
+.trail-card-creditos {
+  border-color: #10b981;
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+}
+
+.trail-card-number {
+  position: absolute;
+  top: -13px;
+  left: 16px;
+  background: #8b6914;
+  color: white;
+  font-family: "Fredoka One";
+  font-size: 11px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 2px solid #fdf6e3;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.trail-card-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  font-size: 1.7rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.trail-card-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.trail-card-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 99px;
+  margin-bottom: 2px;
+}
+
+.trail-card-title {
+  font-family: "Fredoka One";
+  font-size: 1.16rem;
+  color: #1f2937;
+  line-height: 1.15;
+}
+
+.trail-card-desc {
+  font-size: 0.77rem;
+  color: #6b7280;
+  font-weight: 700;
+  margin-top: 3px;
+  line-height: 1.25;
+}
+
+.trail-card-arrow {
+  font-size: 1.9rem;
+  font-weight: 900;
+  color: #cbd5e1;
+}
+
+.mission-badge {
+  position: absolute;
+  top: -11px;
+  right: 12px;
+  font-size: 9px;
+  font-weight: 900;
+  padding: 3px 8px;
+  border-radius: 99px;
+  border: 1.5px solid;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.trail-footprint {
+  font-size: 1.05rem;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.33;
+  animation: pfloat 4.2s ease-in-out infinite;
+}
+
+.trail-footprint-right {
+  right: -21px;
+}
+
+.trail-footprint-left {
+  left: -21px;
+}
+
+@keyframes pfloat {
+  50% {
+    transform: translateY(calc(-50% - 4px)) rotate(5deg);
+  }
+}
+
+.trophy-end {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #fff9c4, #fff3e0);
+  border: 3px solid #f5a800;
+  border-radius: 22px;
+  box-shadow: 0 8px 24px rgba(245, 168, 0, 0.24);
+}
+
+.trophy-bounce {
+  display: inline-block;
+  animation: trophyBounce 2.8s ease-in-out infinite;
+}
+
+@keyframes trophyBounce {
+  25% {
+    transform: translateY(-7px) rotate(-4deg);
+  }
+
+  75% {
+    transform: translateY(-4px) rotate(4deg);
+  }
+}
+
+.achievements-link {
+  text-decoration: none;
+}
+
+.achievements-link:focus-visible {
+  outline: 3px solid #f5a800;
+  outline-offset: 4px;
+  border-radius: 24px;
+}
+
+@media (min-width: 1024px) {
+  main {
+    padding-top: clamp(1rem, 2.2vh, 1.8rem);
+    padding-bottom: 1.25rem;
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .home-shell {
+    max-width: 1180px;
+    min-height: auto;
+    display: grid;
+    grid-template-columns: 330px minmax(560px, 760px);
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .intro-col {
+    height: 100%;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .intro-col > div {
+    margin: 0 !important;
+  }
+
+  .app-badge {
+    max-width: 285px;
+    line-height: 1.25;
+  }
+
+  .placa-colonial {
+    min-width: 300px;
+  }
+
+  .mission-box {
+    max-width: 330px;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .map-col {
+    max-width: 760px;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .map-parchment {
+    width: 100%;
+    min-height: min(760px, calc(100vh - 8.5rem));
+    padding: 2.35rem 2rem !important;
+    border-radius: 2.2rem !important;
+    overflow: hidden;
+  }
+
+  .map-parchment:after {
+    content: none;
+    display: none;
+  }
+
+  .map-route {
+    inset: 1.2rem;
+    width: calc(100% - 2.4rem);
+    height: calc(100% - 2.4rem);
+  }
+
+  .map-route path {
+    stroke-width: 5;
+    opacity: 0.55;
+  }
+
+  .map-parchment > .map-stops {
+    height: 100%;
+    min-height: calc(min(760px, calc(100vh - 8.5rem)) - 4.7rem);
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    gap: 1rem !important;
+  }
+
+  .trail-stop {
+    width: 58% !important;
+    margin: 0 !important;
+  }
+
+  .trail-stop:nth-child(1),
+  .trail-stop:nth-child(3) {
+    align-self: flex-start !important;
+  }
+
+  .trail-stop:nth-child(2),
+  .trail-stop:nth-child(4) {
+    align-self: flex-end !important;
+  }
+
+  .trail-card {
+    min-height: 104px;
+    padding: 1rem !important;
+    border-radius: 1.45rem;
+  }
+
+  .trail-card-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 1.85rem;
+  }
+
+  .trail-card-title {
+    font-size: 1.22rem;
+  }
+
+  .trail-card-desc {
+    font-size: 0.84rem;
+  }
+
+  .trail-footprint {
+    display: block !important;
+    opacity: 0.33;
+  }
+
+  .trail-footprint-right {
+    right: -34px;
+  }
+
+  .trail-footprint-left {
+    left: -34px;
+  }
+
+  .map-parchment > .map-stops > .text-center {
+    align-self: center !important;
+    margin: 0 !important;
+  }
+
+  .trophy-end {
+    padding: 0.9rem 1.4rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .home-shell {
+    max-width: 1260px;
+    grid-template-columns: 360px minmax(680px, 820px);
+    justify-content: center;
+    justify-items: center;
+    gap: 1.8rem;
+  }
+
+  .map-col {
+    max-width: 820px;
+  }
+
+  .map-parchment {
+    min-height: min(800px, calc(100vh - 8rem));
+  }
+
+  .trail-card {
+    min-height: 112px;
+  }
+
+  .trail-card-title {
+    font-size: 1.28rem;
+  }
+}
+
+@media (max-width: 390px) {
+  main {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .app-badge {
+    font-size: 0.6rem;
+    padding: 0.5rem 0.7rem;
+  }
+
+  .trail-footprint {
+    display: none;
+  }
+
+  .trail-card {
+    padding: 12px;
+    gap: 10px;
+    min-height: 78px;
+  }
+
+  .trail-card-icon {
+    width: 46px;
+    height: 46px;
+    font-size: 1.4rem;
+  }
+
+  .mission-badge {
+    right: 8px;
+  }
+
+  .trail-card-title {
+    font-size: 1.05rem;
+  }
+
+  .trail-card-desc {
+    font-size: 0.7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *:before,
+  *:after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 767px) {
+  main {
+    min-height: 90vh !important;
+    padding: 0.75rem !important;
+  }
+}
+
+.trail-card-icon iconify-icon,
+.trail-card-tag iconify-icon,
+.mission-badge iconify-icon,
+.app-badge iconify-icon,
+.mission-box iconify-icon,
+.trophy-end iconify-icon {
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trail-card-icon iconify-icon {
+  color: #fff;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.22));
+}
+
+.trail-card-tag iconify-icon,
+.mission-badge iconify-icon {
+  margin-right: 0.25rem;
+}
+
+.mission-box .mission-title-icon {
+  color: #8b5e3c;
+  margin-right: 0.35rem;
+}
+
+.trophy-end .trophy-bounce iconify-icon {
+  color: #f5a800;
+  filter: drop-shadow(0 3px 0 rgba(139, 94, 60, 0.22));
+}
+
+@media (max-width: 767px) {
+  body::before {
+    display: none !important;
+  }
+
+  main,
+  .fade-in-up,
+  .fade-rise,
+  .trail-stop {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  .fade-in-up.is-visible,
+  .fade-rise.is-visible,
+  .xp-dot,
+  .map-route path,
+  .trail-footprint,
+  .trophy-bounce {
+    animation: none !important;
+  }
+
+  .trail-card {
+    transition: none !important;
+  }
+
+  .trail-card:hover,
+  .trail-card:active {
+    transform: none !important;
+  }
+}
+
+/* CSS padrão para substituir utilitários anteriores */
+.intro-badge-wrap,
+.title-plaque-wrap {
+  margin-bottom: 1rem;
+}
+.title-frame {
+  display: inline-block;
+  position: relative;
+}
+.page-title-card {
+  padding: 1.25rem 1.75rem;
+  border-radius: 1.5rem;
+  text-align: center;
+}
+.page-eyebrow {
+  margin: 0 0 0.25rem;
+  font-family: "Nunito", sans-serif;
+  color: #9b6b2a;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+}
+.main-title {
+  margin: 0;
+  font-family: "Fredoka One", "Nunito", sans-serif;
+  font-size: 2.25rem;
+  line-height: 1.05;
+  color: #5d2b0a;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.65);
+}
+.title-divider {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.divider-line {
+  width: 2.5rem;
+  height: 0.125rem;
+  border-radius: 999px;
+  background: #f5a800;
+}
+.state-name {
+  font-family: "Fredoka One", "Nunito", sans-serif;
+  color: #f5a800;
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+}
+.mission-wrap {
+  width: 100%;
+  max-width: 24rem;
+  margin: 0 auto 1.25rem;
+}
+.mission-title {
+  margin: 0;
+  font-family: "Fredoka One", "Nunito", sans-serif;
+  font-size: 1.125rem;
+  color: #3d1a00;
+}
+.mission-desc {
+  margin: 0.25rem 0 0;
+  color: #6b3a1f;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.625;
+}
+.mission-progress {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+.mission-count {
+  margin-left: 0.5rem;
+  color: #8b5e3c;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+.map-panel {
+  position: relative;
+  padding: 2rem 1rem;
+  border-radius: 1.75rem;
+  border: 4px solid #8b5e3c;
+  overflow: hidden;
+}
+.map-stops {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+}
+.trail-stop-start,
+.trail-stop-end {
+  width: 88%;
+}
+.trail-stop-start {
+  align-self: flex-start;
+}
+.trail-stop-end {
+  align-self: flex-end;
+}
+.icon-historia {
+  background: linear-gradient(135deg, #fbbf24, #ea580c);
+}
+.icon-conteudo {
+  background: linear-gradient(135deg, #38bdf8, #1d4ed8);
+}
+.icon-game {
+  background: linear-gradient(135deg, #ec4899, #7e22ce);
+}
+.icon-creditos {
+  background: linear-gradient(135deg, #34d399, #15803d);
+}
+.tag-historia,
+.badge-historia {
+  color: #b45309;
+  background: #fef3c7;
+  border-color: #fcd34d;
+}
+.tag-conteudo,
+.badge-conteudo {
+  color: #1d4ed8;
+  background: #dbeafe;
+  border-color: #93c5fd;
+}
+.tag-game,
+.badge-game {
+  color: #7e22ce;
+  background: #f3e8ff;
+  border-color: #d8b4fe;
+}
+.tag-creditos,
+.badge-creditos {
+  color: #047857;
+  background: #dcfce7;
+  border-color: #6ee7b7;
+}
+.trophy-wrapper {
+  align-self: center;
+  text-align: center;
+  margin-top: 0.25rem;
+  z-index: 10;
+}
+.trophy-icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  font-size: 3rem;
+  color: #f59e0b;
+}
+.trophy-coins {
+  margin-left: -0.75rem;
+  margin-top: 1rem;
+  font-size: 1.875rem;
+  color: #facc15;
+}
+.trophy-title {
+  margin: 0.5rem 0 0;
+  font-family: "Fredoka One", "Nunito", sans-serif;
+  color: #5d2b0a;
+  font-size: 1rem;
+}
+.trophy-subtitle {
+  margin: 0.25rem 0 0;
+  color: #8b5e3c;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+@media (min-width: 768px) {
+  .main-title {
+    font-size: 3rem;
+  }
+}
+
+.trail-card .mission-badge,
+.trail-status-pill,
+.trail-card > .trail-tooltip,
+.trail-status-dot {
+  display: none !important;
+}
+.trail-card[data-main-trail-slug]::after,
+.trail-card[data-bc-status]::after {
+  content: none !important;
+  display: none !important;
+}
+.bc-profile-wrap {
+  width: min(100%, 330px) !important;
+  margin: 0 auto 0.72rem !important;
+  position: relative !important;
+  z-index: 120 !important;
+  font-family: Nunito, sans-serif !important;
+}
+.bc-profile-button {
+  width: 100% !important;
+  min-height: 56px !important;
+  display: grid !important;
+  grid-template-columns: 40px 1fr 18px !important;
+  align-items: center !important;
+  gap: 0.7rem !important;
+  padding: 0.52rem 0.72rem !important;
+  border-radius: 20px !important;
+  border: 2px solid rgba(139, 105, 20, 0.65) !important;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(253, 246, 227, 0.96)
+  ) !important;
+  color: #5d2b0a !important;
+  box-shadow:
+    0 12px 28px rgba(76, 38, 10, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  cursor: pointer !important;
+  text-align: left !important;
+  font-family: Nunito, sans-serif !important;
+}
+.bc-profile-button:disabled {
+  cursor: wait !important;
+  opacity: 0.88 !important;
+}
+.bc-profile-avatar,
+.bc-profile-menu-icon {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 15px !important;
+  display: grid !important;
+  place-items: center !important;
+  background: linear-gradient(135deg, #2d6a4f, #10b981) !important;
+  color: white !important;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.28),
+    0 8px 16px rgba(45, 106, 79, 0.18) !important;
+}
+.bc-profile-copy strong,
+.bc-profile-menu-head strong {
+  display: block !important;
+  color: #5d2b0a !important;
+  font-size: 0.86rem !important;
+  line-height: 1.1 !important;
+  font-weight: 900 !important;
+}
+.bc-profile-copy small,
+.bc-profile-menu-head small {
+  display: block !important;
+  margin-top: 0.14rem !important;
+  color: #8b5e3c !important;
+  font-size: 0.66rem !important;
+  line-height: 1.1 !important;
+  font-weight: 900 !important;
+}
+.bc-profile-chevron {
+  color: #8b5e3c !important;
+  transition: transform 0.18s ease !important;
+}
+.bc-profile-button[aria-expanded="true"] .bc-profile-chevron {
+  transform: rotate(180deg) !important;
+}
+.bc-profile-wrap.is-loading .bc-profile-avatar iconify-icon {
+  animation: bcProfilePulse 1.05s ease-in-out infinite !important;
+}
+@keyframes bcProfilePulse {
+  50% {
+    transform: scale(1.08);
+    opacity: 0.72;
+  }
+}
+.bc-profile-portal {
+  position: fixed !important;
+  z-index: 90000 !important;
+  width: min(330px, calc(100vw - 24px)) !important;
+  padding: 0.9rem !important;
+  border-radius: 24px !important;
+  border: 3px solid #8b6914 !important;
+  background: linear-gradient(135deg, #fffaf0, #fdf6e3 60%, #ffe8aa) !important;
+  box-shadow: 0 28px 70px rgba(45, 30, 13, 0.36) !important;
+  color: #5d2b0a !important;
+  font-family: Nunito, sans-serif !important;
+}
+.bc-profile-portal[hidden] {
+  display: none !important;
+}
+.bc-profile-portal:before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1.5px dashed rgba(139, 94, 60, 0.22);
+  border-radius: 17px;
+  pointer-events: none;
+}
+.bc-profile-menu-head,
+.bc-profile-menu-actions {
+  position: relative !important;
+  z-index: 1 !important;
+}
+.bc-profile-menu-head {
+  display: flex !important;
+  gap: 0.72rem !important;
+  align-items: center !important;
+}
+.bc-profile-menu-actions {
+  display: grid !important;
+  gap: 0.55rem !important;
+  margin-top: 0.9rem !important;
+}
+.bc-profile-action {
+  min-height: 39px !important;
+  border-radius: 999px !important;
+  border: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.42rem !important;
+  font-size: 0.76rem !important;
+  font-weight: 900 !important;
+  cursor: pointer !important;
+  font-family: Nunito, sans-serif !important;
+}
+.bc-profile-action.secondary {
+  background: rgba(255, 255, 255, 0.86) !important;
+  color: #5d2b0a !important;
+  border: 2px solid rgba(139, 94, 60, 0.28) !important;
+}
+.bc-profile-action.danger {
+  background: linear-gradient(135deg, #c0272d, #8f1e23) !important;
+  color: white !important;
+  box-shadow: 0 10px 20px rgba(192, 39, 45, 0.23) !important;
+}
+.bc-status-seal {
+  position: absolute !important;
+  top: -7px !important;
+  right: -6px !important;
+  width: 22px !important;
+  height: 22px !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 999px !important;
+  border: 2px solid rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.16) !important;
+  z-index: 120 !important;
+  font-size: 0.58rem !important;
+  cursor: help !important;
+}
+.bc-status-loading {
+  background: rgba(255, 255, 255, 0.93) !important;
+  color: #8b5e3c !important;
+  border-color: rgba(139, 94, 60, 0.25) !important;
+}
+.bc-status-loading iconify-icon {
+  animation: bcStatusSpin 0.85s linear infinite !important;
+}
+.bc-status-ok {
+  background: #10b981 !important;
+  color: white !important;
+}
+.bc-status-pending,
+.cert-pending {
+  background: #e7e5e4 !important;
+  color: #57534e !important;
+}
+@keyframes bcStatusSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.trophy-end {
+  position: relative !important;
+}
+.bc-floating-tip {
+  position: fixed !important;
+  z-index: 95000 !important;
+  max-width: min(210px, 74vw) !important;
+  padding: 0.42rem 0.54rem !important;
+  border-radius: 11px !important;
+  background: rgba(93, 43, 10, 0.96) !important;
+  color: #fffaf0 !important;
+  font-size: 0.61rem !important;
+  font-weight: 900 !important;
+  line-height: 1.2 !important;
+  text-align: center !important;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22) !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  transform: translateY(4px) !important;
+  transition:
+    opacity 0.12s ease,
+    transform 0.12s ease !important;
+  font-family: Nunito, sans-serif !important;
+}
+.bc-floating-tip.is-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+.bc-confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(24, 33, 26, 0.58);
+  backdrop-filter: blur(8px);
+}
+.bc-confirm-backdrop.is-open {
+  display: flex;
+}
+.bc-confirm-card {
+  width: min(100%, 390px);
+  border-radius: 28px;
+  border: 4px solid #8b6914;
+  background: linear-gradient(135deg, #fffaf0, #fdf6e3 58%, #ffe8aa);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.32);
+  overflow: hidden;
+  color: #5d2b0a;
+  font-family: Nunito, sans-serif;
+}
+.bc-confirm-ribbon {
+  height: 10px;
+  background: repeating-linear-gradient(
+    90deg,
+    #c0272d 0 22px,
+    #8f1e23 22px 44px,
+    #f5a800 44px 66px
+  );
+}
+.bc-confirm-body {
+  padding: 20px;
+  text-align: center;
+  position: relative;
+}
+.bc-confirm-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 12px;
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #2d6a4f, #10b981);
+  color: white;
+  font-size: 1.8rem;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.25),
+    0 12px 22px rgba(45, 106, 79, 0.18);
+}
+.bc-confirm-title {
+  font-family: "Fredoka One", Fredoka, Nunito, sans-serif;
+  font-size: 1.35rem;
+  line-height: 1.1;
+  margin: 0;
+  color: #5d2b0a;
+}
+.bc-confirm-text {
+  margin: 0.55rem 0 0;
+  color: #6b3a1f;
+  font-size: 0.86rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+.bc-confirm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+.bc-confirm-btn {
+  min-height: 42px;
+  border-radius: 999px;
+  border: 0;
+  font-weight: 900;
+  cursor: pointer;
+  font-size: 0.82rem;
+}
+.bc-confirm-btn.cancel {
+  background: rgba(255, 255, 255, 0.86);
+  color: #5d2b0a;
+  border: 2px solid rgba(139, 94, 60, 0.3);
+}
+.bc-confirm-btn.ok {
+  background: linear-gradient(135deg, #c0272d, #8f1e23);
+  color: white;
+  box-shadow: 0 10px 20px rgba(192, 39, 45, 0.22);
+}
+.bc-confirm-btn:disabled {
+  opacity: 0.72;
+  cursor: wait;
+}
+
+/* Ajustes finais: card Cidadão Fiscal Nota A */
+.trail-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.04rem;
+}
+.trail-card-content .trail-card-tag,
+.trail-card-content .trail-card-title,
+.trail-card-content .trail-card-desc {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.trophy-end {
+  justify-content: center;
+  align-items: center;
+  gap: 0.08rem;
+  text-align: center;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease;
+}
+.trophy-end:hover,
+.trophy-end:focus-visible {
+  transform: translateY(-3px) scale(1.015);
+  border-color: #c0272d;
+  background: linear-gradient(135deg, #fff8c7, #fff0d8);
+  box-shadow:
+    0 14px 30px rgba(143, 30, 35, 0.16),
+    0 8px 22px rgba(245, 168, 0, 0.24);
+}
+.trophy-art {
+  width: 100%;
+  height: auto;
+  margin: -0.15rem auto 0.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  overflow: visible;
+}
+.trophy-chest-image {
+  width: clamp(78px, 12vw, 116px);
+  height: auto;
+  max-width: 100%;
+  display: block;
+  object-fit: contain;
+  object-position: center;
+  margin: 0 auto;
+  transform: translateY(-2px);
+  filter: drop-shadow(0 6px 6px rgba(93, 43, 10, 0.22));
+  transition:
+    transform 0.18s ease,
+    filter 0.18s ease;
+}
+.trophy-end:hover .trophy-chest-image,
+.trophy-end:focus-visible .trophy-chest-image {
+  transform: translateY(-5px) scale(1.03);
+  filter: drop-shadow(0 9px 8px rgba(93, 43, 10, 0.26));
+}
+@media (max-width: 390px) {
+  .trophy-chest-image {
+    width: 76px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .trophy-end,
+  .trophy-chest-image {
+    transition: none !important;
+  }
+  .trophy-end:hover,
+  .trophy-end:focus-visible,
+  .trophy-end:hover .trophy-chest-image,
+  .trophy-end:focus-visible .trophy-chest-image {
+    transform: none !important;
+  }
+}
+
+/* Iconify: base de renderizacao e compatibilidade visual */
+iconify-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+}
+
+/* Trilhas atualizadas da página inicial */
+.trail-card-pratica {
+  border-color: #0f766e;
+  background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+}
+.icon-pratica {
+  background: linear-gradient(135deg, #2dd4bf, #0f766e);
+}
+.tag-pratica,
+.badge-pratica {
+  color: #115e59;
+  background: rgba(204, 251, 241, 0.9);
+  border-color: rgba(15, 118, 110, 0.35);
+}
+@media (min-width: 1024px) {
+  .trail-stop:nth-child(5) {
+    align-self: flex-start !important;
+  }
+}
+
+/* Cards da trilha mais compactos */
+.trail-card {
+  min-height: 76px;
+  padding: 11px 12px;
+  gap: 10px;
+  border-radius: 18px;
+}
+.trail-card-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  font-size: 1.45rem;
+}
+.trail-card-title {
+  font-size: 1.05rem;
+}
+.trail-card-desc {
+  font-size: 0.72rem;
+  line-height: 1.2;
+}
+.map-stops {
+  gap: 1.5rem;
+}
+@media (min-width: 1024px) {
+  .trail-card {
+    min-height: 86px;
+    padding: 0.75rem !important;
+  }
+  .trail-card-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.55rem;
+  }
+  .trail-card-title {
+    font-size: 1.1rem;
+  }
+  .trail-card-desc {
+    font-size: 0.76rem;
+  }
+  .map-parchment > .map-stops {
+    gap: 0.65rem !important;
+  }
+}
+@media (max-width: 390px) {
+  .trail-card {
+    min-height: 72px;
+    padding: 10px;
+  }
+  .trail-card-icon {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+/* Formato serpenteado da trilha com cinco paradas */
+.map-stops {
+  gap: 1.15rem;
+}
+.trail-stop-start,
+.trail-stop-end {
+  width: 82%;
+}
+.trail-stop:nth-child(1),
+.trail-stop:nth-child(3),
+.trail-stop:nth-child(5) {
+  transform: translateX(2px);
+}
+.trail-stop:nth-child(2),
+.trail-stop:nth-child(4) {
+  transform: translateX(-2px);
+}
+.trail-card {
+  border-radius: 16px 22px 16px 22px;
+}
+.trail-stop:nth-child(even) .trail-card {
+  border-radius: 22px 16px 22px 16px;
+}
+@media (min-width: 1024px) {
+  .map-parchment > .map-stops {
+    justify-content: space-around !important;
+    gap: 0.55rem !important;
+  }
+  .trail-stop {
+    width: 64% !important;
+  }
+  .trail-stop:nth-child(1),
+  .trail-stop:nth-child(3),
+  .trail-stop:nth-child(5) {
+    align-self: flex-start !important;
+    transform: translateX(1.1rem);
+  }
+  .trail-stop:nth-child(2),
+  .trail-stop:nth-child(4) {
+    align-self: flex-end !important;
+    transform: translateX(-1.1rem);
+  }
+  .map-route {
+    inset: 1rem 1.4rem;
+    width: calc(100% - 2.8rem);
+    height: calc(100% - 2rem);
+  }
+}
+@media (max-width: 767px) {
+  .trail-stop-start,
+  .trail-stop-end {
+    width: 86%;
+  }
+  .trail-stop:nth-child(1),
+  .trail-stop:nth-child(3),
+  .trail-stop:nth-child(5) {
+    transform: translateX(0);
+  }
+  .trail-stop:nth-child(2),
+  .trail-stop:nth-child(4) {
+    transform: translateX(0);
+  }
+}
+</style>
+<script src="../../shared/layout/footer.js"></script>
+<script src="../../shared/services/api.js"></script>
+<script src="../../shared/services/authService.js"></script>
+<script src="../../shared/accessibility/acessibility.js"></script>
+<script src="../../shared/layout/header.js"></script>
+<script defer="" src="../../shared/layout/background.js"></script>
+<script defer="" src="script.js"></script>
+</head>
+<body class="m-0 min-h-screen overflow-x-hidden bg-[#86cbed] font-[Nunito] text-[#233324] antialiased">
+<main aria-labelledby="titulo-principal" class="relative z-10 flex min-h-[90vh] items-center justify-center p-4 max-md:p-3 opacity-0 animate-[content_.75s_ease_.28s_forwards]" id="conteudo-principal" tabindex="-1">
+<div class="home-shell mx-auto flex w-full max-w-[430px] flex-col items-center gap-4 lg:grid lg:max-w-[1180px] lg:grid-cols-[330px_minmax(560px,760px)] lg:justify-center lg:justify-items-center lg:items-center lg:gap-4 xl:max-w-[1260px] xl:grid-cols-[360px_minmax(680px,820px)] xl:gap-7 translate-z-0 md:max-w-[94vw] lg:w-[min(96vw,1260px)]">
+<section class="intro-col flex flex-col items-center lg:h-full lg:justify-center lg:gap-4">
+<div class="fade-in-up fade-in-badge intro-badge-wrap mb-4 lg:mb-0 opacity-0 translate-y-14 scale-[.985] backface-hidden [&amp;.is-visible]:animate-[fadeRiseSync_1.55s_cubic-bezier(.16,1,.3,1)_forwards]">
+<div class="app-badge inline-flex items-center justify-center gap-[0.45rem] rounded-full px-[0.85rem] py-[0.52rem] text-center text-[0.66rem] font-black uppercase tracking-[0.105em] text-white translate-z-0 gap-[.45rem] border-2 bg-gradient-to-br from-[#c0272d] to-[#8f1e23] px-[.85rem] py-[.52rem] text-[.66rem] tracking-[.105em] border-[#f5a800] shadow-[0_12px_28px_rgba(76,38,10,.18)]">
+<iconify-icon aria-hidden="true" icon="fa6-solid:star"></iconify-icon>
+              Programa Educação Fiscal · SEF/MG
+              <iconify-icon aria-hidden="true" icon="fa6-solid:star"></iconify-icon>
+</div>
+</div>
+<div class="fade-in-up fade-in-placa title-plaque-wrap mb-4 lg:mb-0 opacity-0 translate-y-14 scale-[.985] backface-hidden [&amp;.is-visible]:animate-[fadeRiseSync_1.55s_cubic-bezier(.16,1,.3,1)_forwards]">
+<div class="title-frame relative inline-block">
+<div class="placa-colonial page-title-card rounded-3xl px-7 py-5 text-center relative translate-z-0 rounded-[28px] border-[#8b6914] border-[3px] bg-[linear-gradient(135deg,rgba(253,246,227,.98),rgba(245,230,192,.96)_55%,rgba(237,217,163,.96))] shadow-[0_14px_38px_rgba(28,44,30,.25),0_2px_8px_rgba(0,0,0,.12),inset_0_1px_0_rgba(255,255,255,.85)]">
+<p class="page-eyebrow mb-1 mt-0 text-xs font-black uppercase tracking-[0.25em] text-[#9b6b2a] tracking-[.25em]">Bem-vindo ao</p>
+<h1 class="main-title m-0 text-4xl leading-[1.05] text-[#5d2b0a] md:text-5xl font-[Fredoka] font-black" id="titulo-principal">
+                  Balanço<br/>Cidadão
+                </h1>
+<div class="title-divider mt-2 flex items-center justify-center gap-2">
+<div class="divider-line h-0.5 w-10 rounded-full bg-[#f5a800]"></div>
+<span class="state-name text-base tracking-[0.2em] text-[#f5a800] font-black tracking-[.2em]">MINAS GERAIS</span>
+<div class="divider-line h-0.5 w-10 rounded-full bg-[#f5a800]"></div>
+</div>
+</div>
+<div class="bolt bolt-tl border from-[#ffe48a] to-[#ad7710] -left-[7px] -top-[7px]"></div>
+<div class="bolt bolt-tr border from-[#ffe48a] to-[#ad7710] -right-[7px] -top-[7px]"></div>
+<div class="bolt bolt-bl border from-[#ffe48a] to-[#ad7710] -bottom-[7px] -left-[7px]"></div>
+<div class="bolt bolt-br border from-[#ffe48a] to-[#ad7710] -bottom-[7px] -right-[7px]"></div>
+</div>
+</div>
+<div class="fade-in-up fade-in-mission mission-wrap mx-auto mb-5 w-full max-w-96 lg:mb-0 opacity-0 translate-y-14 scale-[.985] backface-hidden [&amp;.is-visible]:animate-[fadeRiseSync_1.55s_cubic-bezier(.16,1,.3,1)_forwards]">
+<div class="mission-box relative w-full rounded-[22px] px-[18px] py-[15px] lg:flex lg:min-h-[150px] lg:max-w-[330px] lg:flex-col lg:justify-center translate-z-0 border-[2.5px] border-[#f5a800] bg-[linear-gradient(135deg,rgba(255,255,255,.94),rgba(253,246,227,.91))] shadow-[0_10px_28px_rgba(70,83,45,.18),inset_0_1px_0_rgba(255,255,255,.9)]">
+<p class="mission-title m-0 text-lg text-[#3d1a00] font-[Fredoka] font-black">
+<iconify-icon aria-hidden="true" class="mission-title-icon" icon="fa6-solid:map-location-dot"></iconify-icon>
+                Trilha do Tesouro
+              </p>
+<p class="mission-desc mb-0 mt-1 text-sm font-bold leading-[1.625] text-[#6b3a1f] leading-relaxed">
+                Siga o mapa, desbrave Minas Gerais e chegue ao final para se
+                tornar um <strong>Cidadão Fiscal Nota A</strong>!
+              </p>
+<div class="mission-progress mt-3 flex items-center justify-center gap-1">
+<div class="xp-dot h-2.5 w-2.5 rounded-full bg-[#f5a800] shadow-[0_0_0_3px_rgba(245,168,0,.16)]"></div>
+<div class="xp-dot h-2.5 w-2.5 rounded-full bg-[#f5a800] shadow-[0_0_0_3px_rgba(245,168,0,.16)]" style="animation-delay: 0.7s"></div>
+<div class="xp-dot h-2.5 w-2.5 rounded-full bg-[#f5a800] shadow-[0_0_0_3px_rgba(245,168,0,.16)]" style="animation-delay: 0.8s"></div>
+<span class="mission-count ml-2 text-xs font-black text-[#8b5e3c]">5 paradas pela frente</span>
+</div>
+</div>
+</div>
+</section>
+<section aria-label="Mapa da Trilha do Tesouro" class="map-col fade-in-up fade-in-map flex w-full items-center justify-center opacity-0 translate-y-14 scale-[.985] backface-hidden [&amp;.is-visible]:animate-[fadeRiseSync_1.55s_cubic-bezier(.16,1,.3,1)_forwards] min-w-0 lg:w-full xl:w-full">
+<div class="map-parchment map-panel relative overflow-hidden rounded-[28px] border-[#8b5e3c] px-4 py-8 lg:w-full lg:rounded-[35px] lg:px-8 lg:py-9 translate-z-0 border-[3.5px] bg-[linear-gradient(135deg,rgba(253,246,227,.96),rgba(245,234,210,.93)_60%,rgba(238,222,180,.95))] shadow-[0_22px_54px_rgba(57,75,40,.3),inset_0_1px_0_rgba(255,255,255,.7)] w-full min-w-0 max-w-none sm:px-5 md:px-7">
+<svg aria-hidden="true" class="map-route pointer-events-none absolute inset-4 h-[calc(100%-2rem)] w-[calc(100%-2rem)] overflow-visible lg:inset-[1rem_1.4rem] lg:h-[calc(100%-2rem)] lg:w-[calc(100%-2.8rem)]" focusable="false" preserveaspectratio="none" viewbox="0 0 360 860">
+<path class="fill-none stroke-[#b98b2e] stroke-[5] [stroke-dasharray:8_10] opacity-70 animate-[treasureMarch_15s_linear_infinite]" d="M92,40 C92,110 268,120 268,205 C268,285 92,295 92,380 C92,460 268,470 268,555 C268,635 92,645 92,725 C92,790 180,805 180,850"></path>
+</svg>
+<div class="map-stops relative z-10 flex flex-col gap-[1.15rem] lg:h-full lg:justify-around lg:gap-[0.55rem] lg:gap-[.55rem]">
+<div class="trail-stop trail-stop-start relative z-[1] w-[82%] self-start max-md:w-[86%] lg:w-[64%] lg:translate-x-[1.1rem]">
+<a aria-label="Abrir Minas Gerais: Diversidade, cultura e riqueza do estado" class="trail-card trail-card-historia relative flex w-full items-center gap-2.5 rounded-[16px_22px_16px_22px] px-3 py-[11px] no-underline lg:min-h-[86px] lg:px-3 lg:py-3 min-h-[76px] translate-z-0 transition-[transform,box-shadow] duration-200 active:translate-y-0 active:scale-[.99] border-[#f59e0b] bg-[linear-gradient(135deg,#fffbeb,#fef3c7)] border-[2.5px] shadow-[0_7px_20px_rgba(0,0,0,.13)] hover:shadow-[0_14px_34px_rgba(0,0,0,.17)] hover:-translate-y-[3px] hover:scale-[1.012]" href="../historia">
+<div class="trail-card-number absolute z-20 grid h-[26px] w-[26px] place-items-center rounded-full text-[11px] text-white border-2 border-white font-black shadow-md left-4 -top-[13px] bg-[#8b6914]">01</div>
+<div class="trail-card-icon icon-historia grid h-[46px] w-[46px] shrink-0 place-items-center rounded-[14px] text-[1.45rem] lg:h-[50px] lg:w-[50px] lg:text-[1.55rem] border-[3px] border-white/80 text-white shadow-[0_8px_15px_rgba(0,0,0,.16),inset_0_2px_0_rgba(255,255,255,.28)] bg-gradient-to-br from-[#fb923c] to-[#9a3412]"><iconify-icon aria-hidden="true" icon="fa6-solid:mountain-sun"></iconify-icon></div>
+<div class="trail-card-content flex min-w-0 flex-1 flex-col gap-[0.04rem]"><div class="trail-card-tag tag-historia mb-0 inline-block rounded-full px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.05em] inline-flex w-fit items-center gap-1 border tracking-[.05em] border-orange-700/30 bg-orange-100/90 text-orange-900"><iconify-icon aria-hidden="true" icon="fa6-solid:map-location-dot"></iconify-icon>Identidade</div><h2 class="trail-card-title m-0 text-[1.05rem] leading-[1.15] text-[#1f2937] lg:text-[1.1rem] font-[Fredoka] font-black">Minas Gerais</h2><p class="trail-card-desc m-0 text-[0.72rem] font-bold leading-[1.2] text-[#6b7280] lg:text-[0.76rem] text-[.72rem] lg:text-[.76rem]">Diversidade, cultura e riqueza do estado</p></div>
+<div aria-hidden="true" class="trail-card-arrow text-[1.9rem] font-black text-slate-300">›</div>
+<div class="mission-badge badge-historia absolute whitespace-nowrap rounded-full px-2 py-[3px] text-[9px] font-black border-orange-700/30 bg-orange-100/90 text-orange-900 -bottom-2 right-3 inline-flex items-center gap-1 border shadow-sm"><iconify-icon aria-hidden="true" icon="fa6-solid:medal"></iconify-icon>Missão 1</div>
+</a></div><div class="trail-stop trail-stop-end relative z-[1] w-[82%] self-end max-md:w-[86%] lg:w-[64%] lg:-translate-x-[1.1rem]">
+<a aria-label="Abrir Entendendo o Balanço: Balanço e administração pública" class="trail-card trail-card-conteudo relative flex w-full items-center gap-2.5 rounded-[16px_22px_16px_22px] px-3 py-[11px] no-underline lg:min-h-[86px] lg:px-3 lg:py-3 min-h-[76px] translate-z-0 transition-[transform,box-shadow] duration-200 active:translate-y-0 active:scale-[.99] rounded-[22px_16px_22px_16px] border-[#3b82f6] bg-[linear-gradient(135deg,#eff6ff,#dbeafe)] border-[2.5px] shadow-[0_7px_20px_rgba(0,0,0,.13)] hover:shadow-[0_14px_34px_rgba(0,0,0,.17)] hover:-translate-y-[3px] hover:scale-[1.012]" href="../balanco">
+<div class="trail-card-number absolute z-20 grid h-[26px] w-[26px] place-items-center rounded-full text-[11px] text-white border-2 border-white font-black shadow-md left-4 -top-[13px] bg-[#8b6914]">02</div>
+<div class="trail-card-icon icon-conteudo grid h-[46px] w-[46px] shrink-0 place-items-center rounded-[14px] text-[1.45rem] lg:h-[50px] lg:w-[50px] lg:text-[1.55rem] border-[3px] border-white/80 text-white shadow-[0_8px_15px_rgba(0,0,0,.16),inset_0_2px_0_rgba(255,255,255,.28)] bg-gradient-to-br from-[#60a5fa] to-[#1d4ed8]"><iconify-icon aria-hidden="true" icon="fa6-solid:book-open"></iconify-icon></div>
+<div class="trail-card-content flex min-w-0 flex-1 flex-col gap-[0.04rem]"><div class="trail-card-tag tag-conteudo mb-0 inline-block rounded-full px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.05em] inline-flex w-fit items-center gap-1 border tracking-[.05em] border-blue-700/30 bg-blue-100/90 text-blue-900"><iconify-icon aria-hidden="true" icon="fa6-solid:scale-balanced"></iconify-icon>Conceitos</div><h2 class="trail-card-title m-0 text-[1.05rem] leading-[1.15] text-[#1f2937] lg:text-[1.1rem] font-[Fredoka] font-black">Entendendo o Balanço</h2><p class="trail-card-desc m-0 text-[0.72rem] font-bold leading-[1.2] text-[#6b7280] lg:text-[0.76rem] text-[.72rem] lg:text-[.76rem]">Balanço e administração pública</p></div>
+<div aria-hidden="true" class="trail-card-arrow text-[1.9rem] font-black text-slate-300">›</div>
+<div class="mission-badge badge-conteudo absolute whitespace-nowrap rounded-full px-2 py-[3px] text-[9px] font-black border-blue-700/30 bg-blue-100/90 text-blue-900 -bottom-2 right-3 inline-flex items-center gap-1 border shadow-sm"><iconify-icon aria-hidden="true" icon="fa6-solid:medal"></iconify-icon>Missão 2</div>
+</a></div><div class="trail-stop trail-stop-start relative z-[1] w-[82%] self-start max-md:w-[86%] lg:w-[64%] lg:translate-x-[1.1rem]">
+<a aria-label="Abrir O Balanço na Prática: Visualizações e notícias do ano" class="trail-card trail-card-pratica relative flex w-full items-center gap-2.5 rounded-[16px_22px_16px_22px] px-3 py-[11px] no-underline lg:min-h-[86px] lg:px-3 lg:py-3 min-h-[76px] translate-z-0 transition-[transform,box-shadow] duration-200 active:translate-y-0 active:scale-[.99] border-[#0f766e] bg-[linear-gradient(135deg,#f0fdfa,#ccfbf1)] border-[2.5px] shadow-[0_7px_20px_rgba(0,0,0,.13)] hover:shadow-[0_14px_34px_rgba(0,0,0,.17)] hover:-translate-y-[3px] hover:scale-[1.012]" href="../balanco_dados">
+<div class="trail-card-number absolute z-20 grid h-[26px] w-[26px] place-items-center rounded-full text-[11px] text-white border-2 border-white font-black shadow-md left-4 -top-[13px] bg-[#8b6914]">03</div>
+<div class="trail-card-icon icon-pratica grid h-[46px] w-[46px] shrink-0 place-items-center rounded-[14px] text-[1.45rem] lg:h-[50px] lg:w-[50px] lg:text-[1.55rem] border-[3px] border-white/80 text-white shadow-[0_8px_15px_rgba(0,0,0,.16),inset_0_2px_0_rgba(255,255,255,.28)] bg-gradient-to-br from-[#2dd4bf] to-[#0f766e]"><iconify-icon aria-hidden="true" icon="fa6-solid:chart-column"></iconify-icon></div>
+<div class="trail-card-content flex min-w-0 flex-1 flex-col gap-[0.04rem]"><div class="trail-card-tag tag-pratica mb-0 inline-block rounded-full px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.05em] inline-flex w-fit items-center gap-1 border tracking-[.05em] border-teal-700/30 bg-teal-100/90 text-teal-900"><iconify-icon aria-hidden="true" icon="fa6-solid:database"></iconify-icon>Dados</div><h2 class="trail-card-title m-0 text-[1.05rem] leading-[1.15] text-[#1f2937] lg:text-[1.1rem] font-[Fredoka] font-black">O Balanço na Prática</h2><p class="trail-card-desc m-0 text-[0.72rem] font-bold leading-[1.2] text-[#6b7280] lg:text-[0.76rem] text-[.72rem] lg:text-[.76rem]">Visualizações e notícias do ano</p></div>
+<div aria-hidden="true" class="trail-card-arrow text-[1.9rem] font-black text-slate-300">›</div>
+<div class="mission-badge badge-pratica absolute whitespace-nowrap rounded-full px-2 py-[3px] text-[9px] font-black border-teal-700/30 bg-teal-100/90 text-teal-900 -bottom-2 right-3 inline-flex items-center gap-1 border shadow-sm"><iconify-icon aria-hidden="true" icon="fa6-solid:medal"></iconify-icon>Missão 3</div>
+</a></div><div class="trail-stop trail-stop-end relative z-[1] w-[82%] self-end max-md:w-[86%] lg:w-[64%] lg:-translate-x-[1.1rem]">
+<a aria-label="Abrir Jogue &amp; Aprenda: Quiz, desafios e recompensas!" class="trail-card trail-card-game relative flex w-full items-center gap-2.5 rounded-[16px_22px_16px_22px] px-3 py-[11px] no-underline lg:min-h-[86px] lg:px-3 lg:py-3 min-h-[76px] translate-z-0 transition-[transform,box-shadow] duration-200 active:translate-y-0 active:scale-[.99] rounded-[22px_16px_22px_16px] border-[#a855f7] bg-[linear-gradient(135deg,#fdf4ff,#f3e8ff)] border-[2.5px] shadow-[0_7px_20px_rgba(0,0,0,.13)] hover:shadow-[0_14px_34px_rgba(0,0,0,.17)] hover:-translate-y-[3px] hover:scale-[1.012]" href="../trilha-jogos">
+<div class="trail-card-number absolute z-20 grid h-[26px] w-[26px] place-items-center rounded-full text-[11px] text-white border-2 border-white font-black shadow-md left-4 -top-[13px] bg-[#8b6914]">04</div>
+<div class="trail-card-icon icon-game grid h-[46px] w-[46px] shrink-0 place-items-center rounded-[14px] text-[1.45rem] lg:h-[50px] lg:w-[50px] lg:text-[1.55rem] border-[3px] border-white/80 text-white shadow-[0_8px_15px_rgba(0,0,0,.16),inset_0_2px_0_rgba(255,255,255,.28)] bg-gradient-to-br from-[#c084fc] to-[#7e22ce]"><iconify-icon aria-hidden="true" icon="fa6-solid:gamepad"></iconify-icon></div>
+<div class="trail-card-content flex min-w-0 flex-1 flex-col gap-[0.04rem]"><div class="trail-card-tag tag-game mb-0 inline-block rounded-full px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.05em] inline-flex w-fit items-center gap-1 border tracking-[.05em] border-purple-700/30 bg-purple-100/90 text-purple-900"><iconify-icon aria-hidden="true" icon="fa6-solid:trophy"></iconify-icon>Jogo</div><h2 class="trail-card-title m-0 text-[1.05rem] leading-[1.15] text-[#1f2937] lg:text-[1.1rem] font-[Fredoka] font-black">Jogue &amp; Aprenda</h2><p class="trail-card-desc m-0 text-[0.72rem] font-bold leading-[1.2] text-[#6b7280] lg:text-[0.76rem] text-[.72rem] lg:text-[.76rem]">Quiz, desafios e recompensas!</p></div>
+<div aria-hidden="true" class="trail-card-arrow text-[1.9rem] font-black text-slate-300">›</div>
+<div class="mission-badge badge-game absolute whitespace-nowrap rounded-full px-2 py-[3px] text-[9px] font-black border-purple-700/30 bg-purple-100/90 text-purple-900 -bottom-2 right-3 inline-flex items-center gap-1 border shadow-sm"><iconify-icon aria-hidden="true" icon="fa6-solid:medal"></iconify-icon>Missão 4</div>
+</a></div><div class="trail-stop trail-stop-start relative z-[1] w-[82%] self-start max-md:w-[86%] lg:w-[64%] lg:translate-x-[1.1rem]">
+<a aria-label="Abrir Saiba Mais: Mais informações, créditos e referências" class="trail-card trail-card-creditos relative flex w-full items-center gap-2.5 rounded-[16px_22px_16px_22px] px-3 py-[11px] no-underline lg:min-h-[86px] lg:px-3 lg:py-3 min-h-[76px] translate-z-0 transition-[transform,box-shadow] duration-200 active:translate-y-0 active:scale-[.99] border-[2.5px] shadow-[0_7px_20px_rgba(0,0,0,.13)] hover:shadow-[0_14px_34px_rgba(0,0,0,.17)] hover:-translate-y-[3px] hover:scale-[1.012] border-[#10b981] bg-[linear-gradient(135deg,#f0fdf4,#dcfce7)]" href="../creditos">
+<div class="trail-card-number absolute z-20 grid h-[26px] w-[26px] place-items-center rounded-full text-[11px] text-white border-2 border-white font-black shadow-md left-4 -top-[13px] bg-[#8b6914]">05</div>
+<div class="trail-card-icon icon-creditos grid h-[46px] w-[46px] shrink-0 place-items-center rounded-[14px] text-[1.45rem] lg:h-[50px] lg:w-[50px] lg:text-[1.55rem] border-[3px] border-white/80 text-white shadow-[0_8px_15px_rgba(0,0,0,.16),inset_0_2px_0_rgba(255,255,255,.28)] bg-[linear-gradient(135deg,#34d399,#15803d)]"><iconify-icon aria-hidden="true" icon="fa6-solid:circle-info"></iconify-icon></div>
+<div class="trail-card-content flex min-w-0 flex-1 flex-col gap-[0.04rem]"><div class="trail-card-tag tag-creditos mb-0 inline-block rounded-full px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.05em] inline-flex w-fit items-center gap-1 border tracking-[.05em] border-[#6ee7b7] bg-[#dcfce7] text-[#047857]"><iconify-icon aria-hidden="true" icon="fa6-solid:certificate"></iconify-icon>Referências</div><h2 class="trail-card-title m-0 text-[1.05rem] leading-[1.15] text-[#1f2937] lg:text-[1.1rem] font-[Fredoka] font-black">Saiba Mais</h2><p class="trail-card-desc m-0 text-[0.72rem] font-bold leading-[1.2] text-[#6b7280] lg:text-[0.76rem] text-[.72rem] lg:text-[.76rem]">Mais informações, créditos e referências</p></div>
+<div aria-hidden="true" class="trail-card-arrow text-[1.9rem] font-black text-slate-300">›</div>
+<div class="mission-badge badge-creditos absolute whitespace-nowrap rounded-full px-2 py-[3px] text-[9px] font-black -bottom-2 right-3 inline-flex items-center gap-1 border shadow-sm border-[#6ee7b7] bg-[#dcfce7] text-[#047857]"><iconify-icon aria-hidden="true" icon="fa6-solid:star"></iconify-icon>Final</div>
+</a></div><div class="trophy-wrapper z-10 mt-1 self-center text-center">
+<a aria-label="Visualizar minhas conquistas: Cidadão Fiscal Nota A" class="trophy-end achievements-link relative inline-flex flex-col items-center justify-center gap-[0.08rem] rounded-[22px] px-6 py-3 text-center no-underline border-[3px] transition-transform hover:-translate-y-1 hover:scale-[1.02] border-[#f5a800] bg-[linear-gradient(135deg,#fff9c4,#fff3e0)] shadow-[0_8px_24px_rgba(245,168,0,.24)]" href="../conquistas"><span aria-hidden="true" class="trophy-art mx-auto flex w-full items-center justify-center"><img alt="" class="trophy-chest-image mx-auto block h-auto max-w-full object-contain" decoding="async" height="120" loading="lazy" src="../../../public/images/treasure-chest.png" width="128"/></span>
+<p class="trophy-title mb-0 mt-2 text-base text-[#5d2b0a] font-[Fredoka] font-black">Cidadão Fiscal Nota A!</p>
+<p class="trophy-subtitle mb-0 mt-1 text-xs font-bold text-[#8b5e3c]">Visualizar minhas conquistas</p>
+</a>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body>
+</html>

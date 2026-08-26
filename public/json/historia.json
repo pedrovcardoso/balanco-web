@@ -1,0 +1,985 @@
+{
+  "version": 4,
+  "title": "História do Balanço",
+  "totalPages": 15,
+  "imageBase": "assets/images/historia/",
+  "pages": [
+    {
+      "page": 1,
+      "image": "1.png",
+      "alt": "Capa",
+      "regions": [
+        {
+          "id": "pag-1-mrjkkzks-kn04",
+          "type": "title",
+          "typeLabel": "Título",
+          "order": 1,
+          "text": "BALANÇO CIDADÃO",
+          "x": 22.055562337239593,
+          "y": 8.18147833795052,
+          "width": 56.99999321831598,
+          "height": 18.770628023797688,
+          "shape": "rectangle",
+          "character": ""
+        },
+        {
+          "id": "pag-1-mrjklg9f-pjzd",
+          "type": "other",
+          "typeLabel": "Outro texto",
+          "order": 2,
+          "text": "MINAS GERAIS",
+          "x": 79.72223578559027,
+          "y": 6.453634175318141,
+          "width": 9.8888888888889,
+          "height": 4.712287663058818,
+          "shape": "rectangle",
+          "character": ""
+        },
+        {
+          "id": "pag-1-mrjkmp8v-ygzi",
+          "type": "other",
+          "typeLabel": "Outro texto",
+          "order": 3,
+          "text": "Informações Contábeis 2025",
+          "x": 10.722222222222221,
+          "y": 93.08127956687406,
+          "width": 29.333333333333336,
+          "height": 2.7488372663795104,
+          "shape": "rectangle",
+          "character": ""
+        },
+        {
+          "id": "pag-1-mrjkngd9-oauo",
+          "type": "other",
+          "typeLabel": "Outro texto",
+          "order": 4,
+          "text": "CIDADANIA COMEÇA COM INFORMAÇÃO",
+          "x": 49.38888888888889,
+          "y": 48.39303464271253,
+          "width": 14.111111111111136,
+          "height": 10.288509990612212,
+          "shape": "rectangle",
+          "character": ""
+        }
+      ]
+    },
+    {
+      "page": 2,
+      "image": "2.png",
+      "alt": "Página 1 da história em quadrinhos",
+      "regions": [
+        {
+          "id": "pag-2-mrjkp1jd-yw9w",
+          "type": "title",
+          "typeLabel": "Título",
+          "order": 1,
+          "text": "Cidadania na palma da sua mão",
+          "x": 32.5,
+          "y": 6.255837007934837,
+          "width": 33.69047619047619,
+          "height": 9.94779973818978,
+          "shape": "rectangle",
+          "character": ""
+        },
+        {
+          "id": "pag-2-mrjkpckk-xfwa",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "order": 2,
+          "text": "Bom dia, Dona Cida!!!\nPassou cedinho na feira da agricultura familiar?",
+          "x": 44.72222222222223,
+          "y": 19.19928367081713,
+          "width": 28.595224531870045,
+          "height": 13.370850295337924,
+          "shape": "oval",
+          "character": "João"
+        },
+        {
+          "id": "pag-2-mrjl8x2r-s2vf",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "order": 3,
+          "text": "Bom dia, João!\nEu gosto de pegar tudo bem fresquinho. É como a gente costumava dizer no interior: \"Passarinho que acorda cedo bebe água limpa\". ",
+          "x": 38.92857142857143,
+          "y": 43.347752343637005,
+          "width": 36.54761904761904,
+          "height": 16.642754752199203,
+          "shape": "oval",
+          "character": "Dona Cida"
+        },
+        {
+          "id": "pag-2-mrjlohbr-2fwf",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "rectangle",
+          "order": 4,
+          "text": "O povo do interior\ntem toda razão!\nNada melhor que hortaliças fresquinhas!",
+          "x": 35.166666666666664,
+          "y": 62.92260784431029,
+          "width": 19.44444444444445,
+          "height": 16.80717642872043
+        },
+        {
+          "id": "pag-2-mrjloozb-qygp",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "rectangle",
+          "order": 5,
+          "text": "Aliás...\nTem sim: pão!\nFalando nisso, acabou de sair.\nVamos entrar?",
+          "x": 33.94444444444444,
+          "y": 80.201008725104,
+          "width": 21,
+          "height": 12.72318963295659
+        }
+      ]
+    },
+    {
+      "page": 3,
+      "image": "3.png",
+      "alt": "Página 2 da história em quadrinhos",
+      "regions": [
+        {
+          "id": "pag-3-mrjlq94e-9mso",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "rectangle",
+          "order": 1,
+          "text": "Ah! Esse cheirinho de pão de queijo no forno e café coado me leva direto pro sítio onde eu nasci, perto\nde Mariana. Quanta lembrança boa!",
+          "x": 35.05555555555556,
+          "y": 16.50652235271018,
+          "width": 30.1111111111111,
+          "height": 14.686649616819452
+        },
+        {
+          "id": "pag-3-mrjlqk53-tv6k",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "rectangle",
+          "order": 2,
+          "text": "Além disso você acha que eu perderia a oportunidade de ter mais aulas sobre as contas públicas?",
+          "x": 67.83333333333333,
+          "y": 17.92021008970536,
+          "width": 21,
+          "height": 16.650100013498754
+        },
+        {
+          "id": "pag-3-mrjlr0et-jbn0",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "oval",
+          "order": 3,
+          "text": "Estou gostando de ver, Dona Cida!\nCidadania começa com informação.",
+          "x": 45.16666666666666,
+          "y": 37.79037661524868,
+          "width": 26.544444444444437,
+          "height": 12.194888765661624
+        },
+        {
+          "id": "pag-3-mrjlrp99-c32j",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "oval",
+          "order": 4,
+          "text": "Você tem toda razão e eu já estou prontinha para fazer minhas anotações!",
+          "x": 38.16666666666667,
+          "y": 78.708782780498,
+          "width": 30.666666666666657,
+          "height": 13.901262747119247
+        }
+      ]
+    },
+    {
+      "page": 4,
+      "image": "4.png",
+      "alt": "Página 3 da história em quadrinhos",
+      "regions": [
+        {
+          "id": "pag-4-mrjqvi7p-ry8o",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "oval",
+          "order": 1,
+          "text": "Não precisa anotar.\nA entrega do Balanço Geral\nreferente ao ano de 2025 foi feita e, conforme prometido, guardei um exemplar do Balanço Cidadão\npara a senhora.",
+          "x": 41.16667344835068,
+          "y": 7.239009061038914,
+          "width": 40.777743869357636,
+          "height": 18.456478788548146
+        },
+        {
+          "id": "pag-4-mrjqw3vo-xd9o",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "rectangle",
+          "order": 2,
+          "text": "Que maravilha!\nAssim, posso compartilhar as informações em casa, como fiz ano passado.\n\nMeus netos adoram aprender sobre como nosso Estado é administrado.\n\nEu ensino para eles de um jeito bem simples. Conto “causos” e curiosidades de Minas, falo das tradições e cultura da nossa terra e da grandiosidade do nosso povo.\nAssim, vou explicando que para dar conta de tudo é necessário planejar, arrecadar,  comprar, pagar, investir...",
+          "x": 11.611104329427075,
+          "y": 43.75928039367277,
+          "width": 40.99999999999999,
+          "height": 47.82976843500349
+        },
+        {
+          "id": "pag-4-mrjqyi7c-5lmx",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "oval",
+          "order": 3,
+          "text": "... E prestar contas! Afinal,  o Estado deve  mostrar tudo o que fez com o dinheiro público ao longo do ano. ",
+          "x": 69.72220865885413,
+          "y": 62.844064843107674,
+          "width": 21.444444444444443,
+          "height": 24.325852454012193
+        }
+      ]
+    },
+    {
+      "page": 5,
+      "image": "5.png",
+      "alt": "Página 5 da história em quadrinhos",
+      "regions": [
+        {
+          "id": "pag-5-mrjqz8f5-artp",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "rectangle",
+          "order": 1,
+          "text": "Dessa parte eu não me esqueço, afinal é nessa hora que entra em cena um dos documentos mais importantes da gestão pública, o Balanço Geral do Estado.",
+          "x": 17.72222222222222,
+          "y": 8.888323404846055,
+          "width": 39.66666666666667,
+          "height": 13.508569312269143
+        },
+        {
+          "id": "pag-5-mrjqzqza-1ny5",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "oval",
+          "order": 2,
+          "text": "Isso mesmo!\nO documento que mostra o que entrou, o que foi gasto, onde foi investido e o que ficou como obrigação para o próximo ano...",
+          "x": 30.166666666666657,
+          "y": 27.501876211819997,
+          "width": 38.55555555555556,
+          "height": 18.142325958104777
+        },
+        {
+          "id": "pag-5-mrjr0fef-4c9m",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "rectangle",
+          "order": 3,
+          "text": "Essa eu sei...\nAs obrigações que ficam para o próximo ano são os restos a pagar!",
+          "x": 53.49999999999999,
+          "y": 47.92180539704746,
+          "width": 22.3333468967014,
+          "height": 13.115883067806706
+        },
+        {
+          "id": "pag-5-mrjr0mgi-we75",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "oval",
+          "order": 4,
+          "text": "Acertou em cheio!",
+          "x": 34.277777777777786,
+          "y": 57.267856896329576,
+          "width": 12.222222222222221,
+          "height": 5.890363174017345
+        },
+        {
+          "id": "pag-5-mrjr0y4e-9dyq",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "rectangle",
+          "order": 5,
+          "text": "Digamos que eu seja uma aluna dedicada...\ne porque ano passado eu deixei umas continhas penduradas para pagar este ano.",
+          "x": 67.61111111111111,
+          "y": 64.80752003337874,
+          "width": 23.555569118923614,
+          "height": 19.948704733154173
+        },
+        {
+          "id": "pag-5-mrjr1dt1-vmn7",
+          "type": "sound",
+          "typeLabel": "Efeito sonoro",
+          "character": "",
+          "shape": "oval",
+          "order": 6,
+          "text": "Ha ha ha\nHa ha ha",
+          "x": 67.83333333333333,
+          "y": 85.14891580458712,
+          "width": 21.8888888888889,
+          "height": 7.853820761084322
+        }
+      ]
+    },
+    {
+      "page": 6,
+      "image": "6.png",
+      "alt": "Página 6 da história em quadrinhos",
+      "regions": [
+        {
+          "id": "pag-6-mrjrbnbp-0fv2",
+          "type": "title",
+          "typeLabel": "Título",
+          "character": "",
+          "shape": "rectangle",
+          "order": 1,
+          "text": "minutos depois...",
+          "x": 13.833333333333334,
+          "y": 4.725791211083704,
+          "width": 27.4333265516493,
+          "height": 8.110897176306006
+        },
+        {
+          "id": "pag-6-mrjrbzbe-gpvj",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Pedrinho",
+          "shape": "oval",
+          "order": 2,
+          "text": "Vovó, vovó... \nEu já estava preocupado com a senhora!\nA mamãe disse que saiu cedinho para a feira e não voltou..",
+          "x": 10.388895670572916,
+          "y": 15.72114027660175,
+          "width": 33.65555555555555,
+          "height": 15.25787886248451
+        },
+        {
+          "id": "pag-6-mrjrcdxu-w8nm",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "rectangle",
+          "order": 3,
+          "text": "Oi Pedrinho, sua avó e eu nos distraímos. Estávamos  onversando sobre as contas do Estado.",
+          "x": 69.38888888888889,
+          "y": 27.4233284170256,
+          "width": 20.111111111111114,
+          "height": 17.199867466774656
+        },
+        {
+          "id": "pag-6-mrjrczsl-jsge",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "oval",
+          "order": 4,
+          "text": "Pedrinho, \nnão precisava preocupar! \nFui à feira, passei aqui para comprar pão e aproveitei para aprender um pouco mais com o João.",
+          "x": 10.722222222222221,
+          "y": 50.35649222977949,
+          "width": 34.11111111111111,
+          "height": 15.472024502540215
+        },
+        {
+          "id": "pag-6-mrjrdhn7-o1xo",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "rectangle",
+          "order": 5,
+          "text": "Quê isso, \nDona Cida!\nFico feliz \nem dividir conhecimento.",
+          "x": 68.49999999999999,
+          "y": 62.60845022027512,
+          "width": 17.555555555555557,
+          "height": 13.901262747119254
+        },
+        {
+          "id": "pag-6-mrjrduq1-e1ad",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Pedrinho",
+          "shape": "rectangle",
+          "order": 6,
+          "text": "A vovó está se tornando uma expert. \nEstá aplicando todo esse conhecimento lá em casa.",
+          "x": 70.94444444444444,
+          "y": 76.11702672293194,
+          "width": 19.333333333333343,
+          "height": 16.57155701229614
+        }
+      ]
+    },
+    {
+      "page": 7,
+      "image": "7.png",
+      "alt": "Página 7 da história em quadrinhos",
+      "regions": [
+        {
+          "id": "pag-7-mrjrffyn-485s",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "rectangle",
+          "order": 1,
+          "text": "O Pedrinho não está mentindo! \nDesde que entendi a importância de manter o equilíbrio do meu “caixa”, acompanho todas as contas, tim-tim por tim-tim. ",
+          "x": 14.277784559461807,
+          "y": 8.574163384015021,
+          "width": 55.33332655164931,
+          "height": 32.12212691283486
+        },
+        {
+          "id": "pag-7-mrjrg55i-60u9",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "rectangle",
+          "order": 2,
+          "text": "Que maravilha! \nEssa benfeitoria vai valorizar muito o imóvel!",
+          "x": 62.38888888888889,
+          "y": 47.21496392534576,
+          "width": 18.999999999999993,
+          "height": 16.02179195581612
+        },
+        {
+          "id": "pag-7-mrjrgcio-psbr",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "rectangle",
+          "order": 3,
+          "text": "Tenho certeza que sim.",
+          "x": 15.722222222222223,
+          "y": 60.09522757672815,
+          "width": 12.555555555555555,
+          "height": 10.602658027463832
+        },
+        {
+          "id": "pag-7-mrjrgqcw-hm7q",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Pedrinho",
+          "shape": "oval",
+          "order": 4,
+          "text": "Já estou ansioso para pular na piscina!\nFaz 4 anos que estamos sonhando.",
+          "x": 40.722222222222214,
+          "y": 65.35728748665461,
+          "width": 29.111124674479157,
+          "height": 13.587112313471764
+        }
+      ]
+    },
+    {
+      "page": 8,
+      "image": "8.png",
+      "alt": "Página 8 da história em quadrinhos",
+      "regions": [
+        {
+          "id": "pag-8-mrjrh8g1-zhql",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "rectangle",
+          "order": 1,
+          "text": "Na verdade foi um sonho cuidadosamente planejado!\nComo a obra de ampliação da casa exigia um investimento maior, fizemos um planejamento e, durante 4 anos, até que iniciássemos a obra, várias etapas precisaram ser cumpridas.",
+          "x": 17.38888888888889,
+          "y": 11.951306311281277,
+          "width": 64.88890245225694,
+          "height": 12.566113217734907
+        },
+        {
+          "id": "pag-8-mrjrhytw-um2z",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "rectangle",
+          "order": 2,
+          "text": "E como a senhora fez esse planejamento?",
+          "x": 62.83331976996527,
+          "y": 24.59596013342292,
+          "width": 24.222222222222214,
+          "height": 4.241060814189652
+        },
+        {
+          "id": "pag-8-mrjridex-eu2y",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "rectangle",
+          "order": 3,
+          "text": "Nós já tínhamos percebido que na nossa casa faltava uma área de lazer. Então pedimos a um engenheiro que fizesse projeto. Em seguida fizemos a análise das nossas finanças, afinal precisávamos saber quanto dinheiro nós já tínhamos reservado, quanto conseguiríamos guardar por mês e se teríamos algum valor extraordinário a receber. Depois fomos atrás de quem pudesse executar a obra cobrando um preço que coubesse no nosso orçamento.",
+          "x": 14.166666666666666,
+          "y": 48.70718747315589,
+          "width": 34.55555555555556,
+          "height": 40.839867957638454
+        },
+        {
+          "id": "pag-8-mrjris58-kheg",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Pedrinho",
+          "shape": "rectangle",
+          "order": 4,
+          "text": "E o valor extraordinário veio da venda do sítio da vovó, uma “receita de capital” que fez toda diferença na realização do nosso sonho!",
+          "x": 49.61111111111111,
+          "y": 50.98479549387033,
+          "width": 27.777764214409714,
+          "height": 16.33594478625949
+        }
+      ]
+    },
+    {
+      "page": 9,
+      "image": "9.png",
+      "alt": "Página 9 da história em quadrinhos",
+      "regions": [
+        {
+          "id": "pag-9-mrjrpps2-hb3r",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "rectangle",
+          "order": 1,
+          "text": "No primeiro ano fizemos a terraplanagem e iniciamos a fundação da piscina; no ano seguinte concluímos a obra da churrasqueira; e agora estamos quase concluindo a piscina, falta apenas instalar a bomba. \nO paisagismo ficará para o ano que vem.",
+          "x": 8.833333333333334,
+          "y": 11.165924235172845,
+          "width": 36.66666666666667,
+          "height": 21.126782640908594
+        },
+        {
+          "id": "pag-9-mrjrq937-wr5u",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Pedrinho",
+          "shape": "rectangle",
+          "order": 2,
+          "text": "A vovó fica no pé do mestre de obras para não ter nenhum atraso.  ",
+          "x": 44.277777777777786,
+          "y": 24.51741473542441,
+          "width": 20.55555555555555,
+          "height": 11.702197727607413
+        },
+        {
+          "id": "pag-9-mrjrqmny-5jk2",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "rectangle",
+          "order": 3,
+          "text": "Aposto um bolinho de chuva que sua avó já está preparando a prestação de contas.",
+          "x": 71.16668023003471,
+          "y": 26.08818368123305,
+          "width": 21.5555419921875,
+          "height": 12.723189632956597
+        },
+        {
+          "id": "pag-9-mrjrqwr6-2hqa",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "rectangle",
+          "order": 4,
+          "text": "Com certeza! \nQuero mostrar que o dinheiro da família está sendo bem empregado.",
+          "x": 11.166666666666666,
+          "y": 52.39848802445729,
+          "width": 17.33333333333333,
+          "height": 14.608101822025048
+        },
+        {
+          "id": "pag-9-mrjrr5m7-vl41",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "rectangle",
+          "order": 5,
+          "text": "A senhora está certa em planejar a obra com tanta cautela. Na administração pública, o planejamento também é levado a sério, pois por meio dele é possível evitar surpresas, controlar custos e priorizar o que realmente importa.  Aqui em Minas Gerais temos alguns instrumentos específicos de planejamento: O PMDI - Plano Mineiro de Desenvolvimento Integrado; o PPAG-Plano Plurianual de Ação Governamental; a LDO Lei de Diretrizes Orçamentárias); e a LOA (Lei Orçamentária Anual). Vou explicar cada um deles para vocês.",
+          "x": 38.72222900390625,
+          "y": 61.116224275669104,
+          "width": 53.00000678168402,
+          "height": 31.258206629115598
+        }
+      ]
+    },
+    {
+      "page": 10,
+      "image": "10.png",
+      "alt": "Página 10 da história em quadrinhos",
+      "regions": [
+        {
+          "id": "pag-10-mrjrsx63-gjql",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "rectangle",
+          "order": 1,
+          "text": "Imagine que a intenção da sua família de ter uma casa com área de lazer completa que proporcionasse melhoria na qualidade de vida dos moradores seja o PMDI - Plano Mineiro de Desenvolvimento Integrado, ou seja, um plano ousado, de longo prazo, onde são definidas as grandes escolhas estratégicas, visão de futuro e prioridades para um horizonte de vários anos.",
+          "x": 11.833326551649293,
+          "y": 9.987846327418428,
+          "width": 81.88888210720486,
+          "height": 15.393488691725263
+        },
+        {
+          "id": "pag-10-mrjrtacm-1nk8",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "rectangle",
+          "order": 2,
+          "text": "Certo!\nE o que seria o projeto do engenheiro? ",
+          "x": 14.499999999999998,
+          "y": 27.109180380174013,
+          "width": 26.444444444444443,
+          "height": 5.340598117537329
+        },
+        {
+          "id": "pag-10-mrjrtiub-qmdw",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "rectangle",
+          "order": 3,
+          "text": "Ele seria o PPAG - Plano Plurianual de Ação Governamental. Um planejamento de médio prazo. É nele que o governo define tudo o que vai fazer durante quatro anos. A lógica é simples: o governo olha para o que a população mais precisa — como saúde, segurança ou asfalto — e cria 'programas' para resolver esses problemas.",
+          "x": 43.611111111111114,
+          "y": 54.28340021352576,
+          "width": 42.888888888888886,
+          "height": 25.210764643080644
+        },
+        {
+          "id": "pag-10-mrjrtp2o-ddxf",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "rectangle",
+          "order": 4,
+          "text": "E o mais interessante é que ele não acaba quando o mandato termina! O plano vai até o primeiro ano do próximo governo, garantindo que as obras e os serviços não parem no meio do caminho.",
+          "x": 22.38888888888889,
+          "y": 81.37908183926666,
+          "width": 56.111111111111114,
+          "height": 10.916815651498965
+        }
+      ]
+    },
+    {
+      "page": 11,
+      "image": "11.png",
+      "alt": "Página 11 da história em quadrinhos",
+      "regions": [
+        {
+          "id": "pag-11-mrjrvexj-zuy3",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "rectangle",
+          "order": 1,
+          "text": "A LDO - Lei de Diretrizes Orçamentárias, define o que tem que ser executado e finalizado no ano seguinte, parecido com o que vocês fizeram quando dividiram o projeto em várias etapas menores e estabeleceram o compromisso de concluí-las até o final de cada ano: a ‘terraplanagem’ e a fundação no primeiro ano, no outro, a churrasqueira, agora a finalização da piscina e no ano que vem o paisagismo.",
+          "x": 35.94445122612847,
+          "y": 7.710243100295745,
+          "width": 44.88888210720486,
+          "height": 26.62445717366761
+        },
+        {
+          "id": "pag-11-mrjrvnqg-00uz",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "rectangle",
+          "order": 2,
+          "text": "E por fim, temos a LOA - Lei Orçamentária Anual, que estima as receitas e fixa as despesas do Estado para determinado exercício financeiro. ",
+          "x": 58.05555555555556,
+          "y": 34.648850707610855,
+          "width": 30,
+          "height": 16.65009761670286
+        },
+        {
+          "id": "pag-11-mrjrvvo9-gp6b",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "rectangle",
+          "order": 3,
+          "text": "Acho que entendi! É igual a planilha anual onde eu estou anotando o dinheiro que a gente já tinha no bolso, o que está previsto para entrar e com o que estamos gastando na obra.",
+          "x": 13.833333333333334,
+          "y": 62.529914409460176,
+          "width": 31.666666666666664,
+          "height": 18.220861768919733
+        },
+        {
+          "id": "pag-11-mrjrw3kn-ce3u",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Pedrinho",
+          "shape": "rectangle",
+          "order": 4,
+          "text": "Caraca, João!\nA vovó mandou muito bem!",
+          "x": 58.722222222222214,
+          "y": 76.195560136951,
+          "width": 17.22222222222223,
+          "height": 9.97435236657708
+        }
+      ]
+    },
+    {
+      "page": 12,
+      "image": "12.png",
+      "alt": "Página 12 da história em quadrinhos",
+      "regions": [
+        {
+          "id": "pag-12-mrjrx8j1-l99e",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Pedrinho",
+          "shape": "rectangle",
+          "order": 1,
+          "text": "Mas João, e se a Administração Pública resolver fazer muita obra ou contratar muita gente e esquecer de investir em escolas ou em hospitais?",
+          "x": 24.277784559461807,
+          "y": 13.129379425443924,
+          "width": 49.99997965494791,
+          "height": 9.73874014054044
+        },
+        {
+          "id": "pag-12-mrjrxgod-mmwm",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "rectangle",
+          "order": 2,
+          "text": "Essa eu respondo!\nIsso não acontece, meu querido, pois o investimento em saúde e educação é protegido pela Constituição Federal, a lei maior do Pais!\nA Constituição determina que 12% da arrecadação dos impostos e das transferências que o estado recebe sejam investidos em saúde e 25% em educação.",
+          "x": 13.833326551649307,
+          "y": 30.407785099829432,
+          "width": 35.66666666666667,
+          "height": 30.23720993017462
+        },
+        {
+          "id": "pag-12-mrjrxrv5-2bl1",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Pedrinho",
+          "shape": "rectangle",
+          "order": 3,
+          "text": "João, eu tenho outra dúvida:\nComo o cidadão monitora se o governo está cumprindo essa regra ou se está fazendo algo incorreto com o dinheiro público? ",
+          "x": 37.5,
+          "y": 73.91794732264478,
+          "width": 35.555541992187514,
+          "height": 13.272957086232495
+        }
+      ]
+    },
+    {
+      "page": 13,
+      "image": "13.png",
+      "alt": "Página 13 da história em quadrinhos",
+      "regions": [
+        {
+          "id": "pag-13-mrjrzjl2-r3da",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "rectangle",
+          "order": 1,
+          "text": "Ótima pergunta, Pedrinho!\nBimestralmente, o Estado publica o Relatório Resumido da Execução Orçamentária - RREO, que traz, entre outras informações, o cumprimento dos índices de saúde e educação. \nAlém disso, a cada 4 meses o Estado publica o Relatório de Gestão Fiscal-RGF, que mostra se os limites legais relacionados às despesas com pessoal, à dívida pública, às operações de crédito (quando o Estado pega empréstimos) e à concessão de garantias (quando o estado atua como fiador) estão sendo devidamente cumpridos.\nEle faz um verdadeiro Raio-X da situação fiscal da Administração Pública.",
+          "x": 8.61111111111111,
+          "y": 7.945860119924161,
+          "width": 41.111111111111114,
+          "height": 47.12292216971002
+        },
+        {
+          "id": "pag-13-mrjs08ao-wzvb",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Pedrinho",
+          "shape": "rectangle",
+          "order": 2,
+          "text": "João, eu ficaria aqui por horas, mas preciso ir para a escola. Bem que você podia aparecer qualquer dia por lá e compartilhar o seu conhecimento. ",
+          "x": 60.05555555555555,
+          "y": 39.28260255985471,
+          "width": 28.555555555555564,
+          "height": 17.042795845144738
+        },
+        {
+          "id": "pag-13-mrjs0k03-8kst",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "oval",
+          "order": 3,
+          "text": "Boa ideia, Pedrinho!",
+          "x": 45.72222222222223,
+          "y": 54.440481422339204,
+          "width": 16.666666666666664,
+          "height": 6.204518401256607
+        },
+        {
+          "id": "pag-13-mrjs0skj-1k59",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "rectangle",
+          "order": 4,
+          "text": "Meu jovem, como sempre\nfoi uma excelente aula, mas o Pedrinho realmente precisa ir\npara a escola e eu tenho que correr para casa, antes que a minha filha mande outro neto atrás de mim e eu tenha que comprar mais 5 bolinhos de chuva.\nNão tenho disponibilidade de caixa suficiente para isso!",
+          "x": 13.055555555555557,
+          "y": 58.76007804734381,
+          "width": 29.555555555555557,
+          "height": 33.692891065051725
+        },
+        {
+          "id": "pag-13-mrjs0xl4-n738",
+          "type": "sound",
+          "typeLabel": "Efeito sonoro",
+          "character": "",
+          "shape": "oval",
+          "order": 5,
+          "text": "Ha ha..\nHa ha..\nHa ha..",
+          "x": 77.16666666666666,
+          "y": 81.22200542404497,
+          "width": 13.444458007812514,
+          "height": 8.403588214360227
+        }
+      ]
+    },
+    {
+      "page": 14,
+      "image": "14.png",
+      "alt": "Página 14 da história em quadrinhos",
+      "regions": [
+        {
+          "id": "pag-14-mrjs2m8j-mdux",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "rectangle",
+          "order": 1,
+          "text": "Dona Cida, antes de ir quero entregar um presente para a senhora. Tenho certeza que vocês vão gostar muito. ",
+          "x": 26.833333333333332,
+          "y": 7.788782506304531,
+          "width": 46.33333333333334,
+          "height": 8.71773984640565
+        },
+        {
+          "id": "pag-14-mrjs2ymj-jvdv",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "rectangle",
+          "order": 2,
+          "text": "Uai… que chaveiro bonito é esse?",
+          "x": 9.944444444444445,
+          "y": 25.774030850789675,
+          "width": 13.444451226128464,
+          "height": 11.466578311183099
+        },
+        {
+          "id": "pag-14-mrjs37kj-xz46",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "rectangle",
+          "order": 3,
+          "text": "Isso aqui é muito mais que um chaveiro, Dona Cida. São as demonstrações contábeis do Estado na palma da sua mão.",
+          "x": 61.16666666666667,
+          "y": 26.16672188884389,
+          "width": 27.22223578559027,
+          "height": 15.707641522168633
+        },
+        {
+          "id": "pag-14-mrjs3e7y-1r7h",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "rectangle",
+          "order": 4,
+          "text": " Como assim, meu filho?",
+          "x": 57.49999999999999,
+          "y": 60.56645921918909,
+          "width": 12.555569118923621,
+          "height": 10.13142638500289
+        },
+        {
+          "id": "pag-14-mrjs3jwu-yj67",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Pedrinho",
+          "shape": "rectangle",
+          "order": 5,
+          "text": " É tecnologia NFC, vovó!\n É só aproximar do celular.  Me empresta aqui.\n Deixa eu te ensinar.",
+          "x": 43.5,
+          "y": 75.88140730650764,
+          "width": 31.111111111111114,
+          "height": 11.388040103572251
+        }
+      ]
+    },
+    {
+      "page": 15,
+      "image": "15.png",
+      "alt": "Página 15 da história em quadrinhos",
+      "regions": [
+        {
+          "id": "pag-15-mrjs4zj8-2yzo",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "rectangle",
+          "order": 1,
+          "text": "Tô admirada, João! Além de Minas ser um Estado cheio de histórias, cultura e tradição, também investe em tecnologia e inovação!",
+          "x": 11.722215440538193,
+          "y": 8.574160987219138,
+          "width": 23.888888888888886,
+          "height": 19.55601369509995
+        },
+        {
+          "id": "pag-15-mrjs57sr-gin8",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "rectangle",
+          "order": 2,
+          "text": "Isso mesmo, Dona Cida!\nEsse eu encomendei especialmente para a senhora.",
+          "x": 66.83333333333333,
+          "y": 24.988648774681245,
+          "width": 19,
+          "height": 16.021799146203783
+        },
+        {
+          "id": "pag-15-mrjs5e41-y580",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Dona Cida",
+          "shape": "rectangle",
+          "order": 3,
+          "text": "Gostei demais desse presente. Vou carregar comigo pra baixo e pra cima.",
+          "x": 8.277777777777779,
+          "y": 39.59675539029808,
+          "width": 40.33333333333333,
+          "height": 8.48212162837929
+        },
+        {
+          "id": "pag-15-mrjs5w85-fgj0",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "João",
+          "shape": "rectangle",
+          "order": 4,
+          "text": "É isso aí, Dona Cida!\nInformação e transparência devem andar lado a lado com o cidadão.",
+          "x": 51.05555555555556,
+          "y": 48.15742001987998,
+          "width": 40.33333333333333,
+          "height": 7.539667930640952
+        },
+        {
+          "id": "pag-15-mrjs62na-baew",
+          "type": "speech",
+          "typeLabel": "Balão de fala",
+          "character": "Pedrinho",
+          "shape": "rectangle",
+          "order": 5,
+          "text": " Quando o cidadão participa e fiscaliza as contas do Estado, ele ajuda a construir um futuro melhor para todos nós.",
+          "x": 31.277777777777757,
+          "y": 82.24300212298591,
+          "width": 48.99999999999999,
+          "height": 8.71774583839536
+        }
+      ]
+    }
+  ],
+  "characters": ["Dona Cida", "João", "Pedrinho"]
+}

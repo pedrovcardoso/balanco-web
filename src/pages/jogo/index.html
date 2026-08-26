@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Balanço Cidadão MG - Jogos</title>
+  <link rel="icon" type="image/png" href="https://www.governo.mg.gov.br/Content/img/favicon.ico">
+  <link href="../../shared/styles/fonts.css" rel="stylesheet" />
+  <script src="../../../public/vendor/iconify/iconify-icon.min.js"></script>
+  <script src="../../../public/vendor/tailwindcss/tailwind.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { wine: "#9e1f28", gold: "#f5a800", ink: "#233324" },
+          fontFamily: {
+            display: ["Fredoka", "system-ui", "sans-serif"],
+            body: ["Nunito", "system-ui", "sans-serif"]
+          },
+          boxShadow: { card: "0 7px 0 rgba(93,43,10,.14),0 12px 22px rgba(0,0,0,.10)" }
+        }
+      }
+    };
+  </script>
+  <style>
+    *{box-sizing:border-box}html,body{height:100%}.hidden{display:none!important}
+    .soft{background:rgb(253 246 227/.72);backdrop-filter:blur(12px);border:1px solid rgb(255 255 255/.62);box-shadow:0 18px 44px rgb(57 75 40/.19),inset 0 1px 0 rgb(255 255 255/.55)}
+    body.loading-game main{opacity:0;transform:translateY(8px) scale(.992);pointer-events:none}body.game-ready main{opacity:1;transform:none}body.game-ready #apiLoading{opacity:0;transform:translateY(-6px)}
+    #apiLoading{top:var(--a11y-topbar-height,0)}main{height:calc(100dvh - var(--a11y-topbar-height,0px))}
+    body.intro-mode .topbar,body.intro-mode .actions,body.intro-mode .progress{display:none!important}body.intro-mode .game{grid-template-rows:minmax(0,1fr)}body.intro-mode .arena{min-height:100%;background:transparent;backdrop-filter:none;border:0;box-shadow:none}body.intro-mode #gameMount{display:none}
+    body.finish-mode .hud,body.finish-mode .actions,body.finish-mode .progress{display:none}body.finish-mode .topbar{grid-template-columns:1fr}body.finish-mode .game{grid-template-rows:auto minmax(0,1fr)}body.finish-mode .arenaScroll{display:flex;align-items:center;justify-content:center;overflow:hidden;padding:10px 9px 18px}body.finish-mode #gameMount{display:flex;min-height:100%;align-items:center;justify-content:center}
+    body.phase-locked main{visibility:hidden;opacity:0;pointer-events:none}.apiLoading.is-locked{z-index:40;opacity:1!important;transform:none!important;pointer-events:auto;background:rgb(31 41 35/.42);backdrop-filter:blur(10px)}
+    .phaseLockedCard::before{content:"";position:absolute;inset:9px;border:2px dashed rgb(139 94 60/.2);border-radius:21px;pointer-events:none}
+
+    body.feedback-mode #gameMount{opacity:0;visibility:hidden;pointer-events:none}
+    body.feedback-mode .actions,body.feedback-mode .progress{visibility:hidden}
+    body.feedback-mode .arena>.gameFinish__confetti{z-index:12}
+    .mark.show{animation:markPop .78s ease forwards}.apiLoadingSpinner iconify-icon{animation:spin 1s linear infinite}.arenaPulseOk{animation:arenaPulseOk .82s ease}.arenaPulseBad{animation:arenaPulseBad .82s ease}
+    @keyframes spin{to{transform:rotate(360deg)}}@keyframes markPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.25) rotate(-10deg)}38%{opacity:1;transform:translate(-50%,-50%) scale(1.13) rotate(4deg)}100%{opacity:0;transform:translate(-50%,-76%) scale(.9)}}
+    @keyframes arenaPulseOk{45%{box-shadow:0 0 0 4px rgb(22 163 74/.16),0 0 34px rgb(22 163 74/.3),inset 0 0 42px rgb(22 163 74/.13)}}@keyframes arenaPulseBad{45%{box-shadow:0 0 0 4px rgb(239 68 68/.14),0 0 34px rgb(239 68 68/.28),inset 0 0 42px rgb(239 68 68/.12)}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+    .wordSvg line{stroke-linecap:round;opacity:.9;filter:drop-shadow(0 5px 0 rgb(93 43 10/.14));animation:wordLineIn .34s cubic-bezier(.2,1,.2,1) both}
+    .letterCell.selected{background:linear-gradient(135deg,#3b82f6,#a855f7);color:#fff;transform:scale(1.06)}
+    .letterCell.found{background:transparent!important;box-shadow:none!important;color:#fff;text-shadow:0 2px 0 rgb(93 43 10/.38)}
+    .letterCell.hint{outline:4px solid rgb(245 168 0/.65);animation:hintPulse 1.05s ease infinite alternate}
+    @keyframes wordLineIn{from{opacity:0;stroke-dashoffset:240}to{opacity:.9;stroke-dashoffset:0}}
+    @keyframes hintPulse{to{transform:scale(1.12);background:#fff7dc;color:#9e1f28}}
+
+    body:not(.intro-mode):not(.finish-mode) .arenaScroll{display:block;height:100%;min-height:0;max-height:100%;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;contain:layout paint}
+    body:not(.intro-mode):not(.finish-mode) #gameMount{display:block;width:100%;min-height:0;height:auto;overflow:visible}
+    body:not(.intro-mode):not(.finish-mode) #gameMount>article{min-height:0;height:auto}
+    .wordSvg{width:100%;height:100%;overflow:hidden}
+
+    .connectDemo{height:104px;position:relative;margin:8px auto 4px;width:min(330px,94%);overflow:visible}.connectDemo::before{content:"";position:absolute;left:36px;right:36px;top:50%;height:44px;transform:translateY(-50%);border-radius:22px;background:rgb(255 255 255/.28)}.demoBlock{position:absolute;top:28px;width:72px;height:50px;border-radius:18px;display:grid;place-items:center;font-family:"Fredoka",sans-serif;font-weight:700;border:3px solid rgb(255 255 255/.86);box-shadow:0 7px 0 rgb(0 0 0/.16);z-index:3}.demoFrom{left:8px;background:#3b82f6;color:#fff}.demoTo{right:8px;background:linear-gradient(135deg,#fff7dc,#ead8ad);color:#5d2b0a;animation:demoToBlue 3.1s cubic-bezier(.2,.8,.2,1) infinite}.demoLink{position:absolute;left:72px;right:72px;top:0;height:104px;z-index:2;overflow:visible}.demoLinkBg,.demoLinkPath{fill:none;stroke-linecap:round}.demoLinkBg{stroke:rgb(255 255 255/.78);stroke-width:22}.demoLinkPath{stroke:#3b82f6;stroke-width:15;stroke-dasharray:186;stroke-dashoffset:186;animation:demoConnectDraw 3.1s cubic-bezier(.2,.8,.2,1) infinite}.connectHand{position:absolute;left:42px;top:58px;z-index:5;font-size:2.55rem;color:#5d2b0a;filter:drop-shadow(0 7px 0 rgb(0 0 0/.12));animation:connectHandMove 3.1s cubic-bezier(.2,.8,.2,1) infinite}.flowPath{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:18;filter:drop-shadow(0 4px 0 rgb(93 43 10/.12));opacity:.96}.flowPathBg{fill:none;stroke:rgb(255 255 255/.78);stroke-linecap:round;stroke-linejoin:round;stroke-width:26}.flowPath.bad{stroke:#ef4444!important;stroke-dasharray:12 10}.flowErrorIcon{font-family:"Fredoka",sans-serif;font-weight:700;font-size:28px;fill:#fff;stroke:#dc2626;stroke-width:7px;paint-order:stroke;filter:drop-shadow(0 4px 0 rgb(93 43 10/.18))}.endpoint.active{animation:pulseEndpoint .5s ease infinite alternate}.endpoint.done::after{content:"✓";position:absolute;right:-7px;top:-8px;width:23px;height:23px;border-radius:999px;background:#16a34a;color:#fff;display:grid;place-items:center;border:2px solid #fff}.endpoint.wrong{animation:shake .38s ease}@keyframes demoConnectDraw{0%,23%{stroke-dashoffset:186;opacity:.2}58%,78%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:186;opacity:.2}}@keyframes demoToBlue{0%,56%,100%{background:linear-gradient(135deg,#fff7dc,#ead8ad);color:#5d2b0a}58%,78%{background:#3b82f6;color:#fff}}@keyframes connectHandMove{0%,23%,82%,100%{transform:translate(0) rotate(-10deg);opacity:.95}31%{transform:translate(0) rotate(-10deg) scale(.82)}58%{transform:translate(178px) rotate(8deg) scale(.82)}70%{transform:translate(178px) rotate(8deg) scale(1.06)}}@keyframes pulseEndpoint{to{transform:scale(1.06)}}@keyframes shake{25%{transform:translateX(-5px)}55%{transform:translateX(5px)}80%{transform:translateX(-3px)}}
+.arena.flowPulseBad{animation:flowPulseBad .82s ease}@keyframes flowPulseBad{45%{box-shadow:0 0 0 4px rgb(239 68 68/.18),0 0 34px rgb(239 68 68/.32),inset 0 0 42px rgb(239 68 68/.14)}}
+
+    .quizTimer{background:conic-gradient(#f5a800 var(--quiz-progress,100%),rgb(255 255 255/.35) 0)}
+    .quizOption.correct{background:rgb(220 255 229/.82)!important;border-color:rgb(22 163 74/.62)!important}
+    .quizOption.wrong{background:rgb(255 232 232/.82)!important;border-color:rgb(220 38 38/.5)!important}
+    .quizOption.dimmed{opacity:.58}
+    .quizCard.feedback-pending>.quizContent{opacity:0;transform:translateY(14px);pointer-events:none;transition:.16s}
+
+    .swipeIntroDemo{height:88px;position:relative;margin:8px auto 4px;width:min(300px,94%);overflow:visible}.swipeIntroHand{position:absolute;right:8px;bottom:10px;font-size:3rem;color:#5d2b0a;filter:drop-shadow(0 7px 0 rgb(0 0 0/.12));animation:swipeIntroHand 3.1s cubic-bezier(.2,.8,.2,1) infinite;transform-origin:70% 70%}.swipeZone.active{opacity:.42;transform:scale(1.03)}.swipePlayCard{touch-action:none;transition:transform .16s ease}.swipePlayCard.dragging{transition:none}@keyframes swipeIntroHand{0%,23%,82%,100%{transform:translateX(0) rotate(-10deg) scale(1);opacity:.95}31%{transform:translateX(0) rotate(-10deg) scale(.82)}58%{transform:translateX(-180px) rotate(8deg) scale(.82)}70%{transform:translateX(-180px) rotate(8deg) scale(1.06)}}
+
+    .crossCell{outline:none!important}.crossCell:focus,.crossCell:focus-visible,.crossKeyboardKey:focus,.crossKeyboardKey:focus-visible{outline:none!important}.crossCell.is-active{box-shadow:inset 0 0 0 3px rgb(245 168 0/.78),0 2px 5px rgb(93 43 10/.12);z-index:5}.crossCell.is-word{background:rgb(255 247 220/.92)}.crossCell.is-correct{background:rgb(220 255 229/.94);color:#166534}.crossCell.is-wrong{animation:crossShake .38s ease;background:rgb(255 232 232/.94);color:#991b1b}.crossClue.is-active{background:rgb(245 168 0/.18);border-color:rgb(245 168 0/.65)}.crossClue.is-done{background:rgb(220 255 229/.68);text-decoration:line-through}.crossNumber{position:absolute;left:3px;top:1px;font-size:.48rem;font-weight:1000;color:#7a4b13}.crossInput{caret-color:transparent}.crossPulseHint{animation:crossHint 1s ease infinite alternate}@keyframes crossShake{25%{transform:translateX(-3px)}55%{transform:translateX(3px)}80%{transform:translateX(-2px)}}@keyframes crossHint{to{box-shadow:0 0 0 4px rgb(245 168 0/.25);transform:scale(1.05)}}
+
+    @media (min-width:768px){
+      .crossKeyboardPanel{position:sticky!important;left:auto!important;bottom:10px!important;z-index:30!important;transform:none!important;display:none!important;width:min(100%,720px)!important;max-height:none!important;margin:14px auto 0!important;padding:8px!important;gap:4px!important;overflow:visible!important;overscroll-behavior:auto!important}
+      .crossKeyboardPanel.is-open{display:grid!important}
+      .crossKeyboardPanel .crossKeyboardKey{height:39px!important;font-size:.9rem!important;border-radius:10px!important}
+      .crossKeyboardPanel .crossActiveClue{min-height:42px!important;font-size:.8rem!important;padding:7px 10px!important}
+      .crossKeyboardToggle{display:inline-flex!important}
+    }
+    @media (max-width:767px){
+      .crossKeyboardPanel{display:grid!important}
+      .crossKeyboardToggle{display:none!important}
+    }
+  </style>
+  <script src="../../shared/accessibility/a11y.js" defer></script>
+  <script src="../../shared/services/apiLegado.js" defer></script>
+  <script src="../../shared/layout/background.js" defer></script>
+  <script src="../../shared/components/gameFinish.js" defer></script>
+  <script src="./types/ordem-correta.js" defer></script>
+  <script src="./types/caca-palavras.js" defer></script>
+  <script src="./types/flow.js" defer></script>
+  <script src="./types/quiz.js" defer></script>
+  <script src="./types/swipe.js" defer></script>
+  <script src="./types/cruzadinha.js" defer></script>
+  <script src="./script.js" defer></script>
+</head>
+<body class="intro-mode loading-game m-0 h-full overflow-hidden bg-[#86cbed] font-body text-ink antialiased">
+  <div id="apiLoading" class="apiLoading fixed inset-x-0 bottom-0 z-[4] grid place-items-center p-4 transition-all duration-500" aria-live="polite">
+    <div class="inline-flex max-w-[min(88vw,390px)] items-center gap-3 rounded-full border border-white/70 bg-[#fdf6e3]/70 px-4 py-3 font-black text-[#5d2b0a] shadow-xl backdrop-blur-xl">
+      <span class="apiLoadingSpinner grid size-8 place-items-center rounded-full bg-gradient-to-br from-[#2d6a4f] to-emerald-500 text-white"><iconify-icon icon="fa6-solid:circle-notch" aria-hidden="true"></iconify-icon></span>
+      <span><strong class="block font-display text-[.94rem]">Carregando fase</strong><span id="apiLoadingText" class="mt-0.5 block text-xs text-[#7a4b13]">Buscando dados no banco...</span></span>
+    </div>
+  </div>
+  <main class="relative z-[5] overflow-hidden p-1.5 transition-all duration-700">
+    <section class="game mx-auto grid h-full w-full max-w-[980px] grid-rows-[auto_minmax(0,1fr)_auto] gap-1.5" aria-labelledby="gameTitle">
+      <header class="topbar grid grid-cols-[1fr_auto] items-center gap-1.5 max-[560px]:grid-cols-1">
+        <div class="brand soft flex min-w-0 items-center gap-2 rounded-3xl px-2.5 py-1.5">
+          <div id="gameIcon" class="grid size-[38px] shrink-0 place-items-center rounded-[14px] border-2 border-gold bg-gradient-to-br from-wine to-[#6f1620] text-lg text-white"></div>
+          <div><h1 id="gameTitle" class="m-0 font-display text-[clamp(1rem,3.2vw,1.55rem)] font-bold leading-none text-[#5d2b0a]"></h1><p id="subtitle" class="mt-0.5 text-[.68rem] font-black leading-none text-[#7a4b13] max-[560px]:hidden"></p></div>
+        </div>
+        <div class="hud flex gap-1.5 max-[560px]:grid max-[560px]:grid-cols-[repeat(3,minmax(0,1fr))_auto] max-[560px]:gap-1" aria-label="Status da partida">
+          <div class="soft min-w-[58px] rounded-[20px] px-2 py-1.5 text-center"><b id="score" class="block font-display text-[1.05rem] leading-none text-[#5d2b0a]">0</b><span class="text-[.52rem] font-black uppercase tracking-wider text-[#7a4b13]">nota</span></div>
+          <div class="soft min-w-[58px] rounded-[20px] px-2 py-1.5 text-center"><b id="attempts" class="block font-display text-[1.05rem] leading-none text-[#5d2b0a]">0</b><span class="text-[.52rem] font-black uppercase tracking-wider text-[#7a4b13]">tentativas</span></div>
+          <div class="soft min-w-[58px] rounded-[20px] px-2 py-1.5 text-center"><b id="itemsCount" class="block font-display text-[1.05rem] leading-none text-wine">0</b><span class="text-[.52rem] font-black uppercase tracking-wider text-[#7a4b13]">itens</span></div>
+          <button id="exitGame" type="button" class="inline-flex min-h-[38px] items-center justify-center gap-1 rounded-[16px] border border-[#5d2b0a]/15 bg-white/30 px-2.5 text-xs font-black text-[#6b3a1f] transition hover:bg-white/55 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5d2b0a]" aria-haspopup="dialog" aria-controls="exitGameModal">
+            <iconify-icon icon="fa6-solid:arrow-right-from-bracket" aria-hidden="true"></iconify-icon>
+            <span class="max-[420px]:sr-only">Sair</span>
+          </button>
+        </div>
+      </header>
+      <section id="arena" class="arena soft relative min-h-0 overflow-hidden rounded-[30px]" aria-live="polite">
+        <div class="arenaScroll absolute inset-0 overflow-x-hidden overflow-y-auto px-2.5 pb-7 pt-[22px]"><div id="gameMount" class="w-full min-h-0"></div></div>
+        <div id="mark" class="mark pointer-events-none absolute left-1/2 top-[44%] z-[18] -translate-x-1/2 -translate-y-1/2 font-display text-8xl font-bold leading-none opacity-0"></div>
+        <div class="progress absolute bottom-[7px] left-3 right-3 z-[8] h-[9px] overflow-hidden rounded-full bg-[#5d2b0a]/15" role="progressbar" aria-label="Progresso" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="progressFill" class="h-full w-0 bg-gradient-to-r from-blue-500 via-purple-500 to-gold transition-[width] duration-200"></div></div>
+        <div id="intro" class="absolute inset-0 z-30 overflow-y-auto p-2">
+          <div class="grid min-h-full grid-rows-[minmax(0,1fr)_auto] justify-items-center px-0 pb-2.5 pt-1">
+            <div class="soft relative flex min-h-[clamp(430px,68dvh,560px)] w-[min(92%,520px)] flex-col justify-center rounded-[34px] p-4 text-center">
+              <a href="../trilha-jogos/" class="absolute left-4 top-4 inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-[#5d2b0a]/15 bg-white/40 px-3 py-2 text-xs font-black text-[#6b3a1f] no-underline transition hover:bg-white/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5d2b0a]">
+                <iconify-icon icon="fa6-solid:arrow-left" aria-hidden="true"></iconify-icon>
+                Voltar ao mapa
+              </a>
+              <div id="introIcon" class="mx-auto mb-1.5 grid size-[52px] place-items-center rounded-[18px] border-2 border-gold bg-gradient-to-br from-wine to-[#7a1620] text-2xl text-white"></div>
+              <h2 id="introTitle" class="m-0 font-display text-[clamp(1.55rem,6vw,2.45rem)] font-bold leading-none text-[#5d2b0a]"></h2>
+              <p id="introText" class="my-2 font-black leading-tight text-[#6b3a1f]"></p>
+              <div id="introInstructions" class="my-2 grid gap-1.5 text-left"></div>
+            </div>
+            <div class="mt-2 w-[min(92%,520px)]"><button id="start" class="min-h-11 w-full rounded-[19px] border-0 bg-gradient-to-br from-gold to-[#c0272d] px-4 py-3 font-black text-white shadow-[0_8px_0_rgba(93,43,10,.2)]" type="button">Começar missão</button></div>
+          </div>
+        </div>
+      </section>
+      <div class="actions grid"><button id="primaryAction" class="min-h-11 w-full rounded-[18px] border-2 border-[#fff7dc]/85 bg-gradient-to-br from-[#0f7a55] to-[#0b3f2d] p-3 font-black text-white shadow-[0_7px_0_rgba(0,0,0,.18)]" type="button"></button></div>
+    </section>
+  </main>
+
+  <div id="exitGameModal" class="fixed inset-0 z-[100] hidden place-items-center bg-[#233324]/35 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="exitGameTitle" aria-describedby="exitGameDescription">
+    <div class="soft w-[min(92vw,420px)] rounded-[28px] p-5 text-center shadow-2xl">
+      <div class="mx-auto mb-3 grid size-14 place-items-center rounded-[18px] border border-[#5d2b0a]/10 bg-white/50 text-xl text-[#6b3a1f]">
+        <iconify-icon icon="fa6-solid:arrow-right-from-bracket" aria-hidden="true"></iconify-icon>
+      </div>
+      <h2 id="exitGameTitle" class="m-0 font-display text-2xl font-bold text-[#5d2b0a]">Sair do jogo?</h2>
+      <p id="exitGameDescription" class="my-3 font-black leading-tight text-[#6b3a1f]">O progresso desta tentativa não será salvo.</p>
+      <div class="grid gap-2 sm:grid-cols-2">
+        <button id="exitGameCancel" type="button" class="min-h-11 rounded-2xl border border-[#5d2b0a]/20 bg-white/35 px-4 py-3 font-black text-[#6b3a1f] transition hover:bg-white/60">Continuar jogando</button>
+        <a id="exitGameConfirm" href="../trilha-jogos/" class="inline-flex min-h-11 items-center justify-center rounded-2xl bg-wine px-4 py-3 font-black text-white no-underline shadow-lg transition hover:brightness-110">Sair para o mapa</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

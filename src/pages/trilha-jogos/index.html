@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <title>Balanço Cidadão MG</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://www.governo.mg.gov.br/Content/img/favicon.ico"
+    />
+    <link
+      rel="stylesheet"
+      href="../../shared/styles/fonts.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <script src="../../../public/vendor/iconify/iconify-icon.min.js"></script>
+    <script src="../../../public/vendor/tailwindcss/tailwind.min.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              body: ["Nunito", "sans-serif"],
+              display: ["Fredoka", "sans-serif"],
+            },
+            colors: {
+              mgRed: "#c0272d",
+              mgWine: "#8f1e23",
+              mgGold: "#f5a800",
+              mgBrown: "#8b5e3c",
+              mgGreen: "#2d6a4f",
+              cream: "#fdf6e3",
+            },
+          },
+        },
+      };
+    </script>
+    <script src="../../shared/accessibility/a11y.js" defer></script>
+    <script src="../../shared/services/apiLegado.js" defer></script>
+    <script src="../../shared/layout/background.js" defer></script>
+    <script src="../../shared/layout/footer.js" defer></script>
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main id="conteudo-principal" tabindex="-1" class="page-shell">
+      <div class="top-actions">
+        <a class="back-btn" href="../home/">
+          <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+          Voltar
+        </a>
+        <span id="bcGameUserChip" class="game-user-chip" hidden>
+          <i class="fa-solid fa-user" aria-hidden="true"></i>
+          <span id="bcGameUserName">Participante</span>
+        </span>
+      </div>
+
+      <header class="hero" aria-labelledby="pageTitle">
+        <h1 id="pageTitle" class="hero-title">Sessão dos Jogos</h1>
+        <p class="hero-description">
+          Avance pelas fases, conquiste estrelas e libere medalhas em cada
+          seção. Complete toda a jornada para receber seu certificado final de
+          participação.
+        </p>
+      </header>
+
+      <div class="extra-row">
+        <a class="extra-btn" href="simulador/index.html"
+          ><i class="fa-solid fa-calculator" aria-hidden="true"></i> Extra ·
+          Simulador Orçamentário</a
+        >
+      </div>
+      <section
+        class="map-board is-loading"
+        aria-label="Mapa de fases dos jogos"
+      >
+        <div class="map-inner">
+          <div
+            id="mapLoading"
+            class="map-loading"
+            role="status"
+            aria-live="polite"
+          >
+            <div class="loading-adventure">
+              <div class="loading-orbit" aria-hidden="true">
+                <div class="loading-path"></div>
+                <div class="loading-player">
+                  <i class="fa-solid fa-map-location-dot"></i>
+                </div>
+                <div class="loading-flag">
+                  <i class="fa-solid fa-flag-checkered"></i>
+                </div>
+              </div>
+              <h2 class="loading-title">Preparando sua aventura</h2>
+              <p id="mapLoadingText" class="loading-copy">
+                Buscando suas fases...
+              </p>
+              <div class="loading-dots" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+          <div id="sectionBackgrounds" aria-hidden="true"></div>
+          <div id="routeLayer" aria-hidden="true"></div>
+
+          <div id="sectionLabels"></div>
+          <div id="levelsLayer"></div>
+        </div>
+      </section>
+    </main>
+
+    <div
+      id="medalModal"
+      class="modal-backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="medalModalTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-card medal-modal-card">
+        <div class="p-5 text-center">
+          <div class="medal-modal-hero">
+            <div class="medal-modal-icon">
+              <i class="fa-solid fa-medal" aria-hidden="true"></i>
+            </div>
+            <div>
+              <p
+                class="text-xs font-black uppercase tracking-[.16em] text-mgWine"
+              >
+                Conquista da seção
+              </p>
+              <h2
+                id="medalModalTitle"
+                class="font-display text-2xl font-black text-mgGreen"
+              >
+                Medalhas da jornada
+              </h2>
+              <p
+                id="medalModalSection"
+                class="mt-1 text-sm font-extrabold text-[#6b3a1f]"
+              ></p>
+            </div>
+          </div>
+          <div class="medal-state-list">
+            <div class="medal-state-item">
+              <i class="fa-solid fa-lock"></i>
+              <div>
+                <strong>Bloqueada</strong
+                ><small
+                  >Conclua todas as fases da seção para liberar a
+                  medalha.</small
+                >
+              </div>
+            </div>
+            <div class="medal-state-item normal">
+              <i class="fa-solid fa-medal"></i>
+              <div>
+                <strong>Liberada</strong
+                ><small
+                  >Recebida quando todas as fases da seção forem
+                  concluídas.</small
+                >
+              </div>
+            </div>
+            <div class="medal-state-item shiny">
+              <i class="fa-solid fa-star"></i>
+              <div>
+                <strong>Brilhante</strong
+                ><small
+                  >Conquistada quando todas as fases da seção alcançarem três
+                  estrelas.</small
+                >
+              </div>
+            </div>
+          </div>
+          <button id="closeMedalModal" class="close-btn mt-4" type="button">
+            Fechar
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      id="levelModal"
+      class="modal-backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modalTitle"
+    >
+      <div class="modal-card">
+        <div class="p-5 text-center">
+          <div id="modalIcon" class="modal-icon"></div>
+          <p
+            id="modalSession"
+            class="mt-4 text-xs font-black uppercase tracking-[.18em] text-mgWine"
+          >
+            Sessão
+          </p>
+          <h2
+            id="modalTitle"
+            class="mt-1 font-display text-3xl font-black text-mgGreen"
+          >
+            Nome do jogo
+          </h2>
+          <div
+            id="modalStars"
+            class="mt-4 flex justify-center gap-2 text-3xl text-mgGold"
+          ></div>
+          <p
+            id="modalState"
+            class="mt-3 text-sm font-black uppercase text-[#7a4b13]"
+          ></p>
+          <div class="mt-5 grid gap-2 sm:grid-cols-2">
+            <button id="startLevel" class="start-btn" type="button">
+              Iniciar
+            </button>
+            <button id="closeModal" class="close-btn" type="button">
+              Fechar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
