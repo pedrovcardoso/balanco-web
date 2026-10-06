@@ -1,0 +1,110 @@
+/* Estilos específicos para a conquista da página Saiba Mais */
+
+.achievement-section::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1.5px dashed rgba(139, 94, 60, 0.24);
+  border-radius: 22px;
+  pointer-events: none;
+}
+
+.achievement-ribbon {
+  width: 58px;
+  height: 64px;
+  margin-bottom: -22px;
+  border-radius: 8px 8px 2px 2px;
+  background: linear-gradient(135deg, #10b981 0 46%, #fffaf0 46% 56%, #047857 56%);
+  clip-path: polygon(0 0, 100% 0, 86% 100%, 50% 76%, 14% 100%);
+  filter: grayscale(1);
+  opacity: 0.55;
+  transition: 0.45s ease;
+}
+
+.achievement-medal {
+  position: relative;
+  display: grid;
+  width: 108px;
+  height: 108px;
+  place-items: center;
+  border: 6px solid #57534e;
+  border-radius: 999px;
+  background: radial-gradient(circle at 32% 24%, #f5f5f4 0 18%, #d6d3d1 19% 42%, #a8a29e 43% 68%, #57534e 100%);
+  color: #44403c;
+  font-size: 2.45rem;
+  filter: grayscale(1);
+  box-shadow: inset 0 5px 0 rgba(255, 255, 255, 0.42), inset 0 -11px 18px rgba(40, 30, 20, 0.3), 0 12px 20px rgba(0, 0, 0, 0.22);
+  transition: 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.achievement-medal::after {
+  content: '';
+  position: absolute;
+  inset: 9px;
+  border: 2px dashed currentColor;
+  border-radius: 999px;
+  opacity: 0.28;
+}
+
+.achievement-section.is-ready .achievement-status {
+  background: #fff3c4;
+  color: #8b5e3c;
+}
+
+.achievement-section.is-claimed .achievement-ribbon {
+  filter: none;
+  opacity: 1;
+}
+
+.achievement-section.is-claimed .achievement-medal {
+  border-color: #7a4b13;
+  background: radial-gradient(circle at 32% 24%, #fff5bf 0 18%, #ffd56a 19% 42%, #f5a800 43% 68%, #9a6817 100%);
+  color: #5d2b0a;
+  filter: none;
+  transform: scale(1.04);
+}
+
+.achievement-section.is-claimed .achievement-status {
+  background: #dcfce7;
+  color: #047857;
+}
+
+.achievement-section.is-celebrating .achievement-medal {
+  animation: medalClaim 1.05s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.achievement-section.is-celebrating .achievement-ribbon {
+  animation: ribbonClaim 0.85s ease both;
+}
+
+.achievement-burst {
+  position: absolute;
+  left: 95px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+}
+
+.achievement-section.is-celebrating .achievement-burst {
+  animation: burstSpin 1.15s ease-out both;
+  box-shadow: 0 -95px #f5a800, 67px -67px #10b981, 95px 0 #c0272d, 67px 67px #2563eb, 0 95px #f5a800, -67px 67px #10b981, -95px 0 #c0272d, -67px -67px #2563eb;
+}
+
+@keyframes medalClaim {
+  0% { transform: scale(0.72) rotate(-15deg); }
+  45% { transform: scale(1.2) rotate(8deg); }
+  70% { transform: scale(0.96) rotate(-3deg); }
+  100% { transform: scale(1.04) rotate(0); }
+}
+
+@keyframes ribbonClaim {
+  0% { transform: translateY(-22px); opacity: 0; }
+  100% { transform: none; opacity: 1; }
+}
+
+@keyframes burstSpin {
+  0% { transform: scale(0.2) rotate(0); opacity: 1; }
+  100% { transform: scale(1.25) rotate(90deg); opacity: 0; }
+}
+

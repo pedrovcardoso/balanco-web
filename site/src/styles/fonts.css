@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Lexend:wght@300;400;600;700;800&display=swap');
+
+/* Fontes Locais */
+@font-face {
+  font-family: "Fredoka";
+  src: url("../assets/fonts/fredoka/Fredoka-wdth-wght.ttf") format("truetype-variations"),
+       url("../assets/fonts/fredoka/fredoka-latin-400-normal.woff2") format("woff2"),
+       url("../assets/fonts/fredoka/fredoka-latin-400-normal.woff") format("woff");
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fredoka One";
+  src: url("../assets/fonts/fredoka-one/fredoka-one-latin-400-normal.woff2") format("woff2"),
+       url("../assets/fonts/fredoka-one/fredoka-one-latin-400-normal.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Caveat Brush";
+  src: url("../assets/fonts/caveat-brush/CaveatBrush-Regular.ttf") format("truetype"),
+       url("../assets/fonts/caveat-brush/caveat-brush-latin-400-normal.woff2") format("woff2"),
+       url("../assets/fonts/caveat-brush/caveat-brush-latin-400-normal.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("../assets/fonts/nunito/Nunito-wght.ttf") format("truetype-variations"),
+       url("../assets/fonts/nunito/nunito-latin-400-normal.woff2") format("woff2"),
+       url("../assets/fonts/nunito/nunito-latin-400-normal.woff") format("woff");
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("../assets/fonts/nunito/Nunito-Italic-wght.ttf") format("truetype-variations");
+  font-style: italic;
+  font-weight: 200 1000;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("../assets/fonts/opendyslexic/opendyslexic-latin-400-normal.woff2") format("woff2"),
+       url("../assets/fonts/opendyslexic/opendyslexic-latin-400-normal.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("../assets/fonts/opendyslexic/opendyslexic-latin-700-normal.woff2") format("woff2"),
+       url("../assets/fonts/opendyslexic/opendyslexic-latin-700-normal.woff") format("woff");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Atkinson Hyperlegible";
+  src: url("../assets/fonts/atkinson-hyperlegible/AtkinsonHyperlegibleRegular102.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Atkinson Hyperlegible";
+  src: url("../assets/fonts/atkinson-hyperlegible/AtkinsonHyperlegibleBold102.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lexend";
+  src: url("../assets/fonts/lexend/Lexend-VariableFont_wght.ttf") format("truetype-variations"),
+       url("../assets/fonts/lexend/Lexend-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+/* Variaveis CSS Globais de Fontes */
+:root {
+  --font-nunito: "Nunito", "Nunito Sans", system-ui, -apple-system, sans-serif;
+  --font-fredoka: "Fredoka", "Fredoka One", "Nunito", sans-serif;
+  --font-caveat: "Caveat Brush", "Fredoka", cursive;
+
+  --font-title-rounded: var(--font-fredoka);
+  --font-title-handwritten: var(--font-caveat);
+  --font-text: var(--font-nunito);
+}
+
+/* Tailwind CSS Theme Utility Mapping */
+@theme {
+  --font-sans: "Nunito", system-ui, sans-serif;
+  --font-display: "Fredoka", "Nunito", sans-serif;
+  --font-fredoka: "Fredoka", "Fredoka One", "Nunito", sans-serif;
+  --font-nunito: "Nunito", sans-serif;
+  --font-caveat: "Caveat Brush", cursive;
+}
+
+/* Aplicacao Global das Fontes */
+body, button, input, select, textarea {
+  font-family: var(--font-nunito);
+}
+
+h1, h2, h3, h4, h5, h6,
+.font-display,
+.font-fredoka {
+  font-family: var(--font-fredoka);
+}

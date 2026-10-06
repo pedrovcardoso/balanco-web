@@ -1,0 +1,584 @@
+// O arquivo `geojs-31-mun.json` (fronteiras dos municípios do Estado de Minas Gerais em formato GeoJSON) foi obtido a partir do repositório público:
+// - Repositório: [tbrugz/geodata-br](https://github.com/tbrugz/geodata-br)
+// - Autor/Mantenedor: Thiago Brugnaro (`tbrugz`)
+// - Fonte original dos dados: IBGE (Instituto Brasileiro de Geografia e Estatística)
+// - Uso: Dados geográficos abertos utilizados para animação e visualização do mapa de Minas Gerais na tela de carregamento do Balanço Cidadão.
+
+{
+  "titulo": "Minas Gerais - despesas liquidadas em 2025 por categorias resumidas",
+  "exercicio": 2025,
+  "periodo": "janeiro a dezembro de 2025",
+  "unidade_monetaria": "BRL",
+  "metrica": "despesas_liquidadas_ate_o_bimestre",
+  "escopo": "orçamento fiscal; inclui despesas intraorçamentárias",
+  "total_liquidado_2025": 127112592180.39,
+  "categorias": [
+    {
+      "id": "saude",
+      "nome": "Saúde",
+      "funcoes": [
+        {
+          "codigo": "10",
+          "nome": "Saúde",
+          "valor_liquidado_2025": 18340220837.78
+        }
+      ],
+      "valor_liquidado_2025": 18340220837.78,
+      "percentual_total": 14.4283,
+      "descricao": "Reúne ações de atendimento, prevenção, vigilância, hospitais, medicamentos e demais serviços públicos de saúde.",
+      "mensagens_comparacao": {
+        "criterios_percentuais": {
+          "muito_subestimado": "abaixo de -25%",
+          "subestimado": "de -25% a -8%",
+          "proximo": "de -8% a +8%",
+          "superestimado": "de +8% a +25%",
+          "muito_superestimado": "acima de +25%"
+        },
+        "muito_subestimado": "Sua proposta ficou mais de 25% abaixo dos R$ 18,34 bilhões executados. Nessa escala, o Estado teria de reduzir ou adiar atendimentos, exames, compra de medicamentos, repasses hospitalares, vacinação e vigilância em saúde. A pressão tende a aparecer em filas maiores e menor capacidade de resposta nos municípios.",
+        "subestimado": "Sua proposta ficou entre 8% e 25% abaixo da execução. Seria necessário priorizar serviços essenciais e rever expansão de equipes, manutenção de unidades, exames e ações preventivas. Mesmo sem interromper toda a rede, o atendimento poderia ficar mais lento ou desigual entre regiões.",
+        "proximo": "Sua estimativa ficou a até 8% do valor executado de R$ 18,34 bilhões. Isso mostra uma percepção próxima da dimensão financeira necessária para manter hospitais, assistência farmacêutica, atenção básica, vigilância e demais serviços estaduais de saúde.",
+        "superestimado": "Sua proposta ficou entre 8% e 25% acima da execução. O adicional poderia financiar mais exames, leitos, medicamentos, prevenção e estrutura hospitalar, mas dependeria de profissionais, contratos e projetos prontos para transformar orçamento em atendimento.",
+        "muito_superestimado": "Sua proposta superou em mais de 25% os R$ 18,34 bilhões executados. Seria uma expansão relevante da saúde, capaz de ampliar rede e atendimento, mas exigiria retirar recursos de outras áreas e garantir capacidade de contratação, obras, equipes e custeio permanente."
+      },
+      "apresentacao": {
+        "cor": "#c83d45",
+        "icone": "solar:health-bold-duotone"
+      }
+    },
+    {
+      "id": "educacao_cultura_esporte",
+      "nome": "Educação, cultura e esporte",
+      "funcoes": [
+        {
+          "codigo": "12",
+          "nome": "Educação",
+          "valor_liquidado_2025": 21301878691.66
+        },
+        {
+          "codigo": "13",
+          "nome": "Cultura",
+          "valor_liquidado_2025": 381151214.09
+        },
+        {
+          "codigo": "27",
+          "nome": "Desporto e Lazer",
+          "valor_liquidado_2025": 66374651.44
+        }
+      ],
+      "valor_liquidado_2025": 21749404557.19,
+      "percentual_total": 17.1103,
+      "descricao": "Abrange escolas, universidades estaduais, cultura, patrimônio, esporte e lazer, apoiando aprendizagem, cidadania e desenvolvimento humano.",
+      "mensagens_comparacao": {
+        "criterios_percentuais": {
+          "muito_subestimado": "abaixo de -25%",
+          "subestimado": "de -25% a -8%",
+          "proximo": "de -8% a +8%",
+          "superestimado": "de +8% a +25%",
+          "muito_superestimado": "acima de +25%"
+        },
+        "muito_subestimado": "Sua proposta ficou mais de 25% abaixo dos R$ 21,75 bilhões executados. O corte alcançaria uma categoria dominada pela educação e poderia afetar manutenção de escolas, alimentação e transporte escolar, remuneração e formação profissional, universidades estaduais, patrimônio cultural e programas esportivos.",
+        "subestimado": "Sua proposta ficou entre 8% e 25% abaixo da execução. O Estado teria de selecionar reformas, projetos pedagógicos, ações culturais e esportivas, podendo reduzir cobertura territorial e adiar melhorias em escolas e equipamentos públicos.",
+        "proximo": "Sua estimativa ficou a até 8% dos R$ 21,75 bilhões executados. Ela se aproxima do esforço financeiro destinado principalmente à educação, além de cultura, patrimônio, desporto e lazer.",
+        "superestimado": "Sua proposta ficou entre 8% e 25% acima da execução. O reforço poderia apoiar escolas em tempo integral, infraestrutura, tecnologia educacional, formação, cultura e esporte, desde que existam projetos e capacidade de execução.",
+        "muito_superestimado": "Sua proposta superou em mais de 25% os R$ 21,75 bilhões executados. A ampliação poderia acelerar reformas, aprendizagem e acesso à cultura e ao esporte, mas exigiria despesas continuadas e redução significativa em outras categorias."
+      },
+      "apresentacao": {
+        "cor": "#2f6fca",
+        "icone": "solar:notebook-bold-duotone"
+      }
+    },
+    {
+      "id": "seguranca_justica",
+      "nome": "Segurança e Justiça",
+      "funcoes": [
+        {
+          "codigo": "02",
+          "nome": "Judiciária",
+          "valor_liquidado_2025": 10281612830.54
+        },
+        {
+          "codigo": "03",
+          "nome": "Essencial à Justiça",
+          "valor_liquidado_2025": 4659918072.1
+        },
+        {
+          "codigo": "06",
+          "nome": "Segurança Pública",
+          "valor_liquidado_2025": 25378163646.09
+        },
+        {
+          "codigo": "14",
+          "nome": "Direitos da Cidadania",
+          "valor_liquidado_2025": 124846657.29
+        }
+      ],
+      "valor_liquidado_2025": 40444541206.02,
+      "percentual_total": 31.8179,
+      "descricao": "Inclui segurança pública, sistema de justiça, defesa de direitos e cidadania, envolvendo prevenção, investigação, policiamento e funcionamento das instituições.",
+      "mensagens_comparacao": {
+        "criterios_percentuais": {
+          "muito_subestimado": "abaixo de -25%",
+          "subestimado": "de -25% a -8%",
+          "proximo": "de -8% a +8%",
+          "superestimado": "de +8% a +25%",
+          "muito_superestimado": "acima de +25%"
+        },
+        "muito_subestimado": "Sua proposta ficou mais de 25% abaixo dos R$ 40,44 bilhões executados, a maior categoria desta classificação. O valor reúne Judiciário, órgãos essenciais à Justiça, segurança pública e cidadania; um corte dessa dimensão afetaria pessoal, custódia, policiamento, investigação, perícia, atendimento judicial e proteção de direitos.",
+        "subestimado": "Sua proposta ficou entre 8% e 25% abaixo da execução. Seria necessário priorizar operações, pessoal, tecnologia, manutenção de unidades e acesso à Justiça. A redução poderia limitar cobertura territorial e velocidade de atendimento.",
+        "proximo": "Sua estimativa ficou a até 8% dos R$ 40,44 bilhões executados. Isso indica que você percebeu o peso conjunto das estruturas permanentes de segurança pública, Judiciário e funções essenciais à Justiça.",
+        "superestimado": "Sua proposta ficou entre 8% e 25% acima da execução. O adicional poderia modernizar investigação, perícia, prevenção, sistema prisional e atendimento judicial, mas precisaria de metas integradas e avaliação de resultados.",
+        "muito_superestimado": "Sua proposta superou em mais de 25% os R$ 40,44 bilhões executados. Como essa categoria já representa cerca de um terço do total, a expansão reduziria fortemente o espaço de saúde, educação, infraestrutura e proteção social."
+      },
+      "apresentacao": {
+        "cor": "#6750a4",
+        "icone": "solar:shield-keyhole-bold-duotone"
+      }
+    },
+    {
+      "id": "protecao_social_previdencia",
+      "nome": "Proteção social e previdência",
+      "funcoes": [
+        {
+          "codigo": "08",
+          "nome": "Assistência Social",
+          "valor_liquidado_2025": 170896778.97
+        },
+        {
+          "codigo": "09",
+          "nome": "Previdência Social",
+          "valor_liquidado_2025": 25818285992.18
+        },
+        {
+          "codigo": "11",
+          "nome": "Trabalho",
+          "valor_liquidado_2025": 24437240.74
+        }
+      ],
+      "valor_liquidado_2025": 26013620011.89,
+      "percentual_total": 20.465,
+      "descricao": "Reúne assistência social, previdência e trabalho, incluindo proteção a famílias vulneráveis e pagamento de benefícios e aposentadorias.",
+      "mensagens_comparacao": {
+        "criterios_percentuais": {
+          "muito_subestimado": "abaixo de -25%",
+          "subestimado": "de -25% a -8%",
+          "proximo": "de -8% a +8%",
+          "superestimado": "de +8% a +25%",
+          "muito_superestimado": "acima de +25%"
+        },
+        "muito_subestimado": "Sua proposta ficou mais de 25% abaixo dos R$ 26,01 bilhões executados. Como quase todo o valor está ligado à Previdência Social, uma redução dessa escala não seria apenas corte de programas: poderia deixar insuficientes recursos para aposentadorias, pensões e outros compromissos continuados.",
+        "subestimado": "Sua proposta ficou entre 8% e 25% abaixo da execução. A margem para reduzir é limitada porque benefícios previdenciários são obrigações regulares. Assistência social e trabalho também disputariam uma parcela menor, afetando apoio a famílias vulneráveis.",
+        "proximo": "Sua estimativa ficou a até 8% dos R$ 26,01 bilhões executados. Você reconheceu o peso dos compromissos previdenciários, somados às ações de assistência social e trabalho.",
+        "superestimado": "Sua proposta ficou entre 8% e 25% acima da execução. Parte do adicional poderia fortalecer proteção social e políticas de trabalho, mas recursos previdenciários seguem regras específicas e não se transformam automaticamente em novos serviços.",
+        "muito_superestimado": "Sua proposta superou em mais de 25% os R$ 26,01 bilhões executados. O reforço poderia ampliar assistência, mas precisaria separar obrigações previdenciárias de novas políticas e demonstrar sustentabilidade para os anos seguintes."
+      },
+      "apresentacao": {
+        "cor": "#d68100",
+        "icone": "solar:users-group-two-rounded-bold-duotone"
+      }
+    },
+    {
+      "id": "transporte_infraestrutura_urbana",
+      "nome": "Transporte e infraestrutura urbana",
+      "funcoes": [
+        {
+          "codigo": "15",
+          "nome": "Urbanismo",
+          "valor_liquidado_2025": 314243183.45
+        },
+        {
+          "codigo": "16",
+          "nome": "Habitação",
+          "valor_liquidado_2025": 51869916.23
+        },
+        {
+          "codigo": "17",
+          "nome": "Saneamento",
+          "valor_liquidado_2025": 81008266.85
+        },
+        {
+          "codigo": "26",
+          "nome": "Transporte",
+          "valor_liquidado_2025": 1728375336.38
+        }
+      ],
+      "valor_liquidado_2025": 2175496702.91,
+      "percentual_total": 1.7115,
+      "descricao": "Abrange transporte, mobilidade, urbanismo, habitação e saneamento, com obras e serviços que conectam pessoas e melhoram cidades.",
+      "mensagens_comparacao": {
+        "criterios_percentuais": {
+          "muito_subestimado": "abaixo de -25%",
+          "subestimado": "de -25% a -8%",
+          "proximo": "de -8% a +8%",
+          "superestimado": "de +8% a +25%",
+          "muito_superestimado": "acima de +25%"
+        },
+        "muito_subestimado": "Sua proposta ficou mais de 25% abaixo dos R$ 2,18 bilhões executados. Isso poderia adiar conservação de rodovias, obras de mobilidade, saneamento, urbanismo e habitação. A redução de manutenção hoje costuma elevar custos de recuperação no futuro.",
+        "subestimado": "Sua proposta ficou entre 8% e 25% abaixo da execução. O Estado teria de concentrar recursos em trechos e obras prioritárias, ampliando prazos de projetos de transporte, habitação, saneamento e desenvolvimento urbano.",
+        "proximo": "Sua estimativa ficou a até 8% dos R$ 2,18 bilhões executados, valor concentrado principalmente em transporte, com parcelas menores para urbanismo, saneamento e habitação.",
+        "superestimado": "Sua proposta ficou entre 8% e 25% acima da execução. O adicional poderia acelerar manutenção viária e obras urbanas, desde que projetos, licenças, desapropriações e contratos estejam preparados.",
+        "muito_superestimado": "Sua proposta superou em mais de 25% os R$ 2,18 bilhões executados. Seria possível ampliar a carteira de obras, mas investimentos incompletos ou sem manutenção futura podem consumir recursos sem entregar todo o benefício previsto."
+      },
+      "apresentacao": {
+        "cor": "#087f8c",
+        "icone": "solar:bus-bold-duotone"
+      }
+    },
+    {
+      "id": "meio_ambiente_agricultura",
+      "nome": "Meio ambiente e agricultura",
+      "funcoes": [
+        {
+          "codigo": "18",
+          "nome": "Gestão Ambiental",
+          "valor_liquidado_2025": 632158270.36
+        },
+        {
+          "codigo": "20",
+          "nome": "Agricultura",
+          "valor_liquidado_2025": 1097252570.98
+        },
+        {
+          "codigo": "21",
+          "nome": "Organização Agrária",
+          "valor_liquidado_2025": 5094109.75
+        }
+      ],
+      "valor_liquidado_2025": 1734504951.09,
+      "percentual_total": 1.3645,
+      "descricao": "Reúne gestão ambiental, agricultura e organização agrária, apoiando produção rural, conservação, fiscalização e uso sustentável dos recursos naturais.",
+      "mensagens_comparacao": {
+        "criterios_percentuais": {
+          "muito_subestimado": "abaixo de -25%",
+          "subestimado": "de -25% a -8%",
+          "proximo": "de -8% a +8%",
+          "superestimado": "de +8% a +25%",
+          "muito_superestimado": "acima de +25%"
+        },
+        "muito_subestimado": "Sua proposta ficou mais de 25% abaixo dos R$ 1,73 bilhão executados. A redução atingiria apoio à agricultura, fiscalização e licenciamento ambiental, conservação, gestão da água e prevenção de riscos, com reflexos sobre produção rural e segurança ambiental.",
+        "subestimado": "Sua proposta ficou entre 8% e 25% abaixo da execução. Seria preciso priorizar territórios e riscos, reduzindo alcance de assistência ao produtor, fiscalização, recuperação ambiental e monitoramento.",
+        "proximo": "Sua estimativa ficou a até 8% dos R$ 1,73 bilhão executados, distribuídos principalmente entre agricultura e gestão ambiental.",
+        "superestimado": "Sua proposta ficou entre 8% e 25% acima da execução. O reforço poderia ampliar assistência técnica, inovação no campo, conservação, fiscalização e prevenção de eventos ambientais.",
+        "muito_superestimado": "Sua proposta superou em mais de 25% os R$ 1,73 bilhão executados. Uma agenda ambiental e agrícola mais ampla seria possível, mas precisaria de metas territoriais, equipes técnicas e articulação com municípios e produtores."
+      },
+      "apresentacao": {
+        "cor": "#2d6a4f",
+        "icone": "solar:leaf-bold-duotone"
+      }
+    },
+    {
+      "id": "desenvolvimento_economico_inovacao",
+      "nome": "Desenvolvimento econômico e inovação",
+      "funcoes": [
+        {
+          "codigo": "19",
+          "nome": "Ciência e Tecnologia",
+          "valor_liquidado_2025": 615851561.21
+        },
+        {
+          "codigo": "22",
+          "nome": "Indústria",
+          "valor_liquidado_2025": 204959.23
+        },
+        {
+          "codigo": "23",
+          "nome": "Comércio e Serviços",
+          "valor_liquidado_2025": 123946837.87
+        },
+        {
+          "codigo": "24",
+          "nome": "Comunicações",
+          "valor_liquidado_2025": 0.0
+        },
+        {
+          "codigo": "25",
+          "nome": "Energia",
+          "valor_liquidado_2025": 11316059.72
+        }
+      ],
+      "valor_liquidado_2025": 751319418.03,
+      "percentual_total": 0.5911,
+      "descricao": "Inclui ciência, tecnologia, indústria, comércio, serviços, comunicações e energia, estimulando inovação, produtividade e oportunidades econômicas.",
+      "mensagens_comparacao": {
+        "criterios_percentuais": {
+          "muito_subestimado": "abaixo de -25%",
+          "subestimado": "de -25% a -8%",
+          "proximo": "de -8% a +8%",
+          "superestimado": "de +8% a +25%",
+          "muito_superestimado": "acima de +25%"
+        },
+        "muito_subestimado": "Sua proposta ficou mais de 25% abaixo dos R$ 751,32 milhões executados. Isso reduziria principalmente ciência e tecnologia, além de iniciativas de comércio, serviços e energia, limitando pesquisa, inovação e apoio à atividade produtiva.",
+        "subestimado": "Sua proposta ficou entre 8% e 25% abaixo da execução. Menos projetos de pesquisa, inovação e desenvolvimento empresarial poderiam receber apoio, com efeitos mais visíveis no médio e longo prazo.",
+        "proximo": "Sua estimativa ficou a até 8% dos R$ 751,32 milhões executados. O valor real foi concentrado em ciência e tecnologia, com participação menor de comércio, serviços, indústria e energia.",
+        "superestimado": "Sua proposta ficou entre 8% e 25% acima da execução. O adicional poderia ampliar pesquisa aplicada, transformação digital e apoio produtivo, desde que os programas tenham metas e avaliação de retorno público.",
+        "muito_superestimado": "Sua proposta superou em mais de 25% os R$ 751,32 milhões executados. Seria uma aposta forte em inovação e produtividade, mas os resultados podem levar anos e exigem seleção técnica de projetos e acompanhamento contínuo."
+      },
+      "apresentacao": {
+        "cor": "#a93472",
+        "icone": "solar:rocket-bold-duotone"
+      }
+    },
+    {
+      "id": "administracao_publica",
+      "nome": "Administração pública",
+      "funcoes": [
+        {
+          "codigo": "01",
+          "nome": "Legislativa",
+          "valor_liquidado_2025": 2402826573.18
+        },
+        {
+          "codigo": "04",
+          "nome": "Administração",
+          "valor_liquidado_2025": 5021108962.9
+        }
+      ],
+      "valor_liquidado_2025": 7423935536.08,
+      "percentual_total": 5.8404,
+      "descricao": "Mantém o funcionamento administrativo e legislativo do Estado, incluindo gestão, planejamento, controle e suporte às demais políticas públicas.",
+      "mensagens_comparacao": {
+        "criterios_percentuais": {
+          "muito_subestimado": "abaixo de -25%",
+          "subestimado": "de -25% a -8%",
+          "proximo": "de -8% a +8%",
+          "superestimado": "de +8% a +25%",
+          "muito_superestimado": "acima de +25%"
+        },
+        "muito_subestimado": "Sua proposta ficou mais de 25% abaixo dos R$ 7,42 bilhões executados. O corte alcançaria funções legislativas e administrativas que sustentam sistemas, planejamento, arrecadação, controle, compras, tecnologia e suporte às demais políticas públicas.",
+        "subestimado": "Sua proposta ficou entre 8% e 25% abaixo da execução. Seriam necessários ganhos rápidos de eficiência e priorização de estruturas. Se mal planejada, a redução pode atrasar contratos, pagamentos, fiscalização e entregas de todas as áreas.",
+        "proximo": "Sua estimativa ficou a até 8% dos R$ 7,42 bilhões executados. Ela reconhece que a administração e a função legislativa possuem custos para organizar, controlar e viabilizar serviços públicos.",
+        "superestimado": "Sua proposta ficou entre 8% e 25% acima da execução. O adicional poderia modernizar sistemas, dados, atendimento e controle, mas deveria produzir economia futura, transparência e melhoria mensurável dos serviços.",
+        "muito_superestimado": "Sua proposta superou em mais de 25% os R$ 7,42 bilhões executados. Uma modernização ampla seria possível, porém o aumento administrativo exigiria metas objetivas para não deslocar recursos das entregas diretas à população."
+      },
+      "apresentacao": {
+        "cor": "#526174",
+        "icone": "solar:buildings-2-bold-duotone"
+      }
+    },
+    {
+      "id": "dividas_outras_obrigacoes",
+      "nome": "Dívidas e outras obrigações",
+      "funcoes": [
+        {
+          "codigo": "28",
+          "nome": "Encargos Especiais",
+          "valor_liquidado_2025": 8479318280.16
+        }
+      ],
+      "valor_liquidado_2025": 8479318280.16,
+      "percentual_total": 6.6707,
+      "descricao": "Reúne encargos especiais, dívida e outras obrigações financeiras do Estado que não correspondem diretamente à prestação de um serviço específico.",
+      "mensagens_comparacao": {
+        "criterios_percentuais": {
+          "muito_subestimado": "abaixo de -25%",
+          "subestimado": "de -25% a -8%",
+          "proximo": "de -8% a +8%",
+          "superestimado": "de +8% a +25%",
+          "muito_superestimado": "acima de +25%"
+        },
+        "muito_subestimado": "Sua proposta ficou mais de 25% abaixo dos R$ 8,48 bilhões executados em encargos especiais. Obrigações financeiras não desaparecem quando recebem menos orçamento: atrasos podem gerar juros, penalidades, renegociação e menor capacidade de investimento futuro.",
+        "subestimado": "Sua proposta ficou entre 8% e 25% abaixo da execução. O Estado teria de reprogramar pagamentos ou encontrar outra fonte, com risco de elevar custos financeiros e pressionar exercícios seguintes.",
+        "proximo": "Sua estimativa ficou a até 8% dos R$ 8,48 bilhões executados. Você considerou compromissos financeiros que não aparecem como serviço direto, mas reduzem a parcela livre do orçamento.",
+        "superestimado": "Sua proposta ficou entre 8% e 25% acima da execução. Antecipar ou reforçar pagamentos pode reduzir passivos e juros futuros, mas retira recursos de serviços e investimentos no presente.",
+        "muito_superestimado": "Sua proposta superou em mais de 25% os R$ 8,48 bilhões executados. A aceleração do pagamento de obrigações poderia melhorar indicadores fiscais futuros, mas produziria uma compressão imediata relevante nas demais políticas."
+      },
+      "apresentacao": {
+        "cor": "#8f1e23",
+        "icone": "solar:document-text-bold-duotone"
+      }
+    },
+    {
+      "id": "outras_areas",
+      "nome": "Outras áreas",
+      "funcoes": [
+        {
+          "codigo": "05",
+          "nome": "Defesa Nacional",
+          "valor_liquidado_2025": 0.0
+        },
+        {
+          "codigo": "07",
+          "nome": "Relações Exteriores",
+          "valor_liquidado_2025": 230679.24
+        }
+      ],
+      "valor_liquidado_2025": 230679.24,
+      "percentual_total": 0.0002,
+      "descricao": "Agrupa funções com execução reduzida ou pontual nesta classificação, como relações exteriores e defesa nacional no orçamento estadual.",
+      "mensagens_comparacao": {
+        "criterios_percentuais": {
+          "muito_subestimado": "abaixo de -25%",
+          "subestimado": "de -25% a -8%",
+          "proximo": "de -8% a +8%",
+          "superestimado": "de +8% a +25%",
+          "muito_superestimado": "acima de +25%"
+        },
+        "muito_subestimado": "Sua proposta ficou mais de 25% abaixo dos R$ 230,68 mil executados. Embora a diferença percentual seja alta, o impacto absoluto é pequeno: nesta classificação, o valor real correspondeu a relações exteriores, enquanto defesa nacional teve execução zero.",
+        "subestimado": "Sua proposta ficou entre 8% e 25% abaixo da execução de R$ 230,68 mil. A redução afetaria ações muito pontuais e teria efeito quase imperceptível no orçamento total.",
+        "proximo": "Sua estimativa ficou a até 8% dos R$ 230,68 mil executados. A categoria representou aproximadamente 0,0002% do total liquidado.",
+        "superestimado": "Sua proposta ficou entre 8% e 25% acima da execução. O aumento absoluto ainda seria pequeno, mas qualquer nova ação deveria estar ligada às competências estaduais.",
+        "muito_superestimado": "Sua proposta superou em mais de 25% os R$ 230,68 mil executados. Como a base real é muito pequena, a diferença percentual pode parecer enorme; avalie principalmente o valor em reais e a finalidade concreta da nova despesa."
+      },
+      "apresentacao": {
+        "cor": "#75523a",
+        "icone": "solar:box-bold-duotone"
+      }
+    }
+  ],
+  "metodologia": {
+    "descricao": "Valores das funções oficiais somados em 10 categorias simplificadas para o simulador.",
+    "observacao": "As funções 05 e 24 não possuem linha própria no Anexo 2 e foram tratadas com valor zero. A reserva de contingência teve valor liquidado zero.",
+    "fonte": "RREO Anexo 2 - Estado de Minas Gerais - janeiro a dezembro de 2025",
+    "data_base_fonte": "2026-01-21"
+  },
+  "alertas_gerais": {
+    "titulo": "Alertas da sua proposta",
+    "aviso_metodologico": "A leitura do simulador é apenas educativa. Os resultados apresentam cenários para reflexão e podem depender de critérios, bases de cálculo e classificações próprios de cada política pública.",
+    "alertas": [
+      {
+        "id": "deficit",
+        "tipo": "orcamentario",
+        "gatilho": "total_acima",
+        "severidade": "alta",
+        "titulo": "A proposta ultrapassa o orçamento disponível",
+        "resumo": "Será necessário buscar crédito, usar reservas ou cortar despesas durante o ano.",
+        "descricao": "Gastar acima do total disponível cria uma necessidade de financiamento. Para executar a proposta, o Estado teria de recorrer ao endividamento e buscar crédito, elevar receitas, usar disponibilidades financeiras ou reduzir outras despesas. Operações de crédito dependem de autorização, capacidade de pagamento e limites fiscais; também podem gerar juros e comprometer orçamentos futuros.",
+        "base_legal": "LRF, especialmente arts. 1º e 32; Constituição Federal, art. 167, III.",
+        "fonte_url": "https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp101.htm",
+        "classificacao_visual": "fora_limite",
+        "rotulo_visual": "Fora do limite orçamentário"
+      },
+      {
+        "id": "reserva_alta",
+        "tipo": "orcamentario",
+        "gatilho": "sobra_percentual",
+        "limite_percentual": 5,
+        "severidade": "informativa",
+        "titulo": "Uma parcela relevante ficou sem destinação",
+        "resumo": "A reserva aumenta a proteção contra imprevistos, mas reduz entregas imediatas.",
+        "descricao": "Manter recursos livres pode ajudar diante de queda de receita, emergências e riscos fiscais. Porém, uma sobra elevada também indica que parte do orçamento não foi convertida em serviços, investimentos ou redução de obrigações. Na prática, reservas e contingências devem estar ligadas ao planejamento fiscal e aos riscos identificados.",
+        "base_legal": "LRF, arts. 4º, § 3º, e 5º, III.",
+        "fonte_url": "https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp101.htm",
+        "classificacao_visual": "observacao",
+        "rotulo_visual": "Observação"
+      },
+      {
+        "id": "educacao",
+        "tipo": "referencia_legal",
+        "gatilho": "categoria_minima",
+        "categoria_id": "educacao_cultura_esporte",
+        "percentual_referencia": 25,
+        "margem_alerta_pontos": 2,
+        "severidade": "alta",
+        "titulo": "Educação próxima ou abaixo da referência constitucional",
+        "resumo": "A proposta pode não preservar margem suficiente para o mínimo da educação.",
+        "descricao": "Os Estados devem aplicar ao menos 25% da receita resultante de impostos, incluídas transferências, em manutenção e desenvolvimento do ensino. A categoria do simulador também contém cultura e esporte e usa o total liquidado como base, por isso o teste é apenas um sinal pedagógico e não uma apuração oficial.",
+        "base_legal": "Constituição Federal, art. 212.",
+        "fonte_url": "https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm",
+        "classificacao_visual": "alerta",
+        "rotulo_visual": "Alerta aproximado",
+        "base_calculo": {
+          "nome": "Receita líquida resultante de impostos, incluídas transferências e deduzidos repasses constitucionais aos municípios",
+          "valor_realizado_2025": 93740142622.91,
+          "fonte_demonstrativo": "RREO 2025, Anexo 8, 6º bimestre"
+        },
+        "resultado_oficial_2025": {
+          "percentual_aplicado": 25.53,
+          "valor_aplicado_aproximado": 23900000000.0
+        }
+      },
+      {
+        "id": "saude",
+        "tipo": "referencia_legal",
+        "gatilho": "categoria_minima",
+        "categoria_id": "saude",
+        "percentual_referencia": 12,
+        "margem_alerta_pontos": 1,
+        "severidade": "alta",
+        "titulo": "Saúde próxima ou abaixo da referência legal",
+        "resumo": "A proposta pode não preservar margem suficiente para o mínimo da saúde.",
+        "descricao": "Os Estados devem aplicar ao menos 12% da base legal de impostos e transferências em ações e serviços públicos de saúde. O simulador compara a categoria com o total liquidado, enquanto a apuração oficial utiliza receitas e despesas elegíveis específicas; portanto, o resultado é aproximado.",
+        "base_legal": "Lei Complementar nº 141/2012, art. 6º.",
+        "fonte_url": "https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp141.htm",
+        "classificacao_visual": "alerta",
+        "rotulo_visual": "Alerta aproximado",
+        "base_calculo": {
+          "nome": "Receitas resultantes de impostos e transferências constitucionais e legais, conforme LC 141/2012",
+          "valor_realizado_2025": 93740098257.7,
+          "fonte_demonstrativo": "RREO 2025, Anexo 12, 6º bimestre"
+        },
+        "resultado_oficial_2025": {
+          "percentual_aplicado": 12.29,
+          "valor_aplicado_aproximado": 11500000000.0
+        }
+      },
+      {
+        "id": "concentracao",
+        "tipo": "planejamento",
+        "gatilho": "categoria_concentrada",
+        "limite_percentual": 40,
+        "severidade": "informativa",
+        "titulo": "A proposta concentra muitos recursos em uma única área",
+        "resumo": "Uma prioridade muito concentrada pode reduzir a capacidade das demais políticas.",
+        "descricao": "Quando uma categoria recebe mais de 40% do total, outras áreas passam a disputar uma parcela menor. Isso pode dificultar o atendimento de despesas continuadas, obrigações financeiras e serviços essenciais. O limite de 40% é um critério didático do simulador, não uma exigência legal.",
+        "base_legal": "Critério pedagógico do simulador; não corresponde a limite legal.",
+        "fonte_url": "",
+        "classificacao_visual": "observacao",
+        "rotulo_visual": "Observação"
+      }
+    ],
+    "legenda_visual": {
+      "fora_limite": {
+        "cor": "vermelho",
+        "sentido": "Ultrapassa um limite diretamente mensurável no simulador, como o total disponível."
+      },
+      "alerta": {
+        "cor": "amarelo",
+        "sentido": "Requer atenção, mas depende de base, elegibilidade ou apuração específica."
+      },
+      "observacao": {
+        "cor": "cinza",
+        "sentido": "Informação reflexiva; não indica irregularidade nem julgamento moral."
+      }
+    }
+  },
+  "referencias_legais_2025": {
+    "carater": "contextual_educativo",
+    "nota": "As bases legais não correspondem ao total de despesas liquidadas nem, necessariamente, ao valor integral das categorias simplificadas do simulador.",
+    "educacao": {
+      "categoria_id": "educacao_cultura_esporte",
+      "percentual_minimo": 25.0,
+      "base_calculo": {
+        "nome": "Receita líquida resultante de impostos, incluídas transferências e deduzidos repasses constitucionais aos municípios",
+        "valor_realizado_2025": 93740142622.91,
+        "fonte_demonstrativo": "RREO 2025, Anexo 8, 6º bimestre"
+      },
+      "resultado_oficial_2025": {
+        "percentual_aplicado": 25.53,
+        "valor_aplicado_aproximado": 23900000000.0
+      },
+      "comparacao_simulador": {
+        "precisao": "aproximada",
+        "motivo": "A categoria agrega cultura e esporte e não identifica todas as despesas elegíveis de MDE."
+      },
+      "fonte_url": "https://www.fazenda.mg.gov.br/governo/contadoria_geral/lrf/2025/6-bimestre/anexo8.pdf"
+    },
+    "saude": {
+      "categoria_id": "saude",
+      "percentual_minimo": 12.0,
+      "base_calculo": {
+        "nome": "Receitas resultantes de impostos e transferências constitucionais e legais, conforme LC 141/2012",
+        "valor_realizado_2025": 93740098257.7,
+        "fonte_demonstrativo": "RREO 2025, Anexo 12, 6º bimestre"
+      },
+      "resultado_oficial_2025": {
+        "percentual_aplicado": 12.29,
+        "valor_aplicado_aproximado": 11500000000.0
+      },
+      "comparacao_simulador": {
+        "precisao": "aproximada",
+        "motivo": "A função Saúde pode incluir valores que não atendem aos critérios de ASPS e a apuração legal possui ajustes próprios."
+      },
+      "fonte_url": "https://www.fazenda.mg.gov.br/governo/contadoria_geral/lrf/2025/6-bimestre/anexo12.pdf"
+    }
+  }
+}

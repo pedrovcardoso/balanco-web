@@ -1,0 +1,36 @@
+# Variáveis de ambiente
+.env*
+!.env.example
+
+# Python
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.pyc
+
+# Node / Vite
+node_modules/
+dist/
+build/
+.vite/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Temporários
+tmp/
+temp/
+/legado/
+backup_temp/
+.vscode/

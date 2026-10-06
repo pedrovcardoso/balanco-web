@@ -1,0 +1,2 @@
+export function isValidGuid(value){return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(value||''));}
+export function isValidCpf(value){const cpf=String(value||'').replace(/\D/g,'');if(cpf.length!==11||/^(\d)+$/.test(cpf))return false;const digit=(size)=>{let sum=0;for(let i=0;i<size;i++)sum+=Number(cpf[i])*(size+1-i);const r=(sum*10)%11;return r===10?0:r;};return digit(9)===Number(cpf[9])&&digit(10)===Number(cpf[10]);}

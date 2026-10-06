@@ -1,0 +1,18 @@
+agora eu já tenho a base do meu sistema completa e funcional, quero refatorar o meu banco de dados, que estava superestimado no começo
+
+o que eu preciso salvar efetivamente, vou falando por cima o que é o principal
+de usuário vamos usar gov.br preciso apenas do cpf e nome
+dos status das trilhas principais
+- historia, apenas ler a historia em quadrinhos e clicar em resgatar
+- entendendo o balanço, clicar em regatar em cada um dos tres livros
+- jogue e aprenda, todos os jogos concluidos com pelo menos 1 estrela (60 pontos)
+- balanço em dados, no final clicar em resgatar
+- saiba mais clicar em resgatar
+- conquistas, emitir o certificado
+
+para os jogos a lógica é mais complexa, estruture melhor em uma estrutura mais enxuta
+
+quero estrutrar melhor também qual vai ser a estrutura das conquistas, isso vai ser calculado no backend? vai ter uma tabela no banco de dados salvando quais conquistas foram resgatadas?
+como é o melhor modelo?
+
+monte um plano de implementação atualizado 

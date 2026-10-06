@@ -1,0 +1,2 @@
+import { Component } from 'react';
+export default class ErrorBoundary extends Component{state={hasError:false};static getDerivedStateFromError(){return{hasError:true};}componentDidCatch(error,info){console.error('Erro não tratado:',error,info);}render(){if(this.state.hasError)return <main className="p-6" role="alert"><h1 className="text-2xl font-bold">Não foi possível carregar a aplicação.</h1><button className="mt-4 underline" onClick={()=>location.reload()}>Tentar novamente</button></main>;return this.props.children;}}

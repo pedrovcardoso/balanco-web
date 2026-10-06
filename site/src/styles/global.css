@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@import "./fonts.css";
+@import "./themes.css";
+@import "./animations.css";
+
+:root {
+  font-family: Nunito, system-ui, sans-serif;
+  color: var(--color-text);
+  background: var(--color-background);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: calc(16px * var(--font-scale)); }
+body { min-width: 320px; min-height: 100vh; margin: 0; }
+button, input, select, textarea { font: inherit; }
+:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.skip-link { position: fixed; top: 0.5rem; left: 0.5rem; z-index: 9999; transform: translateY(-200%); background: #fff; color: #111; padding: 0.75rem 1rem; border-radius: 0.5rem; }
+.skip-link:focus { transform: translateY(0); }

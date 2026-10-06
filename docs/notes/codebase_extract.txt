@@ -1,0 +1,15 @@
+gerar txt consolidado da codebase
+```
+$dirs='\\(\.venv|venv|__pycache__|\.pytest_cache|\.ruff_cache|\.mypy_cache|node_modules|dist|build|\.vite|\.vscode|\.idea|tmp|temp|legado)\\'; $bin='\.(pyc|log|png|jpe?g|gif|webp|svg|ico|pdf|zip|tar|gz|7z|rar|exe|dll|so|dylib|jar|class|otf|ttf|woff2?|eot|mp3|wav|ogg|mp4|avi|mov|db|sqlite)$'; Get-ChildItem -Recurse -File | Where-Object { $_.FullName -notmatch $dirs -and ($_.Name -notmatch '^\.env' -or $_.Name -eq '.env.example') -and $_.Name -notin @('.DS_Store','Thumbs.db','codebase.txt') -and $_.Name -notmatch $bin } | ForEach-Object { "`n<FILE path=`"$($_.FullName.Substring($PWD.Path.Length+1))`">"; if ($_.Extension -eq '.json') { Get-Content $_.FullName -TotalCount 300 -ErrorAction SilentlyContinue } else { Get-Content $_.FullName -Raw -ErrorAction SilentlyContinue }; "</FILE>`n" } | Set-Content codebase.txt -Encoding UTF8
+```
+
+listar arquivos txt
+```
+Get-ChildItem -Path . -Recurse -File -Filter *.txt | Where-Object FullName -notmatch '\\(\.venv|venv|__pycache__|\.pytest_cache|\.ruff_cache|\.mypy_cache|node_modules|dist|build|\.vite|\.vscode|\.idea|tmp|temp|legado)\\' | Select-Object -ExpandProperty FullName
+```
+
+recriar containers docker
+```
+docker compose -f /home/lepipe/lepipe.org/docker-compose.yml build balanco_frontend balanco_backend && \
+docker compose -f /home/lepipe/lepipe.org/docker-compose.yml up -d --force-recreate balanco_frontend balanco_backend
+```

@@ -1,0 +1,1215 @@
+/* ==========================================================================
+   Loading Component Styles & Animations — Balanço Cidadão MG
+   ========================================================================== */
+
+/* Container que centraliza o card de loading dentro do <main> com min-height */
+.loading-container {
+  width: 100%;
+  flex: 1;
+  min-height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  background: transparent;
+  transition: opacity 350ms ease, transform 350ms ease;
+}
+
+/* Transição de saída do loading */
+.loading-fade-out {
+  opacity: 0 !important;
+  transform: scale(0.96) !important;
+  transition: opacity 350ms cubic-bezier(0.4, 0, 0.2, 1), transform 350ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  pointer-events: none;
+}
+
+/* Transição suave de entrada do conteúdo da página (fade in) */
+.content-fade-in {
+  animation: content-fade-in 450ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes content-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Overlay de tela cheia sem backdrop escuro — fica direto no background animado */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: transparent;
+  pointer-events: auto;
+  font-family: inherit;
+  color: #12361c;
+}
+
+/* Card principal do Loader — translúcido com glassmorphism sobre o background */
+.loading-card {
+  --accent: #1f8f46;
+  --accent-soft: rgba(31, 143, 70, 0.16);
+  width: min(450px, calc(100vw - 28px));
+  min-height: 330px;
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  padding: 18px 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 27px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 18px 42px rgba(12, 56, 19, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(3px) saturate(108%);
+  -webkit-backdrop-filter: blur(3px) saturate(108%);
+}
+
+.loading-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 8%, rgba(255, 255, 255, 0.17), transparent 35%),
+              radial-gradient(circle at 50% 77%, var(--accent-soft), transparent 48%);
+  pointer-events: none;
+}
+
+.loading-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(112deg, transparent 0%, rgba(255, 255, 255, 0.11) 45%, transparent 58%);
+  transform: translateX(-140%);
+  animation: loading-card-shine 6.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.loading-stage,
+.loading-footer {
+  position: relative;
+  z-index: 2;
+}
+
+.loading-stage {
+  min-height: 195px;
+  display: grid;
+  place-items: center;
+}
+
+.loading-footer {
+  display: grid;
+  gap: 9px;
+  text-align: center;
+}
+
+.loading-message {
+  min-height: 42px;
+  display: grid;
+  place-items: center;
+  color: #12361c;
+  font-size: 16px;
+  font-weight: 780;
+  line-height: 1.28;
+}
+
+.loading-eta {
+  color: rgba(18, 54, 28, 0.74);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.loading-progress {
+  height: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 999px;
+  background: rgba(18, 54, 28, 0.13);
+}
+
+.loading-progress-bar {
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent), #e4ad32 62%, #2f9e44);
+  box-shadow: 0 0 15px var(--accent-soft);
+  transition: width 580ms cubic-bezier(0.22, 0.8, 0.35, 1);
+}
+
+.loading-progress-meta {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  color: rgba(18, 54, 28, 0.78);
+  font-size: 12px;
+  font-weight: 720;
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* ==========================================================================
+   1. MAPA DE MINAS GERAIS
+   ========================================================================== */
+.mg-real-map {
+  width: 194px;
+  height: 180px;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.mg-real-map svg {
+  width: 180px;
+  height: 166px;
+  overflow: visible;
+  filter: drop-shadow(0 14px 15px rgba(20, 70, 30, 0.17));
+}
+
+.mg-map-feature {
+  fill: rgba(31, 143, 70, 0.14);
+  stroke: rgba(31, 143, 70, 0.4);
+  stroke-width: 0.42;
+  vector-effect: non-scaling-stroke;
+  animation: mg-map-breathe 4.8s ease-in-out infinite;
+}
+
+.mg-map-outline {
+  fill: none;
+  stroke: var(--accent, #1f8f46);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 720;
+  stroke-dashoffset: 720;
+  vector-effect: non-scaling-stroke;
+  animation: mg-outline-real 4.8s ease-in-out infinite;
+}
+
+.mg-map-scan {
+  position: absolute;
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(242, 201, 76, 0.27), transparent 66%);
+  animation: mg-scan 5.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.mg-map-loading {
+  color: var(--accent, #1f8f46);
+  font-size: 12px;
+  font-weight: 750;
+  opacity: 0.72;
+}
+
+.mg-map-pin {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  background: rgba(242, 201, 76, 0.95);
+  color: #276f3d;
+  box-shadow: 0 7px 16px rgba(20, 70, 30, 0.2);
+  animation: mg-pin-float 3.8s ease-in-out infinite;
+}
+
+.mg-map-pin svg {
+  width: 14px;
+  height: 14px;
+}
+
+.mg-map-pin.a {
+  left: 28px;
+  top: 47px;
+}
+
+.mg-map-pin.b {
+  right: 31px;
+  bottom: 43px;
+  animation-delay: 0.9s;
+}
+
+/* ==========================================================================
+   2. TREM DAS SERRAS
+   ========================================================================== */
+.mg-train-scene {
+  width: 195px;
+  height: 180px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  isolation: isolate;
+}
+
+.train-sky-glow {
+  position: absolute;
+  left: 25px;
+  top: 14px;
+  width: 144px;
+  height: 112px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(242, 201, 76, 0.2), transparent 69%);
+  animation: train-glow-loop 4.6s ease-in-out infinite;
+}
+
+.train-hills {
+  position: absolute;
+  left: -12px;
+  right: -12px;
+  bottom: 48px;
+  height: 66px;
+  opacity: 0.45;
+  background: radial-gradient(ellipse at 5% 100%, rgba(48, 110, 57, 0.32) 0 43%, transparent 44%),
+              radial-gradient(ellipse at 38% 100%, rgba(86, 139, 65, 0.32) 0 55%, transparent 56%),
+              radial-gradient(ellipse at 75% 100%, rgba(48, 110, 57, 0.3) 0 49%, transparent 50%),
+              radial-gradient(ellipse at 108% 100%, rgba(86, 139, 65, 0.28) 0 45%, transparent 46%);
+}
+
+.train-track {
+  position: absolute;
+  left: 7px;
+  right: 7px;
+  bottom: 31px;
+  height: 28px;
+}
+
+.train-track::before,
+.train-track::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(67, 49, 34, 0.76);
+}
+
+.train-track::before {
+  top: 4px;
+}
+
+.train-track::after {
+  top: 17px;
+}
+
+.train-sleepers {
+  position: absolute;
+  inset: 3px 0 0;
+  background: repeating-linear-gradient(90deg, transparent 0 12px, rgba(137, 91, 47, 0.52) 12px 19px, transparent 19px 31px);
+  transform: perspective(80px) rotateX(55deg);
+  animation: train-sleepers-loop 0.85s linear infinite;
+}
+
+.train-svg {
+  position: absolute;
+  left: -390px;
+  bottom: 26px;
+  width: 390px;
+  height: 103px;
+  overflow: visible;
+  filter: drop-shadow(0 8px 7px rgba(62, 43, 25, 0.22));
+  animation: train-trip-v7 5.6s linear infinite;
+  will-change: transform;
+}
+
+.train-wheel-spin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: train-wheel-spin 0.55s linear infinite;
+}
+
+.train-smoke-puff {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: train-smoke-v7 1.8s ease-out infinite;
+}
+
+.train-smoke-puff.s2 {
+  animation-delay: 0.75s;
+}
+
+.train-smoke-puff.s3 {
+  animation-delay: 1.5s;
+}
+
+/* ==========================================================================
+   3. CAFÉ DE MINAS
+   ========================================================================== */
+.mg-coffee-scene {
+  width: 195px;
+  height: 180px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+}
+
+.coffee-halo {
+  position: absolute;
+  left: 22px;
+  top: 13px;
+  width: 151px;
+  height: 143px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(184, 125, 70, 0.2), transparent 69%);
+}
+
+.kettle-wrap {
+  position: absolute;
+  left: 17px;
+  top: 9px;
+  z-index: 4;
+  color: #765034;
+  transform-origin: 75px 53px;
+  filter: drop-shadow(0 12px 12px rgba(84, 53, 26, 0.2));
+  animation: kettle-pour 9.2s cubic-bezier(0.42, 0, 0.25, 1) infinite;
+}
+
+.kettle-wrap svg {
+  width: 95px;
+  height: 95px;
+}
+
+.coffee-drops {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 195px;
+  height: 180px;
+  overflow: visible;
+  pointer-events: none;
+  opacity: 0;
+  animation: coffee-drops-visible 9.2s ease-in-out infinite;
+}
+
+.coffee-cup {
+  position: absolute;
+  right: 22px;
+  bottom: 31px;
+  width: 81px;
+  height: 55px;
+  z-index: 2;
+}
+
+.cup-shell {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 69px;
+  height: 48px;
+  overflow: hidden;
+  border: 3px solid rgba(89, 57, 31, 0.72);
+  border-top-width: 2px;
+  border-radius: 7px 7px 25px 25px;
+  background: rgba(255, 248, 229, 0.9);
+  box-shadow: inset 0 4px 0 rgba(255, 255, 255, 0.4), 0 13px 16px rgba(84, 53, 26, 0.16);
+}
+
+.cup-handle {
+  position: absolute;
+  right: 0;
+  top: 10px;
+  width: 25px;
+  height: 27px;
+  border: 5px solid rgba(89, 57, 31, 0.68);
+  border-left: 0;
+  border-radius: 0 20px 20px 0;
+}
+
+.cup-saucer {
+  position: absolute;
+  left: -9px;
+  bottom: -7px;
+  width: 88px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(102, 67, 38, 0.22);
+}
+
+.coffee-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.coffee-steam {
+  position: absolute;
+  z-index: 5;
+  bottom: 85px;
+  width: 13px;
+  height: 29px;
+  border-left: 2px solid rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  opacity: 0;
+  animation: coffee-steam 3.2s ease-in-out infinite;
+}
+
+.coffee-steam.s1 {
+  right: 69px;
+  animation-delay: 0.3s;
+}
+
+.coffee-steam.s2 {
+  right: 49px;
+  animation-delay: 1.1s;
+}
+
+/* ==========================================================================
+   4. CIDADES HISTÓRICAS
+   ========================================================================== */
+.mg-historic-scene {
+  width: 195px;
+  height: 180px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+}
+
+.historic-moonlight {
+  position: absolute;
+  left: 24px;
+  top: 12px;
+  width: 148px;
+  height: 139px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(242, 201, 76, 0.2), transparent 70%);
+  animation: historic-light 5.2s ease-in-out infinite;
+}
+
+.historic-arch {
+  position: absolute;
+  left: 43px;
+  bottom: 49px;
+  width: 110px;
+  height: 91px;
+  border: 5px solid rgba(111, 66, 30, 0.72);
+  border-bottom: 0;
+  border-radius: 57px 57px 0 0;
+  background: linear-gradient(180deg, rgba(255, 245, 223, 0.45), rgba(236, 201, 144, 0.2));
+  box-shadow: 0 16px 20px rgba(75, 45, 20, 0.16);
+}
+
+.historic-arch::before {
+  content: "";
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  bottom: 0;
+  height: 57px;
+  border-radius: 999px 999px 0 0;
+  background: rgba(94, 58, 30, 0.36);
+}
+
+.historic-arch::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 14px;
+  width: 15px;
+  height: 21px;
+  transform: translateX(-50%);
+  border: 2px solid rgba(111, 66, 30, 0.48);
+  border-radius: 8px 8px 2px 2px;
+  background: rgba(242, 201, 76, 0.28);
+}
+
+.historic-lamp {
+  position: absolute;
+  left: 23px;
+  bottom: 57px;
+  color: #724923;
+  transform-origin: 50% 9%;
+  filter: drop-shadow(0 8px 9px rgba(75, 45, 20, 0.18));
+  animation: historic-lamp 3.8s ease-in-out infinite;
+}
+
+.historic-lamp svg {
+  width: 52px;
+  height: 52px;
+}
+
+.historic-bell {
+  position: absolute;
+  right: 27px;
+  bottom: 76px;
+  color: #ad7135;
+  transform-origin: top center;
+  filter: drop-shadow(0 8px 9px rgba(75, 45, 20, 0.18));
+  animation: historic-bell 3.4s ease-in-out infinite;
+}
+
+.historic-bell svg {
+  width: 42px;
+  height: 42px;
+}
+
+.stone-road {
+  position: absolute;
+  left: 17px;
+  right: 17px;
+  bottom: 27px;
+  height: 23px;
+  border-radius: 50%;
+  opacity: 0.7;
+  background: radial-gradient(ellipse at 13px 12px, rgba(123, 88, 54, 0.55) 0 7px, transparent 8px),
+              radial-gradient(ellipse at 39px 11px, rgba(184, 145, 96, 0.54) 0 8px, transparent 9px),
+              radial-gradient(ellipse at 67px 13px, rgba(123, 88, 54, 0.48) 0 7px, transparent 8px);
+  background-size: 85px 23px;
+  animation: stone-road-loop 4.8s linear infinite;
+}
+
+.gold-spark {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(242, 201, 76, 0.9);
+  box-shadow: 0 0 10px rgba(242, 201, 76, 0.55);
+  animation: historic-spark 3.8s ease-in-out infinite;
+}
+
+.gold-spark.a {
+  left: 48px;
+  top: 42px;
+}
+
+.gold-spark.b {
+  right: 43px;
+  top: 26px;
+  animation-delay: 1.1s;
+}
+
+.gold-spark.c {
+  left: 94px;
+  bottom: 44px;
+  animation-delay: 2.2s;
+}
+
+/* ==========================================================================
+   5. QUEIJO MINAS & PÃO DE QUEIJO
+   ========================================================================== */
+.mg-cheese-scene {
+  width: 195px;
+  height: 180px;
+  position: relative;
+  overflow: visible;
+  border-radius: 24px;
+  display: grid;
+  place-items: center;
+}
+
+.cheese-halo {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(242, 201, 76, 0.22), transparent 68%);
+  animation: cheese-halo 4.8s ease-in-out infinite;
+}
+
+.cheese-board {
+  position: absolute;
+  left: 13px;
+  right: 13px;
+  bottom: 18px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, rgba(163, 101, 39, 0.28), rgba(112, 65, 25, 0.16));
+  box-shadow: 0 10px 18px rgba(86, 51, 18, 0.1);
+}
+
+.cheese-wheel-svg {
+  position: absolute;
+  left: 13px;
+  top: 27px;
+  width: 122px;
+  height: 122px;
+  overflow: visible;
+  filter: drop-shadow(0 14px 12px rgba(92, 55, 15, 0.18));
+}
+
+.cheese-base-ring {
+  fill: rgba(217, 154, 32, 0.1);
+  stroke: rgba(160, 96, 18, 0.18);
+  stroke-width: 2;
+}
+
+.cheese-wedge {
+  stroke: #b87518;
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cheese-wedge-fill 8.4s ease-in-out infinite;
+}
+
+.cheese-wedge.w1 { animation-delay: 0s; }
+.cheese-wedge.w2 { animation-delay: 0.38s; }
+.cheese-wedge.w3 { animation-delay: 0.76s; }
+.cheese-wedge.w4 { animation-delay: 1.14s; }
+.cheese-wedge.w5 { animation-delay: 1.52s; }
+.cheese-wedge.w6 { animation-delay: 1.9s; }
+.cheese-wedge.w7 { animation-delay: 2.28s; }
+.cheese-wedge.w8 { animation-delay: 2.66s; }
+
+.cheese-hole {
+  fill: rgba(151, 88, 14, 0.22);
+  pointer-events: none;
+}
+
+.cheese-rind {
+  fill: none;
+  stroke: rgba(151, 88, 14, 0.35);
+  stroke-width: 3;
+  pointer-events: none;
+}
+
+.pao-static-wrap {
+  position: absolute;
+  right: -1px;
+  bottom: 22px;
+  width: 112px;
+  height: 112px;
+  z-index: 7;
+}
+
+.pao-static {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 9px rgba(82, 48, 20, 0.18));
+}
+
+/* ==========================================================================
+   6. RIO SÃO FRANCISCO (VELHO CHICO)
+   ========================================================================== */
+.mg-river-scene {
+  width: 210px;
+  height: 184px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #f2d58f 0 44%, #d7dcaa 45% 56%, #56aaa7 57% 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+}
+
+.mg-river-scene::after {
+  content: "";
+  position: absolute;
+  left: -25px;
+  right: -25px;
+  bottom: 4px;
+  height: 79px;
+  z-index: 3;
+  opacity: 0.55;
+  background: repeating-radial-gradient(ellipse at 20px 0, transparent 0 15px, rgba(255, 255, 255, 0.34) 16px 18px, transparent 19px 31px);
+  animation: river-water-texture 5.6s linear infinite;
+  pointer-events: none;
+}
+
+.river-sun-asset {
+  position: absolute;
+  right: 21px;
+  top: 18px;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: #efb52b;
+  box-shadow: 0 0 0 8px rgba(239, 181, 43, 0.14);
+  animation: asset-river-sun 4s ease-in-out infinite;
+}
+
+.river-bank-asset {
+  position: absolute;
+  left: -12px;
+  right: -12px;
+  bottom: 64px;
+  height: 43px;
+  opacity: 0.88;
+  background: radial-gradient(ellipse at 7% 100%, #4e8a51 0 44%, transparent 45%),
+              radial-gradient(ellipse at 34% 100%, #789f48 0 48%, transparent 49%),
+              radial-gradient(ellipse at 72% 100%, #4e8a51 0 45%, transparent 46%),
+              radial-gradient(ellipse at 105% 100%, #789f48 0 49%, transparent 50%);
+}
+
+.river-wave-layer {
+  position: absolute;
+  left: -34px;
+  width: 278px;
+  border-radius: 50%;
+}
+
+.river-wave-layer.w1 {
+  z-index: 2;
+  bottom: 43px;
+  height: 43px;
+  background: #eaf0d8;
+  opacity: 0.88;
+  animation: river-wave-soft-a 5.4s ease-in-out infinite;
+}
+
+.river-wave-layer.w2 {
+  z-index: 3;
+  bottom: 25px;
+  height: 51px;
+  background: linear-gradient(90deg, #449e98, #70b7a3 42%, #238395 72%, #52aaa4);
+  animation: river-wave-soft-b 4.6s ease-in-out infinite;
+}
+
+.river-wave-layer.w3 {
+  z-index: 5;
+  bottom: -10px;
+  height: 61px;
+  background: linear-gradient(90deg, #174f70, #1e7483 44%, #143f62 70%, #287d84);
+  animation: river-wave-soft-a 4.2s ease-in-out infinite reverse;
+}
+
+.carranca-fixed-wrap {
+  position: absolute;
+  left: 7px;
+  bottom: 43px;
+  width: 88px;
+  height: 112px;
+  z-index: 10;
+  transform-origin: 50% 100%;
+  animation: carranca-breathe 7.5s ease-in-out infinite;
+}
+
+.carranca-fixed {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 9px 7px rgba(20, 47, 51, 0.28));
+}
+
+.canoa-only-wrap {
+  position: absolute;
+  left: -145px;
+  bottom: 42px;
+  width: 140px;
+  height: 74px;
+  z-index: 7;
+  animation: canoa-v4 8.3s linear infinite;
+}
+
+.canoa-only {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 6px rgba(16, 65, 73, 0.22));
+}
+
+/* ==========================================================================
+   7. IGREJINHA DA PAMPULHA
+   ========================================================================== */
+.mg-pampulha-scene {
+  width: 210px;
+  height: 184px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #a8d0e2 0 55%, #e8e0c3 56% 69%, #579dae 70% 100%);
+}
+
+.pampulha-sun {
+  position: absolute;
+  right: 22px;
+  top: 17px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #efc24d;
+  box-shadow: 0 0 22px rgba(239, 194, 77, 0.42);
+  animation: pampulha-sun 5s ease-in-out infinite;
+}
+
+.pampulha-cloud {
+  position: absolute;
+  left: -58px;
+  top: 29px;
+  width: 49px;
+  height: 13px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.75);
+  animation: pampulha-cloud 10s linear infinite;
+}
+
+.pampulha-shore {
+  position: absolute;
+  left: -8px;
+  right: -8px;
+  bottom: 49px;
+  height: 36px;
+  border-radius: 55% 48% 0 0;
+  background: linear-gradient(175deg, transparent 0 18%, #77a756 19% 100%);
+}
+
+.pampulha-church {
+  position: absolute;
+  left: 13px;
+  bottom: 55px;
+  width: 185px;
+  height: 108px;
+}
+
+.pampulha-church-svg {
+  position: absolute;
+  inset: 0;
+  width: 185px;
+  height: 108px;
+  overflow: visible;
+  filter: drop-shadow(0 8px 6px rgba(43, 72, 80, 0.18));
+}
+
+.pampulha-shell {
+  fill: #f7f3e8;
+  stroke: #486f83;
+  stroke-width: 2.2;
+  stroke-linejoin: round;
+}
+
+.pampulha-glass {
+  fill: #91c5ce;
+  stroke: #486f83;
+  stroke-width: 2;
+}
+
+.pampulha-glass-grid {
+  stroke: #5c96a7;
+  stroke-width: 1;
+  opacity: 0.72;
+}
+
+.pampulha-door {
+  fill: #a97050;
+  stroke: #794b39;
+  stroke-width: 1.3;
+}
+
+.pampulha-canopy {
+  fill: none;
+  stroke: #fffdf4;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.pampulha-tower {
+  fill: #efe4b4;
+  stroke: #928044;
+  stroke-width: 2;
+}
+
+.pampulha-tower-grid {
+  stroke: #687e77;
+  stroke-width: 1;
+  opacity: 0.75;
+}
+
+.pampulha-cross {
+  stroke: #625839;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.pampulha-draw {
+  stroke-dasharray: 650;
+  stroke-dashoffset: 650;
+  animation: pampulha-outline-v4 7.8s ease-in-out infinite;
+}
+
+.pampulha-fill {
+  animation: pampulha-fill-v4 7.8s ease-in-out infinite;
+}
+
+.pampulha-water {
+  position: absolute;
+  z-index: 5;
+  left: -22px;
+  right: -22px;
+  bottom: -15px;
+  height: 67px;
+  opacity: 0.9;
+  background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.12) 0 2px, transparent 2px 12px),
+              linear-gradient(180deg, #5aabb4, #237587);
+  border-radius: 48% 54% 0 0;
+  animation: river-wave-soft-a 6.8s ease-in-out infinite;
+}
+
+.pampulha-reflection {
+  position: absolute;
+  z-index: 6;
+  left: 48px;
+  bottom: 0;
+  width: 105px;
+  height: 40px;
+  opacity: 0.18;
+  transform: scaleY(-1) skewX(-8deg);
+  background: repeating-linear-gradient(90deg, transparent 0 7px, rgba(247, 243, 233, 0.8) 7px 12px, transparent 12px 18px);
+  clip-path: polygon(18% 0, 82% 0, 100% 100%, 0 100%);
+  animation: pampulha-reflection 6s ease-in-out infinite;
+}
+
+.pampulha-ripple {
+  position: absolute;
+  z-index: 7;
+  left: 19px;
+  bottom: 24px;
+  width: 174px;
+  height: 16px;
+  border-top: 2px solid rgba(255, 255, 255, 0.72);
+  border-radius: 50%;
+  opacity: 0.45;
+  animation: pampulha-ripple 6s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   VITRINE / SHOWCASE GRID
+   ========================================================================== */
+.loading-showcase-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 16px;
+}
+
+.loading-showcase-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.loading-showcase-header h2 {
+  font-size: 28px;
+  font-weight: 800;
+  color: #12361c;
+}
+
+.loading-showcase-header p {
+  font-size: 15px;
+  color: #3b5c42;
+  margin-top: 6px;
+}
+
+.loading-showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 1100px) {
+  .loading-showcase-grid {
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .loading-showcase-grid {
+    grid-template-columns: 1fr;
+  }
+  .loading-card {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   KEYFRAME ANIMATIONS
+   ========================================================================== */
+@keyframes loading-card-shine {
+  0%, 22% { transform: translateX(-140%); }
+  55%, 100% { transform: translateX(140%); }
+}
+
+@keyframes mg-map-breathe {
+  0%, 100% { opacity: 0.68; }
+  50% { opacity: 0.96; }
+}
+
+@keyframes mg-outline-real {
+  0% { stroke-dashoffset: 720; opacity: 0.46; }
+  42% { stroke-dashoffset: 0; opacity: 1; }
+  68% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: -720; opacity: 0.46; }
+}
+
+@keyframes mg-scan {
+  0%, 100% { transform: translate(-27px, -18px) scale(0.9); opacity: 0.27; }
+  50% { transform: translate(29px, 22px) scale(1.08); opacity: 0.68; }
+}
+
+@keyframes mg-pin-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes train-glow-loop {
+  0%, 100% { transform: scale(0.96); opacity: 0.38; }
+  50% { transform: scale(1.04); opacity: 0.68; }
+}
+
+@keyframes train-sleepers-loop {
+  to { background-position: 31px 0; }
+}
+
+@keyframes train-trip-v7 {
+  0% { transform: translateX(0); opacity: 0; }
+  3% { opacity: 1; }
+  97% { opacity: 1; }
+  100% { transform: translateX(630px); opacity: 0; }
+}
+
+@keyframes train-wheel-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes train-smoke-v7 {
+  0% { transform: translate(0, 0) scale(0.55); opacity: 0; }
+  20% { opacity: 0.52; }
+  100% { transform: translate(-15px, -25px) scale(1.55); opacity: 0; }
+}
+
+@keyframes kettle-pour {
+  0%, 18% { transform: translate(0, 0) rotate(0); }
+  35%, 72% { transform: translate(9px, 5px) rotate(27deg); }
+  88%, 100% { transform: translate(0, 0) rotate(0); }
+}
+
+@keyframes coffee-drops-visible {
+  0%, 28%, 81%, 100% { opacity: 0; }
+  36%, 74% { opacity: 1; }
+}
+
+@keyframes coffee-steam {
+  0%, 42% { transform: translateY(7px) scaleY(0.7); opacity: 0; }
+  58% { opacity: 0.58; }
+  100% { transform: translateY(-18px) scaleY(1.1); opacity: 0; }
+}
+
+@keyframes historic-light {
+  0%, 100% { opacity: 0.46; transform: scale(0.96); }
+  50% { opacity: 0.8; transform: scale(1.04); }
+}
+
+@keyframes historic-lamp {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes historic-bell {
+  0%, 28%, 72%, 100% { transform: rotate(0); }
+  42% { transform: rotate(-6deg); }
+  57% { transform: rotate(6deg); }
+}
+
+@keyframes stone-road-loop {
+  to { background-position: 85px 0; }
+}
+
+@keyframes historic-spark {
+  0%, 100% { transform: translateY(4px) scale(0.72); opacity: 0.24; }
+  50% { transform: translateY(-10px) scale(1.08); opacity: 0.9; }
+}
+
+@keyframes cheese-halo {
+  0%, 100% { transform: scale(0.95); opacity: 0.46; }
+  50% { transform: scale(1.04); opacity: 0.78; }
+}
+
+@keyframes cheese-wedge-fill {
+  0%, 5% { opacity: 0; transform: scale(0.86); }
+  12%, 73% { opacity: 1; transform: scale(1); }
+  88%, 100% { opacity: 0; transform: scale(0.94); }
+}
+
+@keyframes river-water-texture {
+  to { background-position: 64px 0; }
+}
+
+@keyframes river-wave-soft-a {
+  0%, 100% { transform: translateX(-8px) translateY(1px); }
+  50% { transform: translateX(10px) translateY(-2px); }
+}
+
+@keyframes river-wave-soft-b {
+  0%, 100% { transform: translateX(11px); }
+  50% { transform: translateX(-12px); }
+}
+
+@keyframes asset-river-sun {
+  0%, 100% { transform: scale(0.94); opacity: 0.75; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+
+@keyframes carranca-breathe {
+  0%, 100% { transform: rotate(-0.7deg) translateY(0); }
+  50% { transform: rotate(0.8deg) translateY(-1px); }
+}
+
+@keyframes canoa-v4 {
+  0% { transform: translateX(0) translateY(4px) rotate(-2deg); opacity: 0; }
+  7% { opacity: 1; }
+  25% { transform: translateX(92px) translateY(-5px) rotate(2.4deg); }
+  49% { transform: translateX(181px) translateY(2px) rotate(-1.4deg); }
+  73% { transform: translateX(271px) translateY(-4px) rotate(2deg); }
+  93% { opacity: 1; }
+  100% { transform: translateX(375px) translateY(1px) rotate(-1deg); opacity: 0; }
+}
+
+@keyframes pampulha-sun {
+  0%, 100% { transform: scale(0.95); opacity: 0.78; }
+  50% { transform: scale(1.07); opacity: 1; }
+}
+
+@keyframes pampulha-cloud {
+  0% { transform: translateX(0); opacity: 0; }
+  10%, 88% { opacity: 0.8; }
+  100% { transform: translateX(320px); opacity: 0; }
+}
+
+@keyframes pampulha-outline-v4 {
+  0%, 7% { stroke-dashoffset: 650; opacity: 0.25; }
+  34%, 84% { stroke-dashoffset: 0; opacity: 1; }
+  96%, 100% { stroke-dashoffset: -650; opacity: 0.2; }
+}
+
+@keyframes pampulha-fill-v4 {
+  0%, 14% { opacity: 0; }
+  37%, 85% { opacity: 1; }
+  96%, 100% { opacity: 0; }
+}
+
+@keyframes pampulha-reflection {
+  0%, 100% { transform: scaleY(-1) skewX(-8deg) translateX(-3px); opacity: 0.18; }
+  50% { transform: scaleY(-1) skewX(5deg) translateX(4px); opacity: 0.28; }
+}
+
+@keyframes pampulha-ripple {
+  0%, 100% { transform: scaleX(0.72); opacity: 0.35; }
+  50% { transform: scaleX(1.08); opacity: 0.82; }
+}
+
+/* Redução de movimento para acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+  .loading-overlay *,
+  .loading-card *,
+  .loading-showcase-container * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
