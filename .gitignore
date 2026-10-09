@@ -10,6 +10,7 @@ __pycache__/
 .ruff_cache/
 .mypy_cache/
 *.pyc
+backend/data/sigplan/
 
 # Node / Vite
 node_modules/

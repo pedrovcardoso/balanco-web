@@ -7,7 +7,7 @@ import './styles/global.css';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter basename="/balanco-web2">
+    <BrowserRouter basename="/balanco-web2/">
       <AppProviders>
         <App />
       </AppProviders>

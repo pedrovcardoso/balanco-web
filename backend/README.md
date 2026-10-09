@@ -26,7 +26,17 @@ Refatorado para acesso assíncrono direto ao MySQL com `aiomysql`, queries param
    ```
    *O servidor estará acessível em `http://127.0.0.1:8000` e a documentação interativa em `http://127.0.0.1:8000/docs`.*
 
-> **Nota para Banco Remoto (VPS):** Se o banco MySQL estiver em um servidor remoto/VPS com acesso via SSH, abra o túnel em um terminal separado antes de iniciar o Uvicorn:
+## Executar a pipeline SIGPLAN localmente
+
+```powershell
+Set-Location backend
+python -m venv venv  # execute somente se a pasta venv ainda não existir
+.\venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python scripts/sigplan_data/run_sigplan_pipeline.py
+```
+
+> **Nota para Banco Remoto (VPS):** Se o banco MySQL estiver em um servidor remoto/VPS com acesso via SSH, abra o túnel em um terminal separado antes de iniciar o Uvicorn ou executar a pipeline SIGPLAN:
 > ```powershell
 > ssh -N -L 3306:127.0.0.1:3306 lepipe@181.215.135.50
 > ```

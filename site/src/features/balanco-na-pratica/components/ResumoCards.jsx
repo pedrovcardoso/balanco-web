@@ -5,7 +5,7 @@ const CARD_CONFIGS = [
   {
     key: 'valorExecutado',
     label: 'Total Executado',
-    sublabel: 'Orçamento liquidado em 2026',
+    sublabel: 'Execução orçamentária registrada',
     icon: 'fa6-solid:coins',
     color: 'teal',
     format: formatCurrencyCompact,
@@ -13,7 +13,7 @@ const CARD_CONFIGS = [
   {
     key: 'quantidadeProgramas',
     label: 'Programas',
-    sublabel: 'Programas de governo ativos',
+    sublabel: 'Programas presentes na execução',
     icon: 'fa6-solid:layer-group',
     color: 'blue',
     format: formatNumber,
@@ -21,7 +21,7 @@ const CARD_CONFIGS = [
   {
     key: 'quantidadeAcoes',
     label: 'Ações',
-    sublabel: 'Ações orçamentárias executadas',
+    sublabel: 'Ações presentes na execução',
     icon: 'fa6-solid:list-check',
     color: 'violet',
     format: formatNumber,
@@ -59,6 +59,7 @@ const COLOR_MAP = {
 export default function ResumoCards({ resumo }) {
 
   return (
+    <>
     <div className="mb-6 grid grid-cols-1 gap-2.5 sm:grid-cols-3 sm:gap-3" role="list" aria-label="Indicadores fiscais de Minas Gerais">
       {CARD_CONFIGS.map(({ key, label, sublabel, icon, color, format }) => {
         const colors = COLOR_MAP[color];
@@ -83,6 +84,7 @@ export default function ResumoCards({ resumo }) {
         );
       })}
     </div>
+    </>
   );
 }
 

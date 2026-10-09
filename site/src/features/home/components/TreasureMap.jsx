@@ -9,7 +9,8 @@ export default function TreasureMap({
   progressStatus,
   onProtectedNavigation,
 }) {
-  const allCompleted = MAIN_TRAILS.every((trail) => {
+  const completableTrails = MAIN_TRAILS.filter((trail) => trail.itemKey);
+  const allCompleted = completableTrails.every((trail) => {
     const progress = progressBySlug.get(trail.slug);
 
     return isTrailCompleted(progress);

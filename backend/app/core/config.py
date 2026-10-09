@@ -16,7 +16,6 @@ class Settings(BaseSettings):
     db_name: str = 'sc_balanco_web'
     db_user: str = 'balanco_user'
     db_password: str = 'senha_segura_balanco_v2'
-    sigplan_database: str = 'lh_Sigplan'
     secret_key: str = 'change-me-with-at-least-32-random-characters'
     access_token_expire_minutes: int = 480
     cors_origins: list[str] = Field(default_factory=lambda: ['http://localhost:5173'])

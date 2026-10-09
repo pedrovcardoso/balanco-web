@@ -74,6 +74,13 @@ export default function BalancoNaPraticaPage() {
 
       const [resumoRes, regioesRes, municipiosRes, populacaoRes, odsRes, funcoesRes, uosRes] = results;
 
+      const failed = [resumoRes, regioesRes, municipiosRes, odsRes, funcoesRes, uosRes]
+        .find((result) => result.status === 'rejected');
+      if (failed) throw failed.reason;
+      if (!resumoRes.value?.quantidadeProgramas) {
+        throw new Error('Não há dados de execução SIGPLAN disponíveis. Execute a carga de dados e tente novamente.');
+      }
+
       const resumo = resumoRes.status === 'fulfilled' ? resumoRes.value : null;
       const regioes = regioesRes.status === 'fulfilled' ? regioesRes.value : [];
       const municipios = municipiosRes.status === 'fulfilled' ? municipiosRes.value : [];
@@ -189,7 +196,7 @@ export default function BalancoNaPraticaPage() {
         title="Balanço na Prática"
         description="Você explorou dados reais da execução orçamentária do estado de Minas Gerais!"
         medalIcon="fa6-solid:chart-pie"
-        reachedEnd={true}
+        reachedEnd={!error && Boolean(dados.resumo?.quantidadeProgramas)}
         claimed={claimed}
         loading={claiming}
         onClaim={claimMedal}

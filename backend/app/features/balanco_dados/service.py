@@ -1,4 +1,5 @@
 from app.core.config import settings
+from fastapi import HTTPException
 
 async def resumo(db):
     try:
@@ -6,8 +7,9 @@ async def resumo(db):
             "SELECT COUNT(DISTINCT programa_cod) AS quantidadeProgramas, "
             "COUNT(DISTINCT CONCAT(programa_cod, '-', acao_cod)) AS quantidadeAcoes, "
             "COALESCE(SUM(CASE WHEN is_total = 1 THEN orcamentario_executado ELSE 0 END), 0) AS valorExecutado, "
-            "MAX(emitido_em) AS dataReferencia "
-            "FROM tb_sigplan_execucao"
+            "MAX(emitido_em) AS dataReferencia, "
+            "MAX(ano) AS anoReferencia, MAX(dt_carga) AS ultimaCarga "
+            "FROM tb_sigplan_execucao WHERE is_total = 1"
         )
         if not row:
             return {"quantidadeProgramas": 0, "quantidadeAcoes": 0, "valorExecutado": 0.0, "dataReferencia": None}
@@ -16,10 +18,12 @@ async def resumo(db):
             "quantidadeAcoes": int(row.get("quantidadeAcoes") or 0),
             "valorExecutado": float(row.get("valorExecutado") or 0.0),
             "dataReferencia": str(row["dataReferencia"]) if row.get("dataReferencia") else None,
+            "anoReferencia": int(row["anoReferencia"]) if row.get("anoReferencia") else None,
+            "ultimaCarga": str(row["ultimaCarga"]) if row.get("ultimaCarga") else None,
         }
     except Exception as err:
         print(f"[balanco_dados] Erro ao buscar resumo no MySQL: {err}")
-        return {"quantidadeProgramas": 0, "quantidadeAcoes": 0, "valorExecutado": 0.0, "dataReferencia": None}
+        raise HTTPException(status_code=503, detail="Não foi possível consultar o resumo SIGPLAN.") from err
 
 async def regioes(db):
     try:
@@ -44,7 +48,7 @@ async def regioes(db):
         ]
     except Exception as err:
         print(f"[balanco_dados] Erro ao buscar regiões no MySQL: {err}")
-        return []
+        raise HTTPException(status_code=503, detail="Não foi possível consultar as regiões SIGPLAN.") from err
 
 async def municipios(db):
     try:
@@ -57,27 +61,28 @@ async def municipios(db):
         return rows
     except Exception as err:
         print(f"[balanco_dados] Erro ao buscar municípios no MySQL: {err}")
-        return []
+        raise HTTPException(status_code=503, detail="Não foi possível consultar os municípios SIGPLAN.") from err
 
 async def ods(db):
     try:
+        ods_rows_sql = (
+            "SELECT DISTINCT programa_cod, TRIM(ods_titulo) AS titulo, "
+            "NULLIF(TRIM(ods_subtitulo), '') AS subtitulo "
+            "FROM tb_sigplan_programas WHERE NULLIF(TRIM(ods_titulo), '') IS NOT NULL"
+        )
         rows = await db.fetch_all(
-            "WITH e AS ("
-            "  SELECT programa_cod, SUM(orcamentario_executado) AS valor "
-            "  FROM tb_sigplan_execucao WHERE is_total = 1 GROUP BY programa_cod"
-            "), "
-            "o AS ("
-            "  SELECT DISTINCT programa_cod, TRIM(ods_titulo) AS titulo, NULLIF(TRIM(ods_subtitulo), '') AS subtitulo "
-            "  FROM tb_sigplan_programas WHERE NULLIF(TRIM(ods_titulo), '') IS NOT NULL"
-            "), "
-            "q AS ("
-            "  SELECT programa_cod, COUNT(*) AS qtd FROM o GROUP BY programa_cod"
-            ") "
             "SELECT o.titulo AS odsTitulo, MAX(o.subtitulo) AS odsSubtitulo, "
             "COALESCE(SUM(e.valor / NULLIF(q.qtd, 0)), 0) AS valorExecutado, "
             "COUNT(DISTINCT e.programa_cod) AS quantidadeProgramas "
-            "FROM e JOIN o ON o.programa_cod = e.programa_cod "
-            "JOIN q ON q.programa_cod = e.programa_cod "
+            "FROM ("
+            "  SELECT programa_cod, SUM(orcamentario_executado) AS valor "
+            "  FROM tb_sigplan_execucao WHERE is_total = 1 GROUP BY programa_cod"
+            ") e "
+            f"JOIN ({ods_rows_sql}) o ON o.programa_cod = e.programa_cod "
+            "JOIN ("
+            "  SELECT programa_cod, COUNT(*) AS qtd "
+            f"  FROM ({ods_rows_sql}) ods_rows GROUP BY programa_cod"
+            ") q ON q.programa_cod = e.programa_cod "
             "GROUP BY o.titulo ORDER BY valorExecutado DESC"
         )
         return [
@@ -91,7 +96,7 @@ async def ods(db):
         ]
     except Exception as err:
         print(f"[balanco_dados] Erro ao buscar ODS no MySQL: {err}")
-        return []
+        raise HTTPException(status_code=503, detail="Não foi possível consultar os ODS SIGPLAN.") from err
 
 async def funcoes(db):
     try:
@@ -100,7 +105,12 @@ async def funcoes(db):
             "COALESCE(SUM(e.orcamentario_executado), 0) AS valorExecutado, "
             "COALESCE(SUM(e.orcamentario_programado_ppag), 0) AS valorProgramado "
             "FROM tb_sigplan_execucao e "
-            "LEFT JOIN tb_sigplan_acoes a ON a.programa_cod = e.programa_cod AND a.acao_cod = e.acao_cod AND a.uo_acao_cod = e.uo_cod "
+            "LEFT JOIN ("
+            "  SELECT programa_cod, acao_cod, uo_acao_cod, "
+            "  MAX(NULLIF(TRIM(funcao_desc), '')) AS funcao_desc "
+            "  FROM tb_sigplan_acoes "
+            "  GROUP BY programa_cod, acao_cod, uo_acao_cod"
+            ") a ON a.programa_cod = e.programa_cod AND a.acao_cod = e.acao_cod AND a.uo_acao_cod = e.uo_cod "
             "WHERE e.is_total = 1 "
             "GROUP BY COALESCE(a.funcao_desc, 'Não informado') "
             "ORDER BY valorExecutado DESC"
@@ -115,24 +125,16 @@ async def funcoes(db):
         ]
     except Exception as err:
         print(f"[balanco_dados] Erro ao buscar funções no MySQL: {err}")
-        return []
+        raise HTTPException(status_code=503, detail="Não foi possível consultar as funções SIGPLAN.") from err
 
 async def uos(db):
     try:
         rows = await db.fetch_all(
-            "WITH execucao_programa AS ("
-            "  SELECT programa_cod, SUM(orcamentario_executado) AS valorExecutado "
-            "  FROM tb_sigplan_execucao WHERE is_total = 1 GROUP BY programa_cod"
-            "), "
-            "programa_uo AS ("
-            "  SELECT programa_cod, MAX(COALESCE(uo_programa_nome, 'Não informado')) AS uo "
-            "  FROM tb_sigplan_programas WHERE is_deleted_programa = 0 GROUP BY programa_cod"
-            ") "
-            "SELECT pu.uo AS uo, COALESCE(SUM(ep.valorExecutado), 0) AS valorExecutado, "
-            "COUNT(DISTINCT ep.programa_cod) AS quantidadeProgramas "
-            "FROM execucao_programa ep "
-            "LEFT JOIN programa_uo pu ON pu.programa_cod = ep.programa_cod "
-            "GROUP BY pu.uo ORDER BY valorExecutado DESC"
+            "SELECT COALESCE(MAX(NULLIF(TRIM(uo_desc), '')), 'Não informado') AS uo, "
+            "COALESCE(SUM(orcamentario_executado), 0) AS valorExecutado, "
+            "COUNT(DISTINCT programa_cod) AS quantidadeProgramas "
+            "FROM tb_sigplan_execucao WHERE is_total = 1 "
+            "GROUP BY uo_cod ORDER BY valorExecutado DESC"
         )
         return [
             {
@@ -144,7 +146,7 @@ async def uos(db):
         ]
     except Exception as err:
         print(f"[balanco_dados] Erro ao buscar UOs no MySQL: {err}")
-        return []
+        raise HTTPException(status_code=503, detail="Não foi possível consultar as UOs SIGPLAN.") from err
 
 async def populacao(client):
     try:

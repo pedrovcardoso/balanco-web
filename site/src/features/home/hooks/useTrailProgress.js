@@ -40,7 +40,7 @@ export function useTrailProgress() {
         }
 
         const info = redemptionMap.get(trail.itemKey);
-        const isRedeemed = Boolean(info && info.redeemed);
+  const isRedeemed = Boolean(info && info.redeemed);
 
         return {
           slug: trail.slug,
