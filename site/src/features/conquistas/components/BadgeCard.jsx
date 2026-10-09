@@ -20,33 +20,22 @@ export default function BadgeCard({ medal, onClick }) {
   const isUnlocked = Boolean(medal.unlocked);
   const ribbonClass = ribbonStyles[isUnlocked ? medal.ribbon : 'locked'] || ribbonStyles.locked;
   const coinClass = coinStyles[isUnlocked ? medal.coin : 'locked'] || coinStyles.locked;
-  const iconName = isUnlocked ? medal.icon : 'lock';
 
   return (
     <button
       type="button"
       onClick={() => onClick(medal)}
       aria-label={`${medal.title} - ${isUnlocked ? 'Liberada' : 'Bloqueada'}`}
-      className="relative flex min-h-[190px] flex-col items-center justify-center rounded-[22px] bg-white/15 px-2 py-3 text-center shadow-[inset_0_1px_0_rgba(255,255,255,.3),0_7px_16px_rgba(0,0,0,.16)] transition active:scale-[.97] hover:bg-white/25 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400"
+      className="relative flex min-h-[220px] min-w-0 flex-col items-center justify-center rounded-[22px] bg-white/15 px-3 py-4 text-center shadow-[inset_0_1px_0_rgba(255,255,255,.3),0_7px_16px_rgba(0,0,0,.16)] transition hover:bg-white/25 active:scale-[.97]"
     >
-      <span
-        aria-hidden="true"
-        className={`mb-[-17px] h-12 w-[46px] rounded-t-md ${ribbonClass} [clip-path:polygon(0_0,100%_0,86%_100%,50%_76%,14%_100%)]`}
-      />
-      <span
-        aria-hidden="true"
-        className={`relative grid h-[82px] w-[82px] place-items-center rounded-full border-[5px] ${coinClass} text-[2rem] shadow-[inset_0_4px_0_rgba(255,255,255,.42),inset_0_-8px_14px_rgba(92,52,8,.3),0_9px_14px_rgba(0,0,0,.25)] md:h-[92px] md:w-[92px]`}
-      >
-        <Icon icon={`fa6-solid:${iconName}`} />
+      <span aria-hidden="true" className={`mb-[-17px] h-12 w-[46px] rounded-t-md ${ribbonClass} [clip-path:polygon(0_0,100%_0,86%_100%,50%_76%,14%_100%)]`} />
+      <span aria-hidden="true" className={`relative grid size-[82px] place-items-center rounded-full border-[5px] text-[2rem] md:size-[92px] ${coinClass}`}>
+        <Icon icon={`fa6-solid:${isUnlocked ? medal.icon : 'lock'}`} />
       </span>
-      <strong className="mt-2 grid min-h-[34px] place-items-center font-display text-[.83rem] leading-none text-[#fff7d6] [text-shadow:0_2px_3px_rgba(0,0,0,.35)]">
-        {medal.shortName || medal.title}
+      <strong className="mt-3 block min-h-[42px] w-full whitespace-normal break-words px-1 font-display text-[.83rem] font-black leading-tight text-[#fff7d6] [text-shadow:0_2px_3px_rgba(0,0,0,.35)]">
+        {medal.title}
       </strong>
-      <span
-        className={`mt-2 rounded-full px-2 py-1 text-[9px] font-black uppercase ${
-          isUnlocked ? 'bg-white/80 text-[#5d351d]' : 'bg-stone-300/80 text-stone-700'
-        }`}
-      >
+      <span className={`mt-2 rounded-full px-2 py-1 text-[9px] font-black uppercase ${isUnlocked ? 'bg-white/80 text-[#5d351d]' : 'bg-stone-300/80 text-stone-700'}`}>
         {isUnlocked ? 'Liberada' : 'Bloqueada'}
       </span>
     </button>

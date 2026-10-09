@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getGameMap } from '../services/trilhaService.js';
+import { getGameMap, getUserProgress } from '../services/trilhaService.js';
 import { useAuth } from '../../../shared/hooks/useAuth.js';
 
 export const MAP_WIDTH = 760;
@@ -172,7 +172,7 @@ function groupSections(rows) {
 }
 
 export function useGameMap() {
-  const { user } = useAuth();
+  const { user, isGuest } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mapSections, setMapSections] = useState([]);
@@ -188,14 +188,39 @@ export function useGameMap() {
     try {
       const rawRows = await getGameMap();
       const localProgress = getStoredGameProgress();
+      let remoteProgressMap = {};
 
-      // 1. Incorpora progresso salvo localmente
+      if (user && !isGuest) {
+        try {
+          const remoteList = await getUserProgress();
+          (remoteList || []).forEach((item) => {
+            const key = String(item.publicPhaseId || item.phaseId || item.phase_id || item.id || '');
+            if (key) {
+              remoteProgressMap[key] = item;
+            }
+          });
+        } catch (e) {
+          console.warn('[useGameMap] Falha ao carregar progresso remoto:', e);
+        }
+      }
+
+      // Incorpora progresso salvo remotamente no banco e localmente no localStorage
       const rows = (rawRows || []).map((row) => {
         const pId = String(row.publicPhaseId || row.gamePhaseId || row.id || '');
         const local = localProgress[pId];
+        const remote = remoteProgressMap[pId];
+
         let status = row.status;
         let bestScore = Number(row.bestScore || 0);
         let bestStars = Number(row.bestStars || 0);
+
+        if (remote) {
+          bestScore = Math.max(bestScore, Number(remote.bestScore || remote.best_score || 0));
+          bestStars = Math.max(bestStars, Number(remote.bestStars || remote.best_stars || 0));
+          if (bestStars >= 1 || bestScore >= 60 || remote.completedAt) {
+            status = 'completed';
+          }
+        }
 
         if (local) {
           bestScore = Math.max(bestScore, Number(local.bestScore || 0));

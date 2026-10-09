@@ -8,31 +8,34 @@ export function AuthProvider({ children }) {
   const login = useCallback(async (cpf, name) => {
     const { data } = await api.post('/auth/login', { cpf, name });
     setToken(data.token); setStoredUser(data.user); setUser(data.user);
-    window.dispatchEvent(new CustomEvent('bc:session-expired'));
+    window.dispatchEvent(new CustomEvent('bc:auth-changed', { detail: data.user }));
     return data.user;
   }, []);
   const loginAsGuest = useCallback(async () => {
     const { data } = await api.post('/auth/guest', { display_name: 'Visitante' });
     setToken(data.token); setStoredUser(data.user); setUser(data.user);
-    window.dispatchEvent(new CustomEvent('bc:session-expired'));
+    window.dispatchEvent(new CustomEvent('bc:auth-changed', { detail: data.user }));
     return data.user;
   }, []);
   const logout = useCallback(async () => {
     try { await api.post('/auth/logout'); } finally {
       clearSession();
       setUser(null);
-      window.dispatchEvent(new CustomEvent('bc:session-expired'));
+      window.dispatchEvent(new CustomEvent('bc:auth-changed', { detail: null }));
     }
   }, []);
   const deleteAccount = useCallback(async () => {
     try { await api.delete('/auth/account'); } finally {
       clearSession();
       setUser(null);
-      window.dispatchEvent(new CustomEvent('bc:session-expired'));
+      window.dispatchEvent(new CustomEvent('bc:auth-changed', { detail: null }));
     }
   }, []);
   useEffect(() => {
-    const expire = () => setUser(null);
+    const expire = () => {
+      setUser(null);
+      window.dispatchEvent(new CustomEvent('bc:auth-changed', { detail: null }));
+    };
     window.addEventListener('bc:session-expired', expire);
     return () => window.removeEventListener('bc:session-expired', expire);
   }, []);

@@ -1,14 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { TRAILS_BY_KEY, TRAIL_KEYS } from '../../../shared/constants/trails.js';
+import api from '../../../lib/api.js';
 import { useAuth } from '../../../shared/hooks/useAuth.js';
-import { completeTrail, getReadingProgress } from '../../historia/services/historiaService.js';
 
-const DADOS_TRAIL = TRAILS_BY_KEY[TRAIL_KEYS.DADOS];
-
-/**
- * Gerencia o progresso e o resgate da medalha da trilha "Balanço na Prática".
- * Consulta o banco ao montar para restaurar o estado e salva via API ao resgatar.
- */
 export function useTrailProgress() {
   const { user, isGuest } = useAuth();
   const isLoggedIn = user && !isGuest;
@@ -17,7 +10,6 @@ export function useTrailProgress() {
   const [claiming, setClaiming] = useState(false);
   const [restoring, setRestoring] = useState(true);
 
-  // Restaura estado do banco ao montar / ao autenticar
   useEffect(() => {
     let active = true;
 
@@ -30,9 +22,11 @@ export function useTrailProgress() {
 
       setRestoring(true);
       try {
-        const result = await getReadingProgress(DADOS_TRAIL.slug, 1);
+        const { data } = await api.get('/trails/progress');
+        const items = Array.isArray(data) ? data : [];
+        const dadosItem = items.find((i) => i.itemKey === 'BALANCO_DADOS');
         if (active) {
-          setClaimed(Boolean(result?.isCompleted));
+          setClaimed(Boolean(dadosItem && dadosItem.redeemed));
         }
       } catch (err) {
         console.warn('[BalancoNaPratica] Falha ao restaurar progresso:', err);
@@ -55,12 +49,12 @@ export function useTrailProgress() {
 
     setClaiming(true);
     try {
-      await completeTrail(DADOS_TRAIL.slug);
+      await api.post('/trails/redeem', { itemKey: 'BALANCO_DADOS' });
       setClaimed(true);
 
       window.dispatchEvent(
         new CustomEvent('bc:trail-progress-changed', {
-          detail: { slug: DADOS_TRAIL.slug, status: 'completed', progressPercent: 100 },
+          detail: { itemKey: 'BALANCO_DADOS', status: 'completed', progressPercent: 100 },
         }),
       );
 
@@ -75,3 +69,4 @@ export function useTrailProgress() {
 
   return { claimed, claiming, restoring, claimMedal };
 }
+

@@ -1,65 +1,84 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getGameMap, getQuestionsForPhase } from '../services/jogoService';
-import { useAuth } from '../../../shared/hooks/useAuth';
+import { normalizeEngineSlug, normalizePhaseQuestions, parseJson } from '../utils/gameData';
 
 export function useGamePhase(phaseId) {
-  const { user } = useAuth();
   const [phase, setPhase] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    let isMounted = true;
+    const controller = new AbortController();
+
     async function load() {
       if (!phaseId) {
         setError('Fase não informada.');
         setLoading(false);
         return;
       }
+
+      setLoading(true);
+      setError(null);
+      setPhase(null);
+
       try {
-        setLoading(true);
-        setError(null);
-        setPhase(null);
+        const mapData = await getGameMap();
+        if (controller.signal.aborted) return;
 
-        const mapData = await getGameMap(user?.publicUserId || 'guest');
-        const phaseInfo = Array.isArray(mapData)
-          ? mapData.find((p) => String(p.publicPhaseId || p.phase_id || p.id) === String(phaseId))
-          : null;
+        const identifier = String(phaseId);
+        const phaseInfo = mapData.find((item) =>
+          [item.publicPhaseId, item.gamePhaseId, item.public_id, item.phase_id, item.id, item.slug]
+            .filter((value) => value != null && value !== '')
+            .some((value) => String(value) === identifier),
+        );
 
-        const questions = await getQuestionsForPhase(phaseId);
+        if (!phaseInfo) throw new Error('A fase não foi encontrada no mapa de jogos.');
 
-        if (isMounted) {
-          const rawMeta = phaseInfo?.metadataJson || phaseInfo?.metadata_json || phaseInfo?.metadata || {};
-          const metadata = typeof rawMeta === 'string' ? JSON.parse(rawMeta) : rawMeta;
+        const questionsData = await getQuestionsForPhase(phaseId, { random: false, limit: 50 });
+        if (controller.signal.aborted) return;
 
-          const engineSlug = phaseInfo?.engineSlug || metadata?.engineSlug || metadata?.type || 'quiz';
-          const typeSlug = String(engineSlug).toLowerCase().replace(/_/g, '-');
+        const config = parseJson(phaseInfo.configJson ?? phaseInfo.config_json, {});
+        const metadata = parseJson(
+          phaseInfo.metadataJson ?? phaseInfo.metadata_json ?? phaseInfo.metadata,
+          {},
+        );
+        const mergedMetadata = { ...config, ...metadata };
+        const rowsFromApi = normalizePhaseQuestions(questionsData);
+        const rowsFromConfig = normalizePhaseQuestions(mergedMetadata.questions);
+        const rows = rowsFromApi.length ? rowsFromApi : rowsFromConfig;
+        const engineSlug = normalizeEngineSlug(
+          phaseInfo.engineSlug ?? mergedMetadata.engineSlug ?? mergedMetadata.mode ?? mergedMetadata.type,
+        );
 
-          setPhase({
-            id: phaseId,
-            title: metadata?.title || phaseInfo?.title || phaseInfo?.phaseTitle || 'Missão do Jogo',
-            subtitle: metadata?.subtitle || phaseInfo?.subtitle || 'Complete o desafio para progredir',
-            prompt: metadata?.prompt || phaseInfo?.prompt || 'Responda com atenção.',
-            engineSlug: typeSlug === 'ordem' ? 'ordem-correta' : typeSlug,
-            metadata,
-            rows: questions && questions.length > 0 ? questions : (metadata?.questions || []),
-          });
-          setLoading(false);
+        if (!rows.length) {
+          throw new Error(
+            `A fase “${phaseInfo.phaseTitle ?? phaseInfo.title ?? phaseId}” existe, mas a API não retornou itens vinculados. Verifique tb_phase_question e se as perguntas estão ativas.`,
+          );
         }
-      } catch (err) {
-        console.error('[useGamePhase] Erro ao carregar fase:', err);
-        if (isMounted) {
-          setError(err.message || 'Falha ao carregar dados da fase.');
-          setLoading(false);
-        }
+
+        setPhase({
+          id: phaseInfo.publicPhaseId ?? phaseInfo.gamePhaseId ?? phaseInfo.id ?? phaseId,
+          databaseId: phaseInfo.gamePhaseId ?? phaseInfo.phase_id ?? phaseInfo.id ?? null,
+          title: phaseInfo.phaseTitle ?? phaseInfo.title ?? mergedMetadata.title ?? 'Missão do Jogo',
+          subtitle: phaseInfo.description ?? mergedMetadata.subtitle ?? 'Complete o desafio para progredir',
+          prompt: mergedMetadata.prompt ?? 'Responda com atenção para alcançar o objetivo.',
+          engineSlug,
+          passScore: Number(phaseInfo.passScore ?? phaseInfo.pass_score ?? 60),
+          maxScore: Number(phaseInfo.maxScore ?? phaseInfo.max_score ?? 100),
+          config,
+          metadata: mergedMetadata,
+          rows,
+        });
+      } catch (loadError) {
+        if (!controller.signal.aborted) setError(loadError.message || 'Falha ao carregar dados da fase.');
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
       }
     }
 
     load();
-    return () => {
-      isMounted = false;
-    };
-  }, [phaseId, user]);
+    return () => controller.abort();
+  }, [phaseId]);
 
   return { phase, loading, error };
 }

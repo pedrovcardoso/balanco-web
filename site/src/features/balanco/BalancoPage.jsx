@@ -10,6 +10,7 @@ import BalancoBookshelf from './components/BalancoBookshelf.jsx';
 import AchievementCard from '../../shared/components/ui/AchievementCard.jsx';
 import { SECTION_TITLES } from './constants/sections.js';
 import { useBalancoProgress } from './hooks/useBalancoProgress.js';
+import { TRAIL_ITEM_KEYS } from './services/balancoService.js';
 import { Loading } from '../../shared/components/loading/index.js';
 import { useLoadingProgress } from '../../shared/hooks/useLoadingProgress.js';
 import './balanco.css';
@@ -67,6 +68,8 @@ export default function BalancoPage() {
     initialSection,
     savedSection,
     saveSection,
+    concludeBook,
+    redeemedBooks,
     claimed,
     readCompleted,
     claiming,
@@ -138,19 +141,11 @@ export default function BalancoPage() {
     return Math.max(savedSection || 1, initialSection || 1);
   }, [savedSection, initialSection]);
 
-  // Calcula o status de leitura de cada livro com base na API/Backend
+  // Calcula o status de leitura de cada livro com base na API/Backend (um de cada vez)
   const chaptersProgress = useMemo(() => {
-    if (readCompleted || claimed) {
-      return {
-        'chapter-1': 'read',
-        'chapter-2': 'read',
-        'chapter-3': 'read',
-      };
-    }
-
-    const isRead1 = highestSection >= 5;
-    const isRead2 = highestSection >= 18;
-    const isRead3 = highestSection >= 21;
+    const isRead1 = Boolean(redeemedBooks?.LIVRO_1);
+    const isRead2 = Boolean(redeemedBooks?.LIVRO_2);
+    const isRead3 = Boolean(redeemedBooks?.LIVRO_3);
 
     return {
       'chapter-1': isRead1
@@ -169,7 +164,7 @@ export default function BalancoPage() {
         ? 'in_progress'
         : 'unread',
     };
-  }, [readCompleted, claimed, highestSection, selectedBook]);
+  }, [redeemedBooks, highestSection, selectedBook]);
 
   // Troca de visão instantânea com fade suave
   const changeBookView = useCallback((targetBookId) => {
@@ -196,22 +191,23 @@ export default function BalancoPage() {
   }, []);
 
   // Conclusão imediata do capítulo salvando a seção no backend de forma transparente
-  const handleConcludeAndReturn = useCallback(() => {
+  const handleConcludeAndReturn = useCallback(async () => {
     const currentChapter = selectedBook;
     if (!currentChapter) return;
 
-    // 1. Salva a seção do capítulo concluído no backend de forma assíncrona (não bloqueante)
     if (currentChapter === 'chapter-1') {
       saveSection(5);
+      await concludeBook(TRAIL_ITEM_KEYS.LIVRO_1);
     } else if (currentChapter === 'chapter-2') {
       saveSection(18);
+      await concludeBook(TRAIL_ITEM_KEYS.LIVRO_2);
     } else if (currentChapter === 'chapter-3') {
       saveSection(21);
+      await concludeBook(TRAIL_ITEM_KEYS.LIVRO_3);
     }
 
-    // 2. Retorna imediatamente à estante de livros (0ms de espera)
     changeBookView(null);
-  }, [selectedBook, saveSection, changeBookView]);
+  }, [selectedBook, saveSection, concludeBook, changeBookView]);
 
   useEffect(() => {
     localStorage.setItem(SCALE_KEY, scale);
@@ -265,10 +261,13 @@ export default function BalancoPage() {
     };
   }, [selectedBook]);
 
-  // Medalha liberada somente quando todos os cadernos (seção >= 21) forem lidos
+  // Medalha liberada estritamente quando TODOS os 3 cadernos forem resgatados no banco
   const allChaptersCompleted = useMemo(() => {
-    return readCompleted || claimed || highestSection >= 21;
-  }, [readCompleted, claimed, highestSection]);
+    return Boolean(
+      claimed ||
+      (redeemedBooks?.LIVRO_1 && redeemedBooks?.LIVRO_2 && redeemedBooks?.LIVRO_3)
+    );
+  }, [claimed, redeemedBooks]);
 
   if (fadeState !== 'ready') {
     return (

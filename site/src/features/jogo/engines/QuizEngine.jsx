@@ -1,180 +1,142 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Icon } from '@iconify/react';
-import { Loading } from '../../../shared/components/loading/index.js';
+
+function parseJson(value, fallback) {
+  if (value == null || value === '') return fallback;
+  if (typeof value === 'object') return value;
+  try { return JSON.parse(value); } catch { return fallback; }
+}
+
+function normalizeQuestions(phase) {
+  return (phase?.rows || [])
+    .map((row, index) => {
+      const metadata = parseJson(row.metadataJson ?? row.metadata_json ?? row.metadata, {});
+      const rawOptions = row.options ?? row.optionsJson ?? row.options_json ?? metadata.options ?? [];
+      const options = parseJson(rawOptions, []);
+      const rawAnswer = metadata.answer ?? row.correctAnswer ?? row.correct_answer ?? 0;
+      let answer = Number(rawAnswer);
+      if (!Number.isFinite(answer)) {
+        answer = options.findIndex((option) =>
+          String(option?.text ?? option) === String(rawAnswer)
+        );
+      }
+      return {
+        id: row.id ?? row.questionId ?? `question-${index}`,
+        prompt: row.prompt ?? metadata.prompt ?? `Pergunta ${index + 1}`,
+        options: Array.isArray(options) ? options.map((option) => option?.text ?? option) : [],
+        answer: Math.max(0, answer),
+        explanation: row.simpleExplanation ?? row.simple_explanation ?? metadata.explanation ?? '',
+      };
+    })
+    .filter((item) => item.prompt && item.options.length >= 2);
+}
+
+function shuffle(items) {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
 
 export function QuizEngine({ phase, onUpdateHud, onFeedback, onComplete }) {
-  const configuredCount = Number(phase.metadata?.count || 8);
-  const configuredTime = Number(phase.metadata?.time || 25);
+  const configuredCount = Number(phase?.metadata?.count || phase?.config?.count || 8);
+  const configuredTime = Number(phase?.metadata?.time || phase?.config?.time || 25);
+  const items = useMemo(() => {
+    return shuffle(normalizeQuestions(phase))
+      .slice(0, configuredCount)
+      .map((item) => {
+        const options = shuffle(item.options.map((text, originalIndex) => ({ text, originalIndex })));
+        return { ...item, options, correctIndex: options.findIndex((o) => o.originalIndex === item.answer) };
+      });
+  }, [phase, configuredCount]);
 
-  const [items, setItems] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [score, setScore] = useState(100);
   const [wrongCount, setWrongCount] = useState(0);
   const [sequence, setSequence] = useState(0);
-  const [bestSequence, setBestSequence] = useState(0);
   const [timeLeft, setTimeLeft] = useState(configuredTime);
   const [locked, setLocked] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [reviewReady, setReviewReady] = useState(false);
   const [answers, setAnswers] = useState([]);
-
   const timerRef = useRef(null);
-  const optionRefs = useRef([]);
-  const nextButtonRef = useRef(null);
 
   useEffect(() => {
-    const rawRows = phase.rows || [];
-    const normalized = rawRows
-      .map((row, index) => {
-        let meta = row.metadataJson || row.metadata_json || row.metadata || {};
-        if (typeof meta === 'string') {
-          try { meta = JSON.parse(meta); } catch { meta = {}; }
-        }
-        let opts = row.optionsJson || row.options_json || meta.options || [];
-        if (typeof opts === 'string') {
-          try { opts = JSON.parse(opts); } catch { opts = []; }
-        }
-        const rawAns = meta.answer ?? row.correctAnswer ?? row.correct_answer ?? 0;
-        let ans = Number(rawAns);
-        if (!Number.isFinite(ans)) ans = Math.max(0, opts.findIndex((o) => String(o) === String(rawAns)));
-        return {
-          prompt: row.prompt || meta.prompt || `Pergunta ${index + 1}`,
-          options: opts,
-          answer: Math.max(0, ans),
-          explanation: row.simpleExplanation || row.simple_explanation || meta.explanation || '',
-        };
-      })
-      .filter((item) => item.prompt && item.options.length >= 2);
+    setCurrentIndex(0); setWrongCount(0); setSequence(0); setTimeLeft(configuredTime);
+    setLocked(false); setSelectedOption(null); setReviewReady(false); setAnswers([]);
+  }, [phase?.id, configuredTime]);
 
-    const shuffled = [...normalized].sort(() => Math.random() - 0.5);
-    const selectedItems = shuffled.slice(0, Math.min(configuredCount, shuffled.length)).map((item) => {
-      const shuffledOpts = item.options
-        .map((text, originalIndex) => ({ text, originalIndex }))
-        .sort(() => Math.random() - 0.5);
-      return {
-        ...item,
-        options: shuffledOpts,
-        correctIndex: shuffledOpts.findIndex((o) => o.originalIndex === item.answer),
-      };
-    });
-
-    setItems(selectedItems);
-  }, [phase]);
+  const score = items.length ? Math.max(0, Math.round(100 - wrongCount * (100 / items.length))) : 0;
 
   useEffect(() => {
     if (!items.length) return;
-    const penaltyPerError = 100 / items.length;
-    const currentScore = Math.max(0, Math.round(100 - wrongCount * penaltyPerError));
-    setScore(currentScore);
     onUpdateHud?.({
-      score: currentScore,
+      score,
       attempts: `${Math.min(currentIndex + 1, items.length)}/${items.length}`,
       itemsCount: sequence,
       progress: Math.round((currentIndex / items.length) * 100),
       hudLabels: { score: 'nota', attempts: 'questão', itemsCount: 'sequência' },
     });
-  }, [currentIndex, wrongCount, sequence, items.length]);
+  }, [currentIndex, items.length, onUpdateHud, score, sequence]);
 
   useEffect(() => {
-    if (locked || !items.length || reviewReady) return;
+    if (!items.length || locked || reviewReady) return undefined;
     setTimeLeft(configuredTime);
-
-    timerRef.current = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 0.1) {
-          clearInterval(timerRef.current);
-          handleAnswer(-1, true);
+    timerRef.current = window.setInterval(() => {
+      setTimeLeft((value) => {
+        if (value <= 0.1) {
+          window.clearInterval(timerRef.current);
+          window.setTimeout(() => answer(-1, true), 0);
           return 0;
         }
-        return prev - 0.1;
+        return value - 0.1;
       });
     }, 100);
+    return () => window.clearInterval(timerRef.current);
+  }, [currentIndex, items.length, locked, reviewReady, configuredTime]);
 
-    return () => clearInterval(timerRef.current);
-  }, [currentIndex, locked, reviewReady, items.length]);
-
-  useEffect(() => {
-    if (!items.length || locked || reviewReady) return;
-    const frame = window.requestAnimationFrame(() => optionRefs.current[0]?.focus());
-    return () => window.cancelAnimationFrame(frame);
-  }, [currentIndex, items.length, locked, reviewReady]);
-
-  useEffect(() => {
-    if (!reviewReady) return;
-    const frame = window.requestAnimationFrame(() => nextButtonRef.current?.focus());
-    return () => window.cancelAnimationFrame(frame);
-  }, [reviewReady]);
-
-  function handleOptionKeyDown(event, index) {
-    if (locked) return;
-    const lastIndex = currentItem.options.length - 1;
-    let nextIndex = null;
-    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') nextIndex = index >= lastIndex ? 0 : index + 1;
-    if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') nextIndex = index <= 0 ? lastIndex : index - 1;
-    if (nextIndex !== null) {
-      event.preventDefault();
-      optionRefs.current[nextIndex]?.focus();
-    }
-  }
-
-  function handleAnswer(selectedIndex, timedOut = false) {
-    if (locked || reviewReady) return;
+  function answer(selectedIndex, timedOut = false) {
+    if (locked || reviewReady || !items.length) return;
+    window.clearInterval(timerRef.current);
     setLocked(true);
-    clearInterval(timerRef.current);
     setSelectedOption(selectedIndex);
-
     const item = items[currentIndex];
     const correct = !timedOut && selectedIndex === item.correctIndex;
-
-    let newSeq = sequence;
-    let newBest = bestSequence;
-    let newWrong = wrongCount;
-
-    if (correct) {
-      newSeq += 1;
-      newBest = Math.max(newBest, newSeq);
-      setSequence(newSeq);
-      setBestSequence(newBest);
-    } else {
-      newSeq = 0;
-      newWrong += 1;
-      setSequence(0);
-      setWrongCount(newWrong);
-    }
-
-    const newAnswers = [
-      ...answers,
-      { question: item.prompt, selectedIndex, correctIndex: item.correctIndex, timedOut, correct },
-    ];
-    setAnswers(newAnswers);
-
+    const nextAnswers = [...answers, {
+      question: item.prompt, selectedIndex, correctIndex: item.correctIndex, timedOut, correct,
+    }];
+    setAnswers(nextAnswers);
+    if (correct) setSequence((value) => value + 1);
+    else { setSequence(0); setWrongCount((value) => value + 1); }
     onFeedback?.({ correct });
-
-    setTimeout(() => {
-      setReviewReady(true);
-    }, 820);
+    window.setTimeout(() => setReviewReady(true), 500);
   }
 
-  function handleNext() {
+  function next() {
     if (!reviewReady) return;
     if (currentIndex >= items.length - 1) {
+      const finalWrong = wrongCount + (answers.at(-1)?.correct === false && answers.length < items.length ? 1 : 0);
+      const finalScore = Math.max(0, Math.round(100 - finalWrong * (100 / items.length)));
       onComplete?.({
-        score,
+        score: finalScore,
         attempts: items.length,
-        correctCount: items.length - wrongCount,
+        correctCount: items.length - finalWrong,
         totalCount: items.length,
         answers,
       });
-    } else {
-      setCurrentIndex((prev) => prev + 1);
-      setLocked(false);
-      setReviewReady(false);
-      setSelectedOption(null);
+      return;
     }
+    setCurrentIndex((value) => value + 1);
+    setLocked(false); setSelectedOption(null); setReviewReady(false);
   }
 
   if (!items.length) {
-    return <Loading fullScreen={false} progress={0} message="Carregando perguntas do Quiz..." />;
+    return (
+      <div className="mx-auto w-[min(92vw,520px)] rounded-2xl border border-red-200 bg-red-50 p-5 text-center font-black text-red-800">
+        Esta fase não possui perguntas válidas. Verifique as opções e a resposta correta cadastradas.
+      </div>
+    );
   }
 
   const currentItem = items[currentIndex];
@@ -182,93 +144,37 @@ export function QuizEngine({ phase, onUpdateHud, onFeedback, onComplete }) {
   const letters = ['A', 'B', 'C', 'D', 'E'];
 
   return (
-    <article className="quizCard relative mx-auto flex min-h-[360px] w-[min(94vw,620px)] select-none flex-col justify-center gap-4 px-4 pb-16 pt-10 sm:px-6">
-      <div
-        className="quizTimer absolute right-2 top-2 grid size-12 place-items-center rounded-full shadow-lg"
-        style={{
-          background: `conic-gradient(#f5a800 ${timerPercent}%, rgba(255, 255, 255, 0.35) 0)`,
-        }}
-      >
-        <span className="grid size-[38px] place-items-center rounded-full bg-[#fff7dc] font-display text-sm font-bold text-[#5d2b0a]">
-          {Math.ceil(timeLeft)}
-        </span>
+    <article className="relative mx-auto flex min-h-[360px] w-[min(94vw,620px)] flex-col justify-center gap-4 px-4 pb-16 pt-10 sm:px-6">
+      <div className="absolute right-2 top-2 grid size-12 place-items-center rounded-full shadow-lg"
+        style={{ background: `conic-gradient(#f5a800 ${timerPercent}%, rgba(255,255,255,.35) 0)` }}>
+        <span className="grid size-[38px] place-items-center rounded-full bg-[#fff7dc] font-bold text-[#5d2b0a]">{Math.ceil(timeLeft)}</span>
       </div>
-
-      <div className="quizContent">
-        <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-[#9e1f28]/90 px-3 py-1.5 text-xs font-black uppercase tracking-wider text-white">
-          <Icon icon="fa6-solid:list-check" aria-hidden="true" /> questão {currentIndex + 1} de {items.length}
-        </div>
-
-        <div className="font-display text-[clamp(1.2rem,5.5vw,2.1rem)] font-bold leading-tight text-[#5d2b0a]">
-          {currentItem.prompt}
-        </div>
-
-        <div className="mt-2 font-black text-[#7a4b13] text-sm">Selecione a alternativa correta.</div>
-
-        <div className="mt-4 grid gap-2.5">
-          {currentItem.options.map((option, idx) => {
-            const isCorrect = idx === currentItem.correctIndex;
-            const isSelected = idx === selectedOption;
-
-            let optionStyle = 'bg-[#fff7dc]/65 border-[#fff7dc]/80 text-[#5d2b0a]';
-            if (locked) {
-              if (isCorrect) optionStyle = '!bg-[#dcfce7] !border-[#16a34a] text-green-950 ring-2 ring-green-500/20';
-              else if (isSelected && !isCorrect) optionStyle = '!bg-[#fee2e2] !border-[#dc2626] text-red-950 ring-2 ring-red-500/20';
-              else optionStyle = 'opacity-55 bg-[#fff7dc]/40 border-transparent';
-            }
-
-            return (
-              <button
-                key={idx}
-                ref={(element) => { optionRefs.current[idx] = element; }}
-                disabled={locked}
-                onClick={() => handleAnswer(idx, false)}
-                onKeyDown={(event) => handleOptionKeyDown(event, idx)}
-                type="button"
-                aria-pressed={isSelected}
-                aria-current={locked && isCorrect ? 'true' : undefined}
-                className={`quizOption grid grid-cols-[auto_1fr_auto] items-center gap-2.5 rounded-[20px] border-2 px-3.5 py-3 text-left font-black shadow-md transition focus:outline-none focus:ring-4 focus:ring-[#f5a800]/70 focus:ring-offset-2 focus:ring-offset-[#fff7dc] ${optionStyle}`}
-              >
-                <span className="grid size-8 place-items-center rounded-xl bg-gradient-to-br from-[#9e1f28] to-[#6f1620] font-display text-white">
-                  {letters[idx] || idx + 1}
-                </span>
-                <span>{option.text}</span>
-                <span className="quizOptionIcon">
-                  {locked && isCorrect && <Icon icon="fa6-solid:circle-check" className="text-green-600 text-lg" />}
-                  {locked && isSelected && !isCorrect && <Icon icon="fa6-solid:circle-xmark" className="text-red-600 text-lg" />}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        {locked && (
-          <div className="mt-4 border-t border-[#5d2b0a]/10 pt-3" role="status" aria-live="polite">
-            <div className="text-xs font-black uppercase tracking-wider text-[#7a4b13]">
-              Resposta correta {selectedOption === -1 ? '· tempo esgotado' : ''}
-            </div>
-            <div className="font-display text-xl font-bold text-[#5d2b0a]">
-              {currentItem.options[currentItem.correctIndex]?.text}
-            </div>
-            {currentItem.explanation && (
-              <div className="mt-2 font-black leading-tight text-[#6b3a1f] text-sm">
-                {currentItem.explanation}
-              </div>
-            )}
-          </div>
-        )}
-
-        {reviewReady && (
-          <button
-            ref={nextButtonRef}
-            onClick={handleNext}
-            type="button"
-            className="mt-4 min-h-11 w-full rounded-[18px] bg-gradient-to-br from-[#0f7a55] to-[#0b3f2d] px-4 py-3 font-black text-white shadow-md hover:brightness-110 transition cursor-pointer"
-          >
-            {currentIndex === items.length - 1 ? 'Ver resultado' : 'Ir para a próxima'}
-          </button>
-        )}
+      <div className="inline-flex self-start rounded-full bg-[#9e1f28]/90 px-3 py-1.5 text-xs font-black uppercase text-white">
+        questão {currentIndex + 1} de {items.length}
       </div>
+      <div className="font-display text-[clamp(1.2rem,5.5vw,2.1rem)] font-bold text-[#5d2b0a]">{currentItem.prompt}</div>
+      <div className="grid gap-2.5">
+        {currentItem.options.map((option, index) => {
+          const isCorrect = index === currentItem.correctIndex;
+          const isSelected = index === selectedOption;
+          const state = locked
+            ? isCorrect ? 'bg-green-100 border-green-600' : isSelected ? 'bg-red-100 border-red-600' : 'opacity-50'
+            : 'bg-[#fff7dc]/65 border-[#fff7dc]/80';
+          return (
+            <button key={`${option.originalIndex}-${index}`} disabled={locked} onClick={() => answer(index)} type="button"
+              className={`grid grid-cols-[auto_1fr_auto] items-center gap-2 rounded-[20px] border-2 px-3.5 py-3 text-left font-black shadow-md ${state}`}>
+              <span className="grid size-8 place-items-center rounded-xl bg-[#9e1f28] text-white">{letters[index] || index + 1}</span>
+              <span>{option.text}</span>
+              {locked && isCorrect && <Icon icon="fa6-solid:circle-check" className="text-green-600" />}
+              {locked && isSelected && !isCorrect && <Icon icon="fa6-solid:circle-xmark" className="text-red-600" />}
+            </button>
+          );
+        })}
+      </div>
+      {locked && currentItem.explanation && <div className="font-black text-sm text-[#6b3a1f]">{currentItem.explanation}</div>}
+      {reviewReady && <button onClick={next} type="button" className="min-h-11 rounded-[18px] bg-[#0f7a55] px-4 py-3 font-black text-white">
+        {currentIndex === items.length - 1 ? 'Ver resultado' : 'Ir para a próxima'}
+      </button>}
     </article>
   );
 }

@@ -1,0 +1,1096 @@
+﻿
+<FILE path="ConquistasPage.jsx">
+import { useEffect, useMemo, useState } from 'react';
+import { Icon } from '@iconify/react';
+import { Link } from 'react-router-dom';
+import { ROUTES } from '../../shared/constants/routes.js';
+import { useAuth } from '../../shared/hooks/useAuth.js';
+import { getConquistasData } from './services/conquistaService.js';
+import { Loading } from '../../shared/components/loading/index.js';
+import { useLoadingProgress } from '../../shared/hooks/useLoadingProgress.js';
+import BadgeList from './components/BadgeList.jsx';
+import BadgeModal from './components/BadgeModal.jsx';
+import CertificatePreview from './components/CertificatePreview.jsx';
+
+const CONQUISTAS_LOADING_MESSAGES = [
+  'Carregando conquistas e estante de medalhas...',
+  'Buscando progresso nas trilhas educativas...',
+  'Verificando certificados emitidos...',
+  'Calculando medalhas conquistadas...',
+];
+
+const REQUIRED_TRAILS = 5;
+
+const visuals = [
+  { ribbon: 'red', icon: 'landmark' },
+  { ribbon: 'blue', icon: 'coins' },
+  { ribbon: 'purple', icon: 'chart-line' },
+  { ribbon: 'green', icon: 'magnifying-glass-chart' },
+];
+
+function shortName(val) {
+  return String(val || 'Trilha')
+    .replace(' PÃºblica', '')
+    .replace(' e Controle Social', '')
+    .slice(0, 22);
+}
+
+function groupGameRows(rows) {
+  const map = new Map();
+  (Array.isArray(rows) ? rows : [])
+    .filter(Boolean)
+    .sort(
+      (a, b) =>
+        Number(a?.sectionOrder || 0) - Number(b?.sectionOrder || 0) ||
+        Number(a?.phaseOrder || 0) - Number(b?.phaseOrder || 0)
+    )
+    .forEach((row) => {
+      const key = row.sectionSlug || `secao-${row.gameSectionId || map.size + 1}`;
+      if (!map.has(key)) {
+        map.set(key, {
+          slug: key,
+          title: row.sectionTitle || key,
+          order: Number(row.sectionOrder || map.size + 1),
+          phases: [],
+        });
+      }
+      map.get(key).phases.push(row);
+    });
+  return [...map.values()].sort((a, b) => a.order - b.order);
+}
+
+function getMedalCoinLevel(stars, max, unlocked) {
+  if (!unlocked) return 'locked';
+  if (stars >= Math.ceil(max * 0.75)) return 'gold';
+  if (stars >= Math.ceil(max * 0.5)) return 'silver';
+  return 'bronze';
+}
+
+export default function ConquistasPage() {
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [fadeState, setFadeState] = useState('loading');
+  const [selectedMedal, setSelectedMedal] = useState(null);
+  const [rawGameRows, setRawGameRows] = useState([]);
+  const [certData, setCertData] = useState(null);
+  const [userProgressData, setUserProgressData] = useState(null);
+  const [trailProgressData, setTrailProgressData] = useState([]);
+
+  const {
+    progress: loadingProgress,
+    message: loadingMessage,
+    status: loadingStatus,
+    setProgress: setLoadingProgress,
+  } = useLoadingProgress({
+    initialProgress: 20,
+    messages: CONQUISTAS_LOADING_MESSAGES,
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadData() {
+      setLoading(true);
+      setFadeState('loading');
+      setLoadingProgress(20, CONQUISTAS_LOADING_MESSAGES[0]);
+      try {
+        setLoadingProgress(45, CONQUISTAS_LOADING_MESSAGES[1]);
+        const data = await getConquistasData();
+        if (isMounted) {
+          setLoadingProgress(80, CONQUISTAS_LOADING_MESSAGES[2]);
+          setRawGameRows(data.gameMap || []);
+          setCertData(data.certificate);
+          setUserProgressData(data.progress);
+          setTrailProgressData(data.trailProgress || []);
+          setLoadingProgress(100, 'Conquistas carregadas!');
+        }
+      } catch (err) {
+        console.warn('[ConquistasPage] Erro ao carregar conquistas:', err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+    loadData();
+    return () => {
+      isMounted = false;
+    };
+  }, [user, setLoadingProgress]);
+
+  useEffect(() => {
+    if (!loading) {
+      setFadeState('fading');
+      const timer = setTimeout(() => {
+        setFadeState('ready');
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+  }, [loading]);
+
+  const { medals, dashboard } = useMemo(() => {
+    const sections = groupGameRows(rawGameRows);
+
+    const trailMedals = sections.map((section, index) => {
+      const phases = Array.isArray(section?.phases) ? section.phases : [];
+      const total = phases.length;
+      const done = phases.filter(
+        (p) => p && String(p.status || '').toLowerCase() === 'completed'
+      ).length;
+      const stars = phases.reduce(
+        (n, p) => n + Number(p?.bestStars || 0),
+        0
+      );
+      const max = total * 3;
+      const unlocked = total > 0 && done === total;
+      const visual = visuals[index % visuals.length] || visuals[0];
+
+      return {
+        type: 'Trilha',
+        key: section.slug,
+        title: section.title,
+        shortName: shortName(section.title),
+        icon: visual.icon,
+        ribbon: visual.ribbon,
+        coin: getMedalCoinLevel(stars, max, unlocked),
+        unlocked,
+        stars,
+        max,
+        brilliant: unlocked && stars >= max,
+        description: unlocked
+          ? `Concedida por concluir todas as ${total} fases da trilha ${section.title}.`
+          : `Bloqueada. Conclua as ${total} fases da trilha ${section.title}.`,
+        meta: unlocked ? `${stars} de ${max} estrelas` : `${done}/${total} fases concluÃ­das`,
+      };
+    });
+
+    const completedTrailsFromBackend = (Array.isArray(trailProgressData) ? trailProgressData : []).filter(
+      (t) => t && (t.isCompleted || t.status === 'completed')
+    ).length;
+
+    const gameStars = trailMedals.reduce((n, m) => n + m.stars, 0);
+    const totalStars =
+      userProgressData?.totalStars != null
+        ? Number(userProgressData.totalStars)
+        : gameStars;
+    const possibleStars = trailMedals.reduce((n, m) => n + m.max, 0);
+    const completedGameTrails = trailMedals.filter((m) => m.unlocked).length;
+    const effectiveCompletedTrails = Math.max(
+      completedGameTrails,
+      completedTrailsFromBackend
+    );
+
+    const brilliantCount = trailMedals.filter((m) => m.brilliant).length;
+    const certificatesCount = Number(certData?.certificateCount || 0);
+    const totalTrailsCount = Math.max(trailMedals.length, REQUIRED_TRAILS);
+
+    const achievement = (
+      key,
+      title,
+      short,
+      description,
+      icon,
+      ribbon,
+      coin,
+      current,
+      target,
+      unlocked,
+      meta
+    ) => ({
+      type: 'Conquista',
+      key,
+      title,
+      shortName: short,
+      description,
+      icon,
+      ribbon,
+      coin: unlocked ? coin : 'locked',
+      current,
+      target,
+      unlocked,
+      meta: unlocked ? meta : `Bloqueada Â· ${current}/${target}`,
+    });
+
+    const achievementsList = [
+      achievement(
+        'stars-25',
+        'Colecionador 25 Estrelas',
+        '25 Estrelas',
+        'Liberada ao conquistar pelo menos 25 estrelas nos jogos.',
+        'star',
+        'gold',
+        'gold',
+        totalStars,
+        25,
+        totalStars >= 25,
+        `${totalStars} estrelas conquistadas`
+      ),
+      achievement(
+        'stars-35',
+        'Colecionador 35 Estrelas',
+        '35 Estrelas',
+        'Liberada ao conquistar pelo menos 35 estrelas nos jogos.',
+        'star',
+        'purple',
+        'gold',
+        totalStars,
+        35,
+        totalStars >= 35,
+        `${totalStars} estrelas conquistadas`
+      ),
+      achievement(
+        'all-trails',
+        'Todas as Trilhas',
+        'Todas Trilhas',
+        'Liberada ao concluir todas as trilhas educativas da jornada.',
+        'route',
+        'green',
+        'gold',
+        effectiveCompletedTrails,
+        totalTrailsCount,
+        totalTrailsCount > 0 && effectiveCompletedTrails >= totalTrailsCount,
+        `${effectiveCompletedTrails} de ${totalTrailsCount} trilhas concluÃ­das`
+      ),
+      achievement(
+        'two-brilliant',
+        'Duas Medalhas Brilhantes',
+        'Brilhantes',
+        'Liberada ao conquistar duas medalhas brilhantes nas trilhas.',
+        'medal',
+        'gold',
+        'gold',
+        brilliantCount,
+        2,
+        brilliantCount >= 2,
+        `${brilliantCount} medalha(s) brilhante(s)`
+      ),
+      achievement(
+        'certificate',
+        'Certificado Final',
+        'Certificado',
+        'Liberada quando existe certificado emitido no banco de dados.',
+        'file-signature',
+        'blue',
+        'silver',
+        certificatesCount,
+        1,
+        certificatesCount > 0,
+        certificatesCount > 0 ? 'Certificado emitido' : 'Nenhum certificado emitido'
+      ),
+      achievement(
+        'legend',
+        `Lenda Fiscal ${possibleStars} Estrelas`,
+        'Lenda Fiscal',
+        'Liberada ao conquistar todas as estrelas disponÃ­veis nas fases cadastradas.',
+        'crown',
+        'gold',
+        'gold',
+        totalStars,
+        possibleStars,
+        possibleStars > 0 && totalStars >= possibleStars,
+        `${totalStars} de ${possibleStars} estrelas`
+      ),
+    ];
+
+    const allMedals = [...trailMedals, ...achievementsList];
+    const unlockedMedalsCount = allMedals.filter((m) => m.unlocked).length;
+
+    return {
+      medals: allMedals,
+      dashboard: {
+        stars: totalStars,
+        possible: possibleStars,
+        completed: effectiveCompletedTrails,
+        trails: totalTrailsCount,
+        unlocked: unlockedMedalsCount,
+        certificates: certificatesCount,
+      },
+    };
+  }, [rawGameRows, certData, userProgressData, trailProgressData]);
+
+  const isCertificateUnlocked = dashboard.completed >= REQUIRED_TRAILS;
+  const missingTrails = Math.max(0, REQUIRED_TRAILS - dashboard.completed);
+  const progressPercent = Math.min(
+    100,
+    Math.round((dashboard.completed / REQUIRED_TRAILS) * 100)
+  );
+
+  const participantDisplayName = user?.displayName || 'Pedro Henrique Vieira Cardoso';
+
+  const formattedDate = useMemo(() => {
+    const d = new Date();
+    const formattedStr = d.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    });
+    return `Minas Gerais, ${formattedStr}.`;
+  }, []);
+
+  if (fadeState !== 'ready') {
+    return (
+      <Loading
+        animation="random"
+        progress={loadingProgress}
+        message={loadingMessage}
+        status={loadingStatus}
+        className={fadeState === 'fading' ? 'loading-fade-out' : ''}
+      />
+    );
+  }
+
+  return (
+    <main className="content-fade-in w-full max-w-full px-3 py-4 sm:px-5 lg:px-8 lg:py-8 font-body text-[#233324]">
+      {/* Back to Home Navigation Button */}
+      <div className="back-home-row mx-auto mb-4 flex w-full max-w-[1220px] justify-start">
+        <Link
+          to={ROUTES.HOME}
+          aria-label="Voltar para a pÃ¡gina inicial"
+          className="back-home-btn inline-flex items-center justify-center gap-2 rounded-full border-2 border-[#8b6914] bg-[linear-gradient(135deg,#fffaf0,#f5e6c0)] px-4 py-2 text-xs font-black text-[#5d2b0a] no-underline shadow-md transition hover:-translate-y-0.5 hover:shadow-lg cursor-pointer"
+        >
+          <Icon icon="fa6-solid:arrow-left" />
+          <span>Voltar para inÃ­cio</span>
+        </Link>
+      </div>
+
+      <div className="app-shell mx-auto flex w-full max-w-[1220px] flex-col gap-5">
+        {/* Top Page Stack: Hero Banner + Separate Progress Panel */}
+        <aside className="top-page-stack flex flex-col items-center gap-4 w-full max-w-[1220px] mx-auto">
+          {/* Clean Modern Hero Banner */}
+          <div className="hero-banner-wrap flex w-full justify-center">
+            <section className="hero-banner relative w-full max-w-[720px] rounded-[28px] border border-[rgba(139,105,20,0.3)] bg-[linear-gradient(135deg,#fffdfa_0%,#fef7e6_50%,#f9ecce_100%)] p-6 text-center shadow-[0_12px_32px_rgba(45,106,79,0.12)]">
+              <h1 className="mt-1 font-display text-4xl sm:text-5xl font-black leading-none text-[#2d6a4f]">
+                CidadÃ£o Fiscal <span className="text-[#c0272d]">Nota A!</span>
+              </h1>
+
+              <p className="mx-auto mt-3 max-w-md text-sm font-extrabold leading-snug text-[#6b3a1f]">
+                Gere seu certificado oficial e acompanhe sua estante de medalhas conquistadas ao longo da jornada.
+              </p>
+            </section>
+          </div>
+
+          {/* Separated Progress Panel */}
+          <section
+            aria-labelledby="progressTitle"
+            className="progress-panel w-full max-w-[920px] rounded-[24px] border-2 border-[rgba(139,94,60,.45)] bg-[linear-gradient(135deg,rgba(255,255,255,.94),rgba(253,246,227,.92))] p-4 sm:p-5 shadow-[0_12px_30px_rgba(49,61,37,.16)]"
+          >
+            <div className="progress-panel-head flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="progress-panel-title flex items-center gap-3">
+                <span aria-hidden="true" className="progress-icon grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-[#f5a800] to-[#ea580c] text-white text-lg shadow-md">
+                  <Icon icon="fa6-solid:compass" />
+                </span>
+                <div>
+                  <h2 id="progressTitle" className="font-display text-xl font-black text-[#8f1e23]">
+                    Seu progresso
+                  </h2>
+                  <p className="progress-copy text-xs font-bold text-[#6b3a1f]">
+                    {isCertificateUnlocked
+                      ? 'Certificado liberado! VocÃª jÃ¡ pode emitir o PDF.'
+                      : `Faltam ${missingTrails} trilha${missingTrails !== 1 ? 's' : ''} para liberar o certificado.`}
+                  </p>
+                </div>
+              </div>
+
+              <div aria-label="Indicadores de progresso" className="progress-metrics flex flex-wrap gap-2">
+                <span className="progress-chip flex items-baseline gap-1 rounded-full border border-[rgba(139,105,20,.25)] bg-white/80 px-3 py-1.5 text-[0.68rem] font-black uppercase text-[#6b3a1f]">
+                  <strong className="font-display text-base text-[#2d6a4f]">{dashboard.stars}</strong> estrelas
+                </span>
+                <span className="progress-chip flex items-baseline gap-1 rounded-full border border-[rgba(139,105,20,.25)] bg-white/80 px-3 py-1.5 text-[0.68rem] font-black uppercase text-[#6b3a1f]">
+                  <strong className="font-display text-base text-[#2d6a4f]">{dashboard.completed}</strong> trilhas
+                </span>
+                <span className="progress-chip flex items-baseline gap-1 rounded-full border border-[rgba(139,105,20,.25)] bg-white/80 px-3 py-1.5 text-[0.68rem] font-black uppercase text-[#6b3a1f]">
+                  <strong className="font-display text-base text-[#2d6a4f]">{dashboard.unlocked}</strong> conquistas
+                </span>
+              </div>
+            </div>
+
+            <div
+              role="progressbar"
+              aria-label="Progresso para liberar o certificado"
+              aria-valuemin={0}
+              aria-valuemax={REQUIRED_TRAILS}
+              aria-valuenow={dashboard.completed}
+              aria-valuetext={`${dashboard.completed} de ${REQUIRED_TRAILS} trilhas concluÃ­das`}
+              className="progress-track mt-3.5 h-2.5 w-full overflow-hidden rounded-full bg-[#eadfca] shadow-inner"
+            >
+              <div
+                className="progress-fill h-full rounded-full bg-gradient-to-r from-[#2d6a4f] via-[#10b981] to-[#f5a800] transition-all duration-500"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+          </section>
+        </aside>
+
+        <section className="flex w-full flex-col gap-5">
+          <CertificatePreview
+            participantName={participantDisplayName}
+            formattedDate={formattedDate}
+            isLocked={!isCertificateUnlocked}
+            missingTrailsCount={missingTrails}
+            completedTrailsCount={dashboard.completed}
+            requiredTrailsCount={REQUIRED_TRAILS}
+          />
+
+          <BadgeList
+            medals={medals}
+            dashboard={dashboard}
+            onSelectMedal={setSelectedMedal}
+          />
+        </section>
+      </div>
+
+      <BadgeModal
+        medal={selectedMedal}
+        onClose={() => setSelectedMedal(null)}
+      />
+    </main>
+  );
+}
+
+</FILE>
+
+
+<FILE path="components\BadgeCard.jsx">
+import { Icon } from '@iconify/react';
+
+const ribbonStyles = {
+  red: 'bg-[linear-gradient(135deg,#c0272d_0_46%,#fdf6e3_46%_56%,#8f1e23_56%)]',
+  blue: 'bg-[linear-gradient(135deg,#2563eb_0_46%,#fdf6e3_46%_56%,#1d4ed8_56%)]',
+  green: 'bg-[linear-gradient(135deg,#10b981_0_46%,#fdf6e3_46%_56%,#047857_56%)]',
+  purple: 'bg-[linear-gradient(135deg,#a855f7_0_46%,#fdf6e3_46%_56%,#6d28d9_56%)]',
+  gold: 'bg-[linear-gradient(135deg,#f5a800_0_46%,#fff7d6_46%_56%,#b7791f_56%)]',
+  locked: 'bg-[linear-gradient(135deg,#a8a29e_0_46%,#e7e5e4_46%_56%,#57534e_56%)] grayscale opacity-80',
+};
+
+const coinStyles = {
+  gold: 'bg-[radial-gradient(circle_at_32%_24%,#fff5bf_0_18%,#ffd56a_19%_42%,#f5a800_43%_68%,#9a6817_100%)] border-[#7a4b13] text-[#5d2b0a]',
+  silver: 'bg-[radial-gradient(circle_at_32%_24%,#fff_0_18%,#e5e7eb_19%_42%,#cbd5e1_43%_68%,#64748b_100%)] border-slate-600 text-slate-700',
+  bronze: 'bg-[radial-gradient(circle_at_32%_24%,#ffe4c7_0_18%,#d99b5f_19%_42%,#b87333_43%_68%,#7c3f18_100%)] border-[#7c3f18] text-[#5d2b0a]',
+  locked: 'bg-[radial-gradient(circle_at_32%_24%,#f5f5f4_0_18%,#d6d3d1_19%_42%,#a8a29e_43%_68%,#57534e_100%)] border-stone-600 text-stone-700 grayscale',
+};
+
+export default function BadgeCard({ medal, onClick }) {
+  const isUnlocked = Boolean(medal.unlocked);
+  const ribbonClass = ribbonStyles[isUnlocked ? medal.ribbon : 'locked'] || ribbonStyles.locked;
+  const coinClass = coinStyles[isUnlocked ? medal.coin : 'locked'] || coinStyles.locked;
+
+  return (
+    <button
+      type="button"
+      onClick={() => onClick(medal)}
+      aria-label={`${medal.title} - ${isUnlocked ? 'Liberada' : 'Bloqueada'}`}
+      className="relative flex min-h-[220px] min-w-0 flex-col items-center justify-center rounded-[22px] bg-white/15 px-3 py-4 text-center shadow-[inset_0_1px_0_rgba(255,255,255,.3),0_7px_16px_rgba(0,0,0,.16)] transition hover:bg-white/25 active:scale-[.97]"
+    >
+      <span aria-hidden="true" className={`mb-[-17px] h-12 w-[46px] rounded-t-md ${ribbonClass} [clip-path:polygon(0_0,100%_0,86%_100%,50%_76%,14%_100%)]`} />
+      <span aria-hidden="true" className={`relative grid size-[82px] place-items-center rounded-full border-[5px] text-[2rem] md:size-[92px] ${coinClass}`}>
+        <Icon icon={`fa6-solid:${isUnlocked ? medal.icon : 'lock'}`} />
+      </span>
+      <strong className="mt-3 block min-h-[42px] w-full whitespace-normal break-words px-1 font-display text-[.83rem] font-black leading-tight text-[#fff7d6] [text-shadow:0_2px_3px_rgba(0,0,0,.35)]">
+        {medal.title}
+      </strong>
+      <span className={`mt-2 rounded-full px-2 py-1 text-[9px] font-black uppercase ${isUnlocked ? 'bg-white/80 text-[#5d351d]' : 'bg-stone-300/80 text-stone-700'}`}>
+        {isUnlocked ? 'Liberada' : 'Bloqueada'}
+      </span>
+    </button>
+  );
+}
+
+</FILE>
+
+
+<FILE path="components\BadgeList.jsx">
+import { Icon } from '@iconify/react';
+import BadgeCard from './BadgeCard.jsx';
+
+export default function BadgeList({ medals = [], dashboard = {}, onSelectMedal }) {
+  const unlockedCount = dashboard.unlocked || medals.filter((m) => m.unlocked).length;
+  const totalCount = medals.length;
+  const starsCount = dashboard.stars || 0;
+  const possibleStars = dashboard.possible || 0;
+
+  return (
+    <section aria-labelledby="medalShelfTitle" className="map-parchment relative w-full rounded-[30px] border-[3.5px] border-[#8b5e3c] bg-[linear-gradient(135deg,#fdf6e3,#f5ead2_60%,#eedeb4)] p-4 sm:p-5 lg:p-6 shadow-[0_22px_54px_rgba(57,75,40,.3)]">
+      <div className="relative z-10">
+        <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div className="min-w-0">
+            <h2 id="medalShelfTitle" className="font-display text-3xl font-black text-[#2d6a4f] sm:text-4xl">
+              Estante de medalhas
+            </h2>
+            <p className="mt-1 text-sm font-extrabold text-[#6b3a1f]">
+              Toque em uma medalha para ver os detalhes da conquista.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <div className="rounded-full border-2 border-[#f5a800] bg-white/75 px-4 py-2 text-xs font-black uppercase text-[#7a4b13] shadow">
+              <Icon icon="fa6-solid:medal" className="mr-1 text-[#f5a800] inline" />
+              {unlockedCount} de {totalCount} medalhas
+            </div>
+            <div className="rounded-full border-2 border-[#f5a800] bg-white/75 px-4 py-2 text-xs font-black uppercase text-[#7a4b13] shadow">
+              <Icon icon="fa6-solid:star" className="mr-1 text-[#f5a800] inline" />
+              {starsCount} de {possibleStars} estrelas
+            </div>
+          </div>
+        </div>
+
+        <div className="relative overflow-hidden rounded-[28px] border-4 border-[#5d351d] bg-[repeating-linear-gradient(90deg,#8b5e3c_0_38px,#7a4b2b_39px_43px,#9a6a43_44px_82px)] shadow-[inset_0_-10px_24px_rgba(39,20,8,.24),0_18px_38px_rgba(58,38,24,.26)]">
+          <div className="relative z-[1] px-3 pb-[22px] pt-[14px]">
+            {medals.length === 0 ? (
+              <p className="text-center py-8 font-extrabold text-[#fff7d6]">
+                Nenhuma medalha encontrada no momento.
+              </p>
+            ) : (
+              <div className="grid grid-cols-2 gap-4 min-[480px]:grid-cols-3 md:grid-cols-4">
+                {medals.map((medal, index) => (
+                  <BadgeCard
+                    key={medal.key || index}
+                    medal={medal}
+                    onClick={onSelectMedal}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+</FILE>
+
+
+<FILE path="components\BadgeModal.jsx">
+import { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
+import { Icon } from '@iconify/react';
+import { useFocusTrap } from '../../../shared/hooks/useFocusTrap.js';
+
+const ribbonStyles = {
+  red: 'bg-[linear-gradient(135deg,#c0272d_0_46%,#fdf6e3_46%_56%,#8f1e23_56%)]',
+  blue: 'bg-[linear-gradient(135deg,#2563eb_0_46%,#fdf6e3_46%_56%,#1d4ed8_56%)]',
+  green: 'bg-[linear-gradient(135deg,#10b981_0_46%,#fdf6e3_46%_56%,#047857_56%)]',
+  purple: 'bg-[linear-gradient(135deg,#a855f7_0_46%,#fdf6e3_46%_56%,#6d28d9_56%)]',
+  gold: 'bg-[linear-gradient(135deg,#f5a800_0_46%,#fff7d6_46%_56%,#b7791f_56%)]',
+  locked: 'bg-[linear-gradient(135deg,#a8a29e_0_46%,#e7e5e4_46%_56%,#57534e_56%)] grayscale opacity-80',
+};
+
+const coinStyles = {
+  gold: 'bg-[radial-gradient(circle_at_32%_24%,#fff5bf_0_18%,#ffd56a_19%_42%,#f5a800_43%_68%,#9a6817_100%)] border-[#7a4b13] text-[#5d2b0a]',
+  silver: 'bg-[radial-gradient(circle_at_32%_24%,#fff_0_18%,#e5e7eb_19%_42%,#cbd5e1_43%_68%,#64748b_100%)] border-slate-600 text-slate-700',
+  bronze: 'bg-[radial-gradient(circle_at_32%_24%,#ffe4c7_0_18%,#d99b5f_19%_42%,#b87333_43%_68%,#7c3f18_100%)] border-[#7c3f18] text-[#5d2b0a]',
+  locked: 'bg-[radial-gradient(circle_at_32%_24%,#f5f5f4_0_18%,#d6d3d1_19%_42%,#a8a29e_43%_68%,#57534e_100%)] border-stone-600 text-stone-700 grayscale',
+};
+
+export default function BadgeModal({ medal, onClose }) {
+  const modalRef = useRef(null);
+  useFocusTrap(modalRef, Boolean(medal));
+
+  useEffect(() => {
+    if (!medal) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') onClose();
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [medal, onClose]);
+
+  if (!medal || typeof document === 'undefined') return null;
+
+  const isUnlocked = Boolean(medal.unlocked);
+  const ribbonClass = ribbonStyles[isUnlocked ? medal.ribbon : 'locked'] || ribbonStyles.locked;
+  const coinClass = coinStyles[isUnlocked ? medal.coin : 'locked'] || coinStyles.locked;
+  const iconName = isUnlocked ? medal.icon : 'lock';
+
+  return createPortal(
+    <div
+      role="presentation"
+      className="fixed inset-0 z-[2147483647] grid h-[100dvh] w-screen place-items-center overflow-y-auto bg-[#18211a]/65 p-4 backdrop-blur-lg"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+    >
+      <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalMedalTitle"
+        aria-describedby="modalMedalDescription"
+        className="relative my-auto max-h-[calc(100dvh-2rem)] w-[min(100%,430px)] overflow-y-auto rounded-[30px] border-[3px] border-[#8b6914] bg-[linear-gradient(135deg,#fdf6e3,#f5e6c0_58%,#edd9a3)] shadow-[0_24px_60px_rgba(0,0,0,.34)]"
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Fechar detalhes da medalha"
+          className="absolute right-3 top-3 z-10 grid size-10 place-items-center rounded-full bg-white/80 text-[#5d351d] shadow-md transition hover:bg-white"
+        >
+          <Icon icon="fa6-solid:xmark" aria-hidden="true" />
+        </button>
+
+        <div className="p-5 pt-7 text-center">
+          <div
+            aria-hidden="true"
+            className={`mx-auto -mb-[21px] h-[62px] w-[58px] rounded-t-[7px] shadow-md [clip-path:polygon(0_0,100%_0,86%_100%,50%_76%,14%_100%)] ${ribbonClass}`}
+          />
+          <div
+            aria-hidden="true"
+            className={`relative mx-auto grid size-[112px] place-items-center rounded-full border-[6px] text-[2.75rem] shadow-[inset_0_5px_0_rgba(255,255,255,.42),inset_0_-10px_18px_rgba(92,52,8,.28),0_12px_20px_rgba(0,0,0,.24)] ${coinClass}`}
+          >
+            <Icon icon={`fa6-solid:${iconName}`} />
+          </div>
+
+          <p className="mt-4 text-xs font-black uppercase tracking-[.18em] text-[#8f1e23]">
+            {medal.type || 'Medalha'}
+          </p>
+          <h3 id="modalMedalTitle" className="mt-1 font-display text-3xl font-black text-[#2d6a4f]">
+            {medal.title}
+          </h3>
+          <p id="modalMedalDescription" className="mt-3 text-sm font-extrabold leading-relaxed text-[#6b3a1f]">
+            {medal.description}
+          </p>
+
+          {medal.meta && (
+            <div className="mt-4 rounded-2xl border-2 border-[#f5a800] bg-white/70 px-4 py-3 text-sm font-black text-[#7a4b13]">
+              {medal.meta}
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="mt-5 w-full rounded-2xl bg-gradient-to-r from-[#2d6a4f] to-emerald-700 px-5 py-3 font-display text-lg font-black text-white shadow-lg transition hover:opacity-95 active:scale-[.98]"
+          >
+            Fechar
+          </button>
+        </div>
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
+</FILE>
+
+
+<FILE path="components\CertificateForm.jsx">
+import { useState } from 'react';
+import { Icon } from '@iconify/react';
+import { issueCertificate } from '../services/conquistaService.js';
+
+function downloadBase64Pdf(base64, fileName) {
+  const binary = window.atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index);
+  }
+  const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = fileName;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+export default function CertificateForm({ isLocked = true, participantName = 'Participante' }) {
+  const [downloading, setDownloading] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('');
+
+  async function handleDownloadPdf() {
+    if (isLocked || downloading) return;
+    setDownloading(true);
+    setStatusMessage('Emitindo certificado...');
+
+    try {
+      const certificate = await issueCertificate(participantName);
+      if (!certificate?.pdfBase64) {
+        throw new Error('A API nÃ£o retornou o arquivo PDF do certificado.');
+      }
+      const normalizedName = String(participantName || 'participante')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+      downloadBase64Pdf(
+        certificate.pdfBase64,
+        `certificado-cidadao-fiscal-${normalizedName || 'participante'}.pdf`,
+      );
+      setStatusMessage(`Certificado emitido. CÃ³digo: ${certificate.verificationCode}`);
+    } catch (error) {
+      setStatusMessage(error.message || 'Erro ao emitir certificado.');
+    } finally {
+      setDownloading(false);
+    }
+  }
+
+  return (
+    <div className="mx-auto mt-2 w-full max-w-[720px]">
+      <button
+        type="button"
+        disabled={isLocked || downloading}
+        onClick={handleDownloadPdf}
+        title={isLocked ? 'Conclua os requisitos para liberar o certificado' : 'Baixar certificado em PDF'}
+        className="mx-auto flex w-full max-w-[480px] items-center justify-center gap-3 rounded-2xl border-2 border-red-900 bg-gradient-to-r from-[#c0272d] to-[#8f1e23] px-6 py-4 font-display text-lg font-black text-white shadow-lg transition hover:brightness-110 disabled:cursor-not-allowed disabled:grayscale disabled:opacity-50"
+      >
+        <Icon
+          icon={downloading ? 'fa6-solid:circle-notch' : 'fa6-solid:file-arrow-down'}
+          className={downloading ? 'animate-spin text-xl' : 'text-2xl'}
+        />
+        <span>{downloading ? 'Emitindo certificado...' : 'Baixar certificado oficial'}</span>
+      </button>
+      {statusMessage && (
+        <p role="status" aria-live="polite" className="mt-2 text-center text-sm font-black text-[#2d6a4f]">
+          {statusMessage}
+        </p>
+      )}
+    </div>
+  );
+}
+
+</FILE>
+
+
+<FILE path="components\CertificatePreview.jsx">
+import { useEffect, useRef, useState } from 'react';
+import { Icon } from '@iconify/react';
+import CertificateForm from './CertificateForm.jsx';
+
+export default function CertificatePreview({
+  participantName = 'Participante',
+  formattedDate = 'Minas Gerais',
+  isLocked = true,
+  missingTrailsCount = 4,
+  completedTrailsCount = 0,
+  requiredTrailsCount = 4,
+}) {
+  const stageRef = useRef(null);
+  const [scale, setScale] = useState(0.42);
+
+  useEffect(() => {
+    const updatePreviewScale = () => {
+      if (!stageRef.current || !stageRef.current.parentElement) return;
+      const parentWidth = stageRef.current.parentElement.clientWidth || 500;
+      const available = Math.max(300, Math.min(parentWidth, 680));
+      const calculatedScale = Math.min(available / 1123, 0.55);
+      setScale(calculatedScale);
+    };
+
+    updatePreviewScale();
+    window.addEventListener('resize', updatePreviewScale);
+    return () => window.removeEventListener('resize', updatePreviewScale);
+  }, []);
+
+  return (
+    <div className="certificate-shell relative w-full overflow-hidden rounded-[32px] border-[3px] border-[#8b6914] bg-[linear-gradient(135deg,#fffdf7,#fbf4e2)] p-4 sm:p-6 shadow-[0_20px_50px_rgba(76,38,10,.18)] flex flex-col gap-6">
+      {/* Top Banner inside certificate section */}
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-[#8b6914]/20 pb-4">
+        <div className="flex items-center gap-3">
+          <span className="grid h-10 w-10 place-items-center rounded-xl bg-[linear-gradient(135deg,#f5a800,#c0272d)] text-white shadow-md">
+            <Icon icon="fa6-solid:award" className="text-xl" />
+          </span>
+          <div>
+            <h2 className="font-display text-2xl sm:text-3xl font-black text-[#2d6a4f]">
+              Certificado Oficial de ConclusÃ£o
+            </h2>
+            <p className="text-xs font-black text-[#6b3a1f]">
+              Emitido pelo Governo do Estado de Minas Gerais Â· BalanÃ§o CidadÃ£o
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {isLocked ? (
+            <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-amber-600/30 bg-amber-100 px-3.5 py-1.5 text-xs font-black text-amber-900 shadow-xs">
+              <Icon icon="fa6-solid:lock" className="text-amber-700" />
+              <span>PrÃ©-visualizaÃ§Ã£o (Bloqueado)</span>
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-emerald-600/30 bg-emerald-100 px-3.5 py-1.5 text-xs font-black text-emerald-900 shadow-xs">
+              <Icon icon="fa6-solid:circle-check" className="text-emerald-700" />
+              <span>Pronto para Download</span>
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Certificate Stage / Canvas */}
+      <div className="relative min-w-0 flex flex-col items-center">
+        <div
+          ref={stageRef}
+          className={`certificate-stage relative max-w-full mx-auto overflow-hidden rounded-2xl border-[4px] shadow-xl transition-all duration-300 ${
+            isLocked
+              ? 'border-amber-600/50 shadow-[0_0_25px_rgba(245,168,0,0.25)]'
+              : 'border-[#8b6914] shadow-[0_0_35px_rgba(45,106,79,0.3)]'
+          }`}
+          style={{
+            width: `${1123 * scale + 8}px`,
+            height: `${794 * scale + 8}px`,
+          }}
+        >
+          <div
+            className="block origin-top-left"
+            style={{ transform: `scale(${scale})` }}
+          >
+            <div
+              id="certificate"
+              className={`certificate relative h-[794px] w-[1123px] overflow-hidden border-[12px] border-double border-[#8b6914] bg-[radial-gradient(ellipse_at_top,#ffffff,#fefcf5_60%,#fbf2d8_100%)] text-[#26211b] transition-all duration-300 ${
+                isLocked ? 'saturate-[0.85] opacity-[0.92]' : ''
+              }`}
+            >
+              {/* Background Watermark Pattern */}
+              <div className="certificate-watermark pointer-events-none absolute inset-0 grid place-items-center text-[280px] text-[#8b6914] opacity-[0.06]">
+                <Icon icon="fa6-solid:scale-balanced" />
+              </div>
+
+              {/* Decorative Corner Ornaments */}
+              <div className="absolute top-4 left-4 h-12 w-12 border-t-2 border-l-2 border-[#8b6914]" />
+              <div className="absolute top-4 right-4 h-12 w-12 border-t-2 border-r-2 border-[#8b6914]" />
+              <div className="absolute bottom-4 left-4 h-12 w-12 border-b-2 border-l-2 border-[#8b6914]" />
+              <div className="absolute bottom-4 right-4 h-12 w-12 border-b-2 border-r-2 border-[#8b6914]" />
+
+              <div className="certificate-content relative z-[1] flex h-full flex-col p-[48px_64px_42px] text-center">
+                <header className="flex items-center justify-between">
+                  <div className="text-left">
+                    <p className="font-formal text-xs uppercase tracking-[0.28em] font-bold text-[#8b5e3c]">
+                      Estado de Minas Gerais
+                    </p>
+                    <p className="font-formal text-sm uppercase tracking-[0.2em] text-[#5d351d] font-bold">
+                      Secretaria de Estado de Fazenda
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full bg-[#fdf6e3] border border-[#8b6914]/40 px-3 py-1 font-formal text-xs font-bold text-[#8b6914]">
+                      SEF / MG
+                    </span>
+                  </div>
+                </header>
+
+                <section className="mt-6 flex items-center justify-center gap-8">
+                  <div className="seal text-4xl grid h-[96px] w-[96px] place-items-center rounded-full border-[5px] border-[#7a4b13] bg-[radial-gradient(circle_at_35%_25%,#fff5bd,#f5a800_45%,#8b6914)] text-[#5d2b0a] shadow-xl">
+                    <Icon icon="fa6-solid:landmark" />
+                  </div>
+                  <div className="text-left">
+                    <h1 className="font-formal text-5xl font-bold uppercase tracking-wider text-[#2d2a24]">
+                      Certificado
+                    </h1>
+                    <p className="mt-1 font-formal text-xl text-[#8f1e23] font-bold tracking-wide">
+                      DE RECONHECIMENTO & CONCLUSAO
+                    </p>
+                  </div>
+                </section>
+
+                <section className="mt-8 px-12">
+                  <p className="font-formal text-lg leading-8 text-[#2d2a24]">
+                    Certificamos, para os devidos fins, que
+                  </p>
+                  <h2
+                    id="certificateName"
+                    className="mx-auto mt-4 max-w-[780px] border-b-3 border-[#8b6914] pb-3 font-formal text-4xl font-bold leading-tight text-[#8f1e23] tracking-wide"
+                  >
+                    {participantName}
+                  </h2>
+                  <p className="mx-auto mt-6 max-w-[880px] font-formal text-lg leading-8 text-[#2d2a24]">
+                    concluiu com Ãªxito a jornada educativa do{' '}
+                    <strong className="text-[#8f1e23]">BalanÃ§o CidadÃ£o MG</strong>, completando as etapas da{' '}
+                    <strong className="text-[#2d6a4f]">Trilha do Tesouro</strong> e demonstrando
+                    comprometimento com a transparÃªncia pÃºblica, controle social e educaÃ§Ã£o fiscal.
+                  </p>
+                </section>
+
+                <footer className="mt-auto">
+                  <p id="certificateDate" className="font-formal text-base font-bold text-[#2d2a24]">
+                    {formattedDate}
+                  </p>
+                  <div className="mx-auto mt-8 grid max-w-[650px] grid-cols-2 gap-12">
+                    <div>
+                      <div className="signature-line mx-auto mb-2 h-px w-[230px] bg-[#5d351d]" />
+                      <p className="font-formal text-xs font-bold uppercase tracking-wide text-[#5d351d]">
+                        Programa EducaÃ§Ã£o Fiscal MG
+                      </p>
+                    </div>
+                    <div>
+                      <div className="signature-line mx-auto mb-2 h-px w-[230px] bg-[#5d351d]" />
+                      <p className="font-formal text-xs font-bold uppercase tracking-wide text-[#5d351d]">
+                        BalanÃ§o CidadÃ£o MG
+                      </p>
+                    </div>
+                  </div>
+                  <p className="mt-6 text-[10px] font-bold uppercase tracking-[0.2em] text-[#7a4b13]">
+                    Autenticidade e emissÃ£o digital validadas via BalanÃ§o CidadÃ£o MG
+                  </p>
+                </footer>
+              </div>
+            </div>
+          </div>
+
+          {/* Floating motivational lock badge overlay (non-blocking visually so certificate shines through) */}
+          {isLocked && (
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 top-0 flex flex-col items-center justify-end p-4 bg-gradient-to-t from-[#233324]/80 via-[#233324]/30 to-transparent backdrop-blur-[1px]">
+              <div className="pointer-events-auto mb-2 w-full max-w-[460px] rounded-2xl border-2 border-[#f5a800] bg-[linear-gradient(135deg,#fffaf0,#fdf0ce)] p-4 text-center text-[#5d2b0a] shadow-2xl">
+                <div className="flex items-center justify-center gap-3">
+                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-[#ea580c] to-[#c0272d] text-white text-lg shadow-md">
+                    <Icon icon="fa6-solid:lock" />
+                  </span>
+                  <div className="text-left">
+                    <h3 className="font-display text-lg font-black leading-tight text-[#8f1e23]">
+                      Quer emitir o seu certificado oficial?
+                    </h3>
+                    <p className="text-xs font-extrabold text-[#6b3a1f]">
+                      Conclua mais <span className="text-[#c0272d] font-black">{missingTrailsCount} trilha{missingTrailsCount !== 1 ? 's' : ''}</span> para liberar a versÃ£o em PDF com seu nome!
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Certificate Form (Download Button + Subtitle) inside Container */}
+      <div className="pt-2 border-t border-[#8b6914]/20">
+        <CertificateForm
+          isLocked={isLocked}
+          missingTrailsCount={missingTrailsCount}
+          completedTrailsCount={completedTrailsCount}
+          requiredTrailsCount={requiredTrailsCount}
+          participantName={participantName}
+        />
+      </div>
+    </div>
+  );
+}
+
+</FILE>
+
+
+<FILE path="services\conquistaService.js">
+import api from '../../../lib/api.js';
+
+export async function getConquistasData() {
+  const [achievementsResponse, certificateResponse] = await Promise.all([
+    api.get('/achievements'),
+    api.get('/certificates/status'),
+  ]);
+
+  const payload = achievementsResponse.data || {};
+  const achievements = Array.isArray(payload)
+    ? payload
+    : Array.isArray(payload.items)
+      ? payload.items
+      : [];
+
+  return {
+    achievements,
+    summary: payload.summary || {
+      total: achievements.length,
+      unlocked: achievements.filter((item) => item?.unlocked).length,
+    },
+    certificate: certificateResponse.data || null,
+  };
+}
+
+export async function issueCertificate(participantName, fiscalYear = new Date().getFullYear()) {
+  const { data } = await api.post('/certificates/generate', { participantName, fiscalYear });
+  return data;
+}
+
+export async function verifyCertificate(code) {
+  const { data } = await api.get(`/certificates/verify/${encodeURIComponent(code)}`);
+  return data;
+}
+
+</FILE>
+
+
+<FILE path="utils\mainTrailMedals.js">
+export const MAIN_TRAIL_DEFINITIONS = [
+  {
+    key: 'HISTORIA_HQ',
+    title: 'HistÃ³ria em Quadrinhos',
+    shortName: 'HistÃ³ria HQ',
+    description: 'Concedida por concluir e resgatar a HistÃ³ria em Quadrinhos da trilha principal.',
+    icon: 'book-open',
+    ribbon: 'red',
+    coin: 'bronze',
+  },
+  {
+    key: 'LIVRO_1',
+    title: 'Livro 1 ConcluÃ­do',
+    shortName: 'Livro 1',
+    description: 'Concedida por concluir e resgatar o primeiro livro da trilha principal.',
+    icon: 'book',
+    ribbon: 'blue',
+    coin: 'bronze',
+  },
+  {
+    key: 'LIVRO_2',
+    title: 'Livro 2 ConcluÃ­do',
+    shortName: 'Livro 2',
+    description: 'Concedida por concluir e resgatar o segundo livro da trilha principal.',
+    icon: 'book',
+    ribbon: 'purple',
+    coin: 'silver',
+  },
+  {
+    key: 'LIVRO_3',
+    title: 'Livro 3 ConcluÃ­do',
+    shortName: 'Livro 3',
+    description: 'Concedida por concluir e resgatar o terceiro livro da trilha principal.',
+    icon: 'book',
+    ribbon: 'green',
+    coin: 'gold',
+  },
+  {
+    key: 'BALANCO_DADOS',
+    title: 'BalanÃ§o em Dados',
+    shortName: 'BalanÃ§o Dados',
+    description: 'Concedida por concluir e resgatar a etapa BalanÃ§o em Dados.',
+    icon: 'chart-column',
+    ribbon: 'blue',
+    coin: 'silver',
+  },
+  {
+    key: 'SAIBA_MAIS',
+    title: 'Saiba Mais ConcluÃ­do',
+    shortName: 'Saiba Mais',
+    description: 'Concedida por concluir e resgatar a etapa Saiba Mais da trilha principal.',
+    icon: 'graduation-cap',
+    ribbon: 'gold',
+    coin: 'gold',
+  },
+];
+
+export function buildMainTrailMedals(trailProgress) {
+  const progressMap = new Map(
+    (Array.isArray(trailProgress) ? trailProgress : [])
+      .filter(Boolean)
+      .map((item) => [String(item.itemKey || item.item_key || ''), item]),
+  );
+
+  return MAIN_TRAIL_DEFINITIONS.map((definition) => {
+    const progress = progressMap.get(definition.key);
+    const unlocked = Boolean(progress?.redeemed);
+    const redeemedAt = progress?.redeemedAt || progress?.redeemed_at;
+
+    return {
+      ...definition,
+      type: 'Trilha principal',
+      key: `main-trail-${definition.key.toLowerCase()}`,
+      unlocked,
+      meta: unlocked
+        ? redeemedAt
+          ? `ConcluÃ­da em ${new Date(redeemedAt).toLocaleDateString('pt-BR')}`
+          : 'Etapa concluÃ­da'
+        : 'Bloqueada Â· conclua esta etapa da trilha principal',
+    };
+  });
+}
+
+</FILE>
+

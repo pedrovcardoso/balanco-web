@@ -1,311 +1,198 @@
 -- =============================================================================
--- sc_balanco_web — Schema Completo MySQL
--- Convenções: sc_ para schema/database, tb_ para tabelas
+-- sc_balanco_web - Schema MySQL corrigido
 -- Charset: utf8mb4 | Collation: utf8mb4_unicode_ci | Engine: InnoDB
--- Gerado em: 2026-10-05
+-- Correcao: CURRENT_TIMESTAMP em campos automaticos e sessao UTC.
 -- =============================================================================
 
-CREATE DATABASE IF NOT EXISTS sc_balanco_web
+DROP DATABASE IF EXISTS sc_balanco_web;
+
+CREATE DATABASE sc_balanco_web
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 
 USE sc_balanco_web;
+SET time_zone = '+00:00';
 
 -- =============================================================================
--- GRUPO 1 — SITE (usuários, trilha, progresso, certificado)
+-- GRUPO 1 - SITE
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS tb_user (
-  id            INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  name          VARCHAR(120)  NOT NULL,
-  email         VARCHAR(254)  NOT NULL,
-  cpf           CHAR(11)          NULL,
-  created_at    DATETIME      NOT NULL DEFAULT (UTC_TIMESTAMP()),
+  id         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  cpf        CHAR(11) NOT NULL,
+  nome       VARCHAR(150) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
-  UNIQUE KEY uq_user_email (email)
+  UNIQUE KEY uq_user_cpf (cpf)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Seções da trilha principal (historia, livros, jogos, dados, saiba-mais, conquistas)
 CREATE TABLE IF NOT EXISTS tb_trail_section (
-  id            INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  slug          VARCHAR(80)   NOT NULL,
-  title         VARCHAR(120)  NOT NULL,
-  description   TEXT              NULL,
-  order_index   TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  is_active     TINYINT(1)    NOT NULL DEFAULT 1,
+  id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  slug        VARCHAR(80) NOT NULL,
+  title       VARCHAR(120) NOT NULL,
+  description TEXT NULL,
+  order_index TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  is_active   TINYINT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (id),
   UNIQUE KEY uq_trail_section_slug (slug)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Progresso do usuário por seção da trilha (resgate de conquistas)
 CREATE TABLE IF NOT EXISTS tb_trail_redemption (
-  id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  user_id         INT UNSIGNED NOT NULL,
-  trail_section   VARCHAR(80)  NOT NULL,
-  redeemed_at     DATETIME     NOT NULL DEFAULT (UTC_TIMESTAMP()),
+  id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id     INT UNSIGNED NOT NULL,
+  item_key    VARCHAR(50) NOT NULL COMMENT 'HISTORIA_HQ | LIVRO_1 | LIVRO_2 | LIVRO_3 | BALANCO_DADOS | SAIBA_MAIS',
+  redeemed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
-  UNIQUE KEY uq_trail_redemption (user_id, trail_section),
-  CONSTRAINT fk_trail_redemption_user FOREIGN KEY (user_id) REFERENCES tb_user(id)
+  UNIQUE KEY uq_redemption (user_id, item_key),
+  CONSTRAINT fk_redemption_user
+    FOREIGN KEY (user_id) REFERENCES tb_user (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Progresso por fase do jogo
-CREATE TABLE IF NOT EXISTS tb_game_progress (
-  id            INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  user_id       INT UNSIGNED NOT NULL,
-  phase_id      INT UNSIGNED NOT NULL,
-  best_score    SMALLINT UNSIGNED NOT NULL DEFAULT 0,
-  stars         TINYINT UNSIGNED  NOT NULL DEFAULT 0,
-  completed     TINYINT(1)        NOT NULL DEFAULT 0,
-  attempts      SMALLINT UNSIGNED NOT NULL DEFAULT 0,
-  updated_at    DATETIME          NOT NULL DEFAULT (UTC_TIMESTAMP()),
-  PRIMARY KEY (id),
-  UNIQUE KEY uq_game_progress (user_id, phase_id),
-  CONSTRAINT fk_game_progress_user  FOREIGN KEY (user_id)  REFERENCES tb_user(id),
-  CONSTRAINT fk_game_progress_phase FOREIGN KEY (phase_id) REFERENCES tb_phase(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Certificados emitidos
 CREATE TABLE IF NOT EXISTS tb_certificate (
   id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
   user_id         INT UNSIGNED NOT NULL,
-  issued_at       DATETIME     NOT NULL DEFAULT (UTC_TIMESTAMP()),
-  certificate_url VARCHAR(512)     NULL,
+  validation_code VARCHAR(16) NOT NULL,
+  issued_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
-  CONSTRAINT fk_certificate_user FOREIGN KEY (user_id) REFERENCES tb_user(id)
+  UNIQUE KEY uq_certificate_code (validation_code),
+  CONSTRAINT fk_certificate_user
+    FOREIGN KEY (user_id) REFERENCES tb_user (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =============================================================================
--- GRUPO 2 — JOGOS (seção, engine, fase, questão, ligação)
+-- GRUPO 2 - JOGOS
 -- =============================================================================
 
--- Seções temáticas dos jogos
 CREATE TABLE IF NOT EXISTS tb_section (
-  id            INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  slug          VARCHAR(80)  NOT NULL,
-  title         VARCHAR(120) NOT NULL,
-  description   TEXT             NULL,
-  order_index   TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  is_active     TINYINT(1)   NOT NULL DEFAULT 1,
+  id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  slug        VARCHAR(80) NOT NULL,
+  title       VARCHAR(120) NOT NULL,
+  description TEXT NULL,
+  order_index TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  is_active   TINYINT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (id),
   UNIQUE KEY uq_section_slug (slug)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Motores de jogo disponíveis
 CREATE TABLE IF NOT EXISTS tb_engine (
-  id            INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  slug          VARCHAR(80)  NOT NULL,
-  title         VARCHAR(80)  NOT NULL,
-  description   TEXT             NULL,
-  scoring_mode  VARCHAR(40)  NOT NULL,
-  is_active     TINYINT(1)   NOT NULL DEFAULT 1,
+  id           INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  slug         VARCHAR(80) NOT NULL,
+  title        VARCHAR(80) NOT NULL,
+  description  TEXT NULL,
+  scoring_mode VARCHAR(40) NOT NULL,
+  is_active    TINYINT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (id),
   UNIQUE KEY uq_engine_slug (slug)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Fases do jogo
 CREATE TABLE IF NOT EXISTS tb_phase (
-  id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  public_id       CHAR(36)         NULL COMMENT 'UUID público usado nas URLs',
-  section_id      INT UNSIGNED NOT NULL,
-  engine_id       INT UNSIGNED NOT NULL,
-  slug            VARCHAR(120) NOT NULL,
-  title           VARCHAR(200) NOT NULL,
-  description     TEXT             NULL,
-  order_index     TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  question_count  TINYINT UNSIGNED     NULL,
-  pass_score      TINYINT UNSIGNED NOT NULL DEFAULT 60,
-  max_score       TINYINT UNSIGNED NOT NULL DEFAULT 100,
-  config_json     TEXT             NULL,
-  is_active       TINYINT(1)   NOT NULL DEFAULT 1,
-  created_at      DATETIME     NOT NULL DEFAULT (UTC_TIMESTAMP()),
+  id             INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  public_id      CHAR(36) NULL COMMENT 'UUID publico usado nas URLs',
+  section_id     INT UNSIGNED NOT NULL,
+  engine_id      INT UNSIGNED NOT NULL,
+  slug           VARCHAR(120) NOT NULL,
+  title          VARCHAR(200) NOT NULL,
+  description    TEXT NULL,
+  order_index    TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  question_count TINYINT UNSIGNED NULL,
+  pass_score     TINYINT UNSIGNED NOT NULL DEFAULT 60,
+  max_score      TINYINT UNSIGNED NOT NULL DEFAULT 100,
+  config_json    TEXT NULL,
+  is_active      TINYINT(1) NOT NULL DEFAULT 1,
+  created_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   UNIQUE KEY uq_phase_slug (slug),
   UNIQUE KEY uq_phase_public_id (public_id),
-  CONSTRAINT fk_phase_section FOREIGN KEY (section_id) REFERENCES tb_section(id),
-  CONSTRAINT fk_phase_engine  FOREIGN KEY (engine_id)  REFERENCES tb_engine(id)
+  CONSTRAINT fk_phase_section FOREIGN KEY (section_id) REFERENCES tb_section (id),
+  CONSTRAINT fk_phase_engine FOREIGN KEY (engine_id) REFERENCES tb_engine (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Banco de questões
+CREATE TABLE IF NOT EXISTS tb_game_progress (
+  id           INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id      INT UNSIGNED NOT NULL,
+  phase_id     INT UNSIGNED NOT NULL,
+  best_score   TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  best_stars   TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  attempts     SMALLINT UNSIGNED NOT NULL DEFAULT 1,
+  completed_at DATETIME NULL COMMENT 'Primeira aprovacao (score >= 60)',
+  updated_at   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_progress (user_id, phase_id),
+  CONSTRAINT fk_progress_user
+    FOREIGN KEY (user_id) REFERENCES tb_user (id) ON DELETE CASCADE,
+  CONSTRAINT fk_progress_phase
+    FOREIGN KEY (phase_id) REFERENCES tb_phase (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS tb_question (
-  id                  INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  public_id           CHAR(36)         NULL,
-  section_id          INT UNSIGNED NOT NULL,
-  engine_id           INT UNSIGNED NOT NULL,
-  difficulty          TINYINT UNSIGNED NOT NULL DEFAULT 1,
-  prompt              TEXT         NOT NULL,
-  simple_explanation  TEXT             NULL,
-  correct_answer      VARCHAR(200) NOT NULL,
-  options_json        TEXT             NULL COMMENT 'Array JSON de opções (quiz/swipe)',
-  metadata_json       TEXT             NULL COMMENT 'Dados extras do motor de jogo',
-  tags                VARCHAR(500)     NULL,
-  is_active           TINYINT(1)   NOT NULL DEFAULT 1,
-  created_at          DATETIME     NOT NULL DEFAULT (UTC_TIMESTAMP()),
+  id                 INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  public_id          CHAR(36) NULL,
+  section_id         INT UNSIGNED NOT NULL,
+  engine_id          INT UNSIGNED NOT NULL,
+  difficulty         TINYINT UNSIGNED NOT NULL DEFAULT 1,
+  prompt             TEXT NOT NULL,
+  simple_explanation TEXT NULL,
+  correct_answer     VARCHAR(200) NOT NULL,
+  options_json       TEXT NULL COMMENT 'Array JSON de opcoes (quiz/swipe)',
+  metadata_json      TEXT NULL COMMENT 'Dados extras do motor de jogo',
+  tags               VARCHAR(500) NULL,
+  is_active          TINYINT(1) NOT NULL DEFAULT 1,
+  created_at         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   UNIQUE KEY uq_question_public_id (public_id),
-  CONSTRAINT fk_question_section FOREIGN KEY (section_id) REFERENCES tb_section(id),
-  CONSTRAINT fk_question_engine  FOREIGN KEY (engine_id)  REFERENCES tb_engine(id)
+  CONSTRAINT fk_question_section FOREIGN KEY (section_id) REFERENCES tb_section (id),
+  CONSTRAINT fk_question_engine FOREIGN KEY (engine_id) REFERENCES tb_engine (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Ligação fase ↔ questão
 CREATE TABLE IF NOT EXISTS tb_phase_question (
-  id            INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  phase_id      INT UNSIGNED NOT NULL,
-  question_id   INT UNSIGNED NOT NULL,
-  order_index   TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  weight        DECIMAL(5,2) NOT NULL DEFAULT 1.00,
-  is_required   TINYINT(1)   NOT NULL DEFAULT 0,
+  id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  phase_id    INT UNSIGNED NOT NULL,
+  question_id INT UNSIGNED NOT NULL,
+  order_index TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  weight      DECIMAL(5,2) NOT NULL DEFAULT 1.00,
+  is_required TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (id),
   UNIQUE KEY uq_phase_question (phase_id, question_id),
-  CONSTRAINT fk_pq_phase    FOREIGN KEY (phase_id)    REFERENCES tb_phase(id),
-  CONSTRAINT fk_pq_question FOREIGN KEY (question_id) REFERENCES tb_question(id)
+  CONSTRAINT fk_pq_phase FOREIGN KEY (phase_id) REFERENCES tb_phase (id),
+  CONSTRAINT fk_pq_question FOREIGN KEY (question_id) REFERENCES tb_question (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =============================================================================
--- INSERT — tb_section (seções 1–4; exclui seção 5 = testes)
+-- DADOS BASICOS
 -- =============================================================================
 
 INSERT INTO tb_section (id, slug, title, description, order_index, is_active) VALUES
-(1, 'administracao-publica',       'Administracao Publica',          'Fundamentos da administracao publica e ciclo orcamentario.', 1, 1),
-(2, 'receitas-despesas',           'Receita e Despesa Pública',      'Receitas, despesas, execução e restos a pagar.',             2, 1),
-(3, 'execucao-orcamentaria',       'Execucao Orcamentaria',          'Como o orcamento aprovado vira execucao pratica.',           3, 1),
-(4, 'transparencia-controle-social','Transparencia e Controle Social','Balanco, demonstrativos, direitos e controle social.',      4, 1);
-
--- =============================================================================
--- INSERT — tb_engine (todos os 7 motores)
--- =============================================================================
+(1, 'administracao-publica', 'Administracao Publica', 'Fundamentos da administracao publica e ciclo orcamentario.', 1, 1),
+(2, 'receitas-despesas', 'Receita e Despesa Publica', 'Receitas, despesas, execucao e restos a pagar.', 2, 1),
+(3, 'execucao-orcamentaria', 'Execucao Orcamentaria', 'Como o orcamento aprovado vira execucao pratica.', 3, 1),
+(4, 'transparencia-controle-social', 'Transparencia e Controle Social', 'Balanco, demonstrativos, direitos e controle social.', 4, 1);
 
 INSERT INTO tb_engine (id, slug, title, description, scoring_mode, is_active) VALUES
-(1, 'caca-palavras', 'Caca-palavras', 'Sopa de letras com dicas.',                               'hints_penalty',  1),
-(2, 'cruzadinha',    'Cruzadinha',    'Conceitos fiscais com dicas.',                             'hints_penalty',  1),
-(3, 'flow',          'Flow',          'Associacao entre conceitos e explicacoes.',                'attempts_steps', 1),
-(4, 'ordem-correta', 'Ordem correta', 'Ordenacao de eventos ou termos.',                         'attempts_steps', 1),
-(5, 'swipe',         'Swipe',         'Classificacao rapida em duas opcoes.',                    'ratio_correct',  1),
-(6, 'quiz',          'Quiz',          'Perguntas de multipla escolha.',                          'ratio_correct',  1),
-(7, 'wend',          'Wend',          'Conectar letras para descobrir palavras escondidas.',     'hints_penalty',  1);
-
--- =============================================================================
--- INSERT — tb_phase (fases 1–16; exclui fases 17–22 da seção 5 de testes)
--- =============================================================================
+(1, 'caca-palavras', 'Caca-palavras', 'Sopa de letras com dicas.', 'hints_penalty', 1),
+(2, 'cruzadinha', 'Cruzadinha', 'Conceitos fiscais com dicas.', 'hints_penalty', 1),
+(3, 'flow', 'Flow', 'Associacao entre conceitos e explicacoes.', 'attempts_steps', 1),
+(4, 'ordem-correta', 'Ordem correta', 'Ordenacao de eventos ou termos.', 'attempts_steps', 1),
+(5, 'swipe', 'Swipe', 'Classificacao rapida em duas opcoes.', 'ratio_correct', 1),
+(6, 'quiz', 'Quiz', 'Perguntas de multipla escolha.', 'ratio_correct', 1),
+(7, 'wend', 'Wend', 'Conectar letras para descobrir palavras escondidas.', 'hints_penalty', 1);
 
 INSERT INTO tb_phase (id, public_id, section_id, engine_id, slug, title, description, order_index, question_count, pass_score, max_score, config_json, is_active) VALUES
-(1,  'f11da6be-e9ad-40f8-9bc9-a2efaab6bdb0', 1, 1,
- 'caca-palavras-principios-da-administracao-publica',
- 'Caca-palavras: Principios da Administracao Publica',
- 'Lista de principios do LIMPE.',
- 2, NULL, 60, 100,
- '{"cols":11,"rows":15,"allowDirections":["horizontal","vertical","diagonal"],"stars":{"one":60,"two":80,"three":95}}',
- 1),
-(2,  '75f1b9a0-0a28-47c8-8948-9252090471ae', 1, 3,
- 'instrumentos-planejamento',
- 'Flow · Instrumentos de Planejamento',
- 'Associe PMDI, PPAG, LDO e LOA às suas definições.',
- 3, 4, 60, 100,
- '{"board":"5x5","mode":"flow","pairs":4,"stars":{"one":60,"two":80,"three":95}}',
- 1),
-(3,  '657bd373-dc4b-4290-89dd-736565ad7787', 1, 4,
- 'ciclo-orcamentario',
- 'Ordem Correta · Ciclo Orçamentário',
- 'Organize as etapas do ciclo orçamentário na sequência correta.',
- 1, 6, 60, 100,
- '{"mode":"ordem-correta","items":6,"stars":{"one":60,"two":80,"three":95}}',
- 1),
-(4,  'bbf2b83b-e95d-4317-815d-88b9dce8f49f', 1, 6,
- 'quiz-administracao-publica',
- 'Quiz · Administração Pública',
- 'Questões sobre Administração Direta e Indireta, LIMPE, esferas de governo e três Poderes.',
- 4, 8, 60, 100,
- '{"mode":"quiz","count":8,"time":25,"stars":{"one":60,"two":80,"three":95}}',
- 1),
-(5,  '6a7c4f02-eacc-4852-9a1a-aaa2d2c6ad33', 2, 3,
- 'receita-despesa-restos-pagar',
- 'Flow · Receita, Despesa e Restos a Pagar',
- 'Associe Receita Corrente, Receita de Capital, Despesa Corrente, Despesa de Capital e Restos a Pagar às definições.',
- 1, 5, 60, 100,
- '{"board":"5x5","mode":"flow","pairs":5,"stars":{"one":60,"two":80,"three":95}}',
- 1),
-(6,  'e8a69b48-4483-425f-a094-6eb51936d477', 2, 5,
- 'classificacao-despesa-corrente-capital',
- 'Swipe · Despesa Corrente ou Capital',
- 'Classifique despesas como corrente ou de capital. Esquerda: corrente. Direita: capital.',
- 2, 10, 60, 100,
- '{"mode":"swipe","count":10,"time":12,"left":"corrente","right":"capital","stars":{"one":60,"two":80,"three":95}}',
- 1),
-(7,  '1234e635-efa6-41a2-869e-63eeae80d289', 2, 2,
- 'cruzadinha-termos-fiscais',
- 'Cruzadinha: Termos Fiscais',
- 'Receita, despesa, corrente, capital, LOA e restos a pagar.',
- 3, NULL, 60, 100,
- '{"unlock":"previous_phase_required","stars":{"one":60,"two":80,"three":95}}',
- 1),
-(8,  'a3dd571c-0bab-4d97-8410-eac914e5bc3b', 2, 5,
- 'verdadeiro-falso-receita-despesa',
- 'Verdadeiro ou Falso: Receita e Despesa',
- '10 afirmacoes aleatorias.',
- 4, 10, 60, 100,
- '{"unlock":"previous_phase_required","stars":{"one":60,"two":80,"three":95}}',
- 1),
-(9,  '9de13736-e573-424f-9d56-8a907504dd2d', 3, 4,
- 'caminho-documento',
- 'Ordem correta: Caminho do Documento',
- 'Ordene o fluxo da execucao.',
- 1, NULL, 60, 100,
- '{"unlock":"previous_phase_required","stars":{"one":60,"two":80,"three":95}}',
- 1),
-(10, 'e14139df-da51-4068-9de0-5337ddb0e4b1', 3, 3,
- 'etapas-despesa-publica',
- 'Liga conceitos: Etapas da Despesa Publica',
- 'Empenho, liquidacao e pagamento.',
- 2, NULL, 60, 100,
- '{"unlock":"previous_phase_required","stars":{"one":60,"two":80,"three":95}}',
- 1),
-(11, '4d055753-2084-4b91-a35a-88778d7ad7b2', 3, 5,
- 'verdadeiro-falso-indices-limites',
- 'Verdadeiro ou Falso: Indices e Limites',
- '10 afirmacoes aleatorias.',
- 3, 10, 60, 100,
- '{"unlock":"previous_phase_required","stars":{"one":60,"two":80,"three":95}}',
- 1),
-(12, 'b3aa6112-1f10-4997-9a4b-21be4f7876d1', 3, 6,
- 'quiz-execucao-orcamentaria',
- 'Quiz: Execucao Orcamentaria',
- '6 perguntas aleatorias.',
- 4, 6, 60, 100,
- '{"unlock":"previous_phase_required","stars":{"one":60,"two":80,"three":95}}',
- 1),
-(13, 'dbbce83d-7a3b-4864-8c56-7d157e1b92ad', 4, 2,
- 'balancos-demonstrativos',
- 'Cruzadinha: Balanços e Demonstrativos',
- 'Termos e mecanismos de prestação de contas.',
- 1, NULL, 60, 100,
- '{"unlock":"previous_phase_required","stars":{"one":60,"two":80,"three":95}}',
- 1),
-(14, 'ae72ad98-4b0a-4800-add0-69c8a86537c7', 4, 5,
- 'verdadeiro-falso-direitos-deveres',
- 'Verdadeiro ou Falso: Direitos e Deveres',
- '10 afirmacoes aleatorias.',
- 2, 10, 60, 100,
- '{"unlock":"previous_phase_required","stars":{"one":60,"two":80,"three":95}}',
- 1),
-(15, '943ea061-5141-4f0d-934e-7090b47d0cbc', 4, 3,
- 'direitos-deveres-controle',
- 'Liga conceitos: Direitos, Deveres e Controle',
- 'Formas de participacao e controle social.',
- 3, NULL, 60, 100,
- '{"unlock":"previous_phase_required","stars":{"one":60,"two":80,"three":95}}',
- 1),
-(16, '775928ea-9a45-48c2-ad51-906922d4e95a', 4, 6,
- 'quiz-balancos-relatorios',
- 'Quiz: Balancos e Relatorios',
- 'RREO, RGF, Balanco Geral e outros.',
- 4, 6, 60, 100,
- '{"unlock":"previous_phase_required","stars":{"one":60,"two":80,"three":95}}',
- 1);
-
--- =============================================================================
--- INSERT — tb_question
--- Inclui: seções 1–4, is_active = true
--- Exclui: seção 5 (testes), question_id 72 (is_active=false)
--- =============================================================================
+(1,'f11da6be-e9ad-40f8-9bc9-a2efaab6bdb0',1,1,'caca-palavras-principios-da-administracao-publica','Caca-palavras: Principios da Administracao Publica','Lista de principios do LIMPE.',2,NULL,60,100,'{"cols":11,"rows":15,"allowDirections":["horizontal","vertical","diagonal"],"stars":{"one":60,"two":80,"three":95}}',1),
+(2,'75f1b9a0-0a28-47c8-8948-9252090471ae',1,3,'instrumentos-planejamento','Flow - Instrumentos de Planejamento','Associe PMDI, PPAG, LDO e LOA as suas definicoes.',3,4,60,100,'{"board":"5x5","mode":"flow","pairs":4,"stars":{"one":60,"two":80,"three":95}}',1),
+(3,'657bd373-dc4b-4290-89dd-736565ad7787',1,4,'ciclo-orcamentario','Ordem Correta - Ciclo Orcamentario','Organize as etapas do ciclo orcamentario na sequencia correta.',1,6,60,100,'{"mode":"ordem-correta","items":6,"stars":{"one":60,"two":80,"three":95}}',1),
+(4,'bbf2b83b-e95d-4317-815d-88b9dce8f49f',1,6,'quiz-administracao-publica','Quiz - Administracao Publica','Questoes sobre Administracao Direta e Indireta, LIMPE, esferas de governo e tres Poderes.',4,8,60,100,'{"mode":"quiz","count":8,"time":25,"stars":{"one":60,"two":80,"three":95}}',1),
+(5,'6a7c4f02-eacc-4852-9a1a-aaa2d2c6ad33',2,3,'receita-despesa-restos-pagar','Flow - Receita, Despesa e Restos a Pagar','Associe conceitos as definicoes.',1,5,60,100,'{"board":"5x5","mode":"flow","pairs":5,"stars":{"one":60,"two":80,"three":95}}',1),
+(6,'e8a69b48-4483-425f-a094-6eb51936d477',2,5,'classificacao-despesa-corrente-capital','Swipe - Despesa Corrente ou Capital','Classifique despesas como corrente ou de capital.',2,10,60,100,'{"mode":"swipe","count":10,"time":12,"left":"corrente","right":"capital","stars":{"one":60,"two":80,"three":95}}',1),
+(7,'1234e635-efa6-41a2-869e-63eeae80d289',2,2,'cruzadinha-termos-fiscais','Cruzadinha: Termos Fiscais','Receita, despesa, corrente, capital, LOA e restos a pagar.',3,NULL,60,100,'{"unlock":"previous_phase_required","stars":{"one":60,"two":80,"three":95}}',1),
+(8,'a3dd571c-0bab-4d97-8410-eac914e5bc3b',2,5,'verdadeiro-falso-receita-despesa','Verdadeiro ou Falso: Receita e Despesa','10 afirmacoes aleatorias.',4,10,60,100,'{"mode":"swipe","count":10,"time":12,"left":"falso","right":"verdadeiro","leftLabel":"Falso","rightLabel":"Verdadeiro","unlock":"previous_phase_required","stars":{"one":60,"two":80,"three":95}}',1),
+(9,'9de13736-e573-424f-9d56-8a907504dd2d',3,4,'caminho-documento','Ordem correta: Caminho do Documento','Ordene o fluxo da execucao.',1,NULL,60,100,'{"unlock":"previous_phase_required","stars":{"one":60,"two":80,"three":95}}',1),
+(10,'e14139df-da51-4068-9de0-5337ddb0e4b1',3,3,'etapas-despesa-publica','Liga conceitos: Etapas da Despesa Publica','Empenho, liquidacao e pagamento.',2,NULL,60,100,'{"unlock":"previous_phase_required","stars":{"one":60,"two":80,"three":95}}',1),
+(11,'4d055753-2084-4b91-a35a-88778d7ad7b2',3,5,'verdadeiro-falso-indices-limites','Verdadeiro ou Falso: Indices e Limites','10 afirmacoes aleatorias.',3,10,60,100,'{"mode":"swipe","count":10,"time":12,"left":"falso","right":"verdadeiro","leftLabel":"Falso","rightLabel":"Verdadeiro","unlock":"previous_phase_required","stars":{"one":60,"two":80,"three":95}}',1),
+(12,'b3aa6112-1f10-4997-9a4b-21be4f7876d1',3,6,'quiz-execucao-orcamentaria','Quiz: Execucao Orcamentaria','6 perguntas aleatorias.',4,6,60,100,'{"unlock":"previous_phase_required","stars":{"one":60,"two":80,"three":95}}',1),
+(13,'dbbce83d-7a3b-4864-8c56-7d157e1b92ad',4,2,'balancos-demonstrativos','Cruzadinha: Balancos e Demonstrativos','Termos e mecanismos de prestacao de contas.',1,NULL,60,100,'{"unlock":"previous_phase_required","stars":{"one":60,"two":80,"three":95}}',1),
+(14,'ae72ad98-4b0a-4800-add0-69c8a86537c7',4,5,'verdadeiro-falso-direitos-deveres','Verdadeiro ou Falso: Direitos e Deveres','10 afirmacoes aleatorias.',2,10,60,100,'{"mode":"swipe","count":10,"time":12,"left":"falso","right":"verdadeiro","leftLabel":"Falso","rightLabel":"Verdadeiro","unlock":"previous_phase_required","stars":{"one":60,"two":80,"three":95}}',1),
+(15,'943ea061-5141-4f0d-934e-7090b47d0cbc',4,3,'direitos-deveres-controle','Liga conceitos: Direitos, Deveres e Controle','Formas de participacao e controle social.',3,NULL,60,100,'{"unlock":"previous_phase_required","stars":{"one":60,"two":80,"three":95}}',1),
+(16,'775928ea-9a45-48c2-ad51-906922d4e95a',4,6,'quiz-balancos-relatorios','Quiz: Balancos e Relatorios','RREO, RGF, Balanco Geral e outros.',4,6,60,100,'{"unlock":"previous_phase_required","stars":{"one":60,"two":80,"three":95}}',1);
 
 -- -----------------------------------------------------------------------
 -- Seção 1 — Administração Pública
@@ -662,6 +549,78 @@ INSERT INTO tb_question (id, public_id, section_id, engine_id, difficulty, promp
  'capital', NULL,
  '{"id": "amortizacao-divida", "prompt": "Amortização da dívida pública.", "answer": "capital", "leftValue": "corrente", "rightValue": "capital"}',
  'receita-despesa-publica,classificacao-despesa-swipe,swipe', 1);
+
+-- Fase 8: Swipe — Verdadeiro ou Falso: Receita e Despesa (engine: swipe)
+INSERT INTO tb_question (id, public_id, section_id, engine_id, difficulty, prompt, simple_explanation, correct_answer, options_json, metadata_json, tags, is_active) VALUES
+(80, '1f5a9b10-7452-475a-a71d-5561a0b12380', 2, 5, 1,
+ 'Os tributos (impostos, taxas e contribuições) são exemplos de Receita Corrente.',
+ 'Impostos e taxas são arrecadações regulares do Estado para manutenção dos serviços públicos.',
+ 'verdadeiro', NULL,
+ '{"id": "vf-tributos-corrente", "answer": "verdadeiro", "leftValue": "falso", "rightValue": "verdadeiro"}',
+ 'receita-despesa-publica,vf-receita-despesa,swipe', 1),
+
+(81, '2f5a9b10-7452-475a-a71d-5561a0b12381', 2, 5, 1,
+ 'Operações de crédito (empréstimos obtidos pelo governo) são classificadas como Despesas Correntes.',
+ 'Operações de crédito entram no caixa como Receita de Capital.',
+ 'falso', NULL,
+ '{"id": "vf-operacoes-credito", "answer": "falso", "leftValue": "falso", "rightValue": "verdadeiro"}',
+ 'receita-despesa-publica,vf-receita-despesa,swipe', 1),
+
+(82, '3f5a9b10-7452-475a-a71d-5561a0b12382', 2, 5, 1,
+ 'A compra de merenda escolar é uma Despesa Corrente.',
+ 'Merenda escolar é item de consumo para manutenção das atividades da escola.',
+ 'verdadeiro', NULL,
+ '{"id": "vf-merenda-corrente", "answer": "verdadeiro", "leftValue": "falso", "rightValue": "verdadeiro"}',
+ 'receita-despesa-publica,vf-receita-despesa,swipe', 1),
+
+(83, '4f5a9b10-7452-475a-a71d-5561a0b12383', 2, 5, 1,
+ 'Investimentos em pontes e estradas geram bens permanentes e são Despesas de Capital.',
+ 'Obras de infraestrutura incorporam valor ao patrimônio público.',
+ 'verdadeiro', NULL,
+ '{"id": "vf-obras-capital", "answer": "verdadeiro", "leftValue": "falso", "rightValue": "verdadeiro"}',
+ 'receita-despesa-publica,vf-receita-despesa,swipe', 1),
+
+(84, '5f5a9b10-7452-475a-a71d-5561a0b12384', 2, 5, 1,
+ 'Alienação de bens (venda de imóveis ou veículos antigos) gera Receita Corrente.',
+ 'A venda de patrimônio público é classificada como Receita de Capital.',
+ 'falso', NULL,
+ '{"id": "vf-alienacao-bens", "answer": "falso", "leftValue": "falso", "rightValue": "verdadeiro"}',
+ 'receita-despesa-publica,vf-receita-despesa,swipe', 1),
+
+(85, '6f5a9b10-7452-475a-a71d-5561a0b12385', 2, 5, 1,
+ 'Restos a Pagar são despesas que foram empenhadas mas não pagas até o final do ano.',
+ 'Restos a pagar transitam de um exercício financeiro para o seguinte.',
+ 'verdadeiro', NULL,
+ '{"id": "vf-restos-pagar-conceito", "answer": "verdadeiro", "leftValue": "falso", "rightValue": "verdadeiro"}',
+ 'receita-despesa-publica,vf-receita-despesa,swipe', 1),
+
+(86, '7f5a9b10-7452-475a-a71d-5561a0b12386', 2, 5, 1,
+ 'Pagamento de aposentadorias e pensões é uma Despesa de Capital.',
+ 'Aposentadorias e pensões mantêm serviços/pessoal e são Despesas Correntes.',
+ 'falso', NULL,
+ '{"id": "vf-aposentadoria-capital", "answer": "falso", "leftValue": "falso", "rightValue": "verdadeiro"}',
+ 'receita-despesa-publica,vf-receita-despesa,swipe', 1),
+
+(87, '8f5a9b10-7452-475a-a71d-5561a0b12387', 2, 5, 1,
+ 'Receitas patrimoniais (como aluguéis de bens públicos) são Receitas Correntes.',
+ 'Rendimentos patrimoniais e aluguéis entram na categoria de receitas correntes.',
+ 'verdadeiro', NULL,
+ '{"id": "vf-receita-patrimonial", "answer": "verdadeiro", "leftValue": "falso", "rightValue": "verdadeiro"}',
+ 'receita-despesa-publica,vf-receita-despesa,swipe', 1),
+
+(88, '9f5a9b10-7452-475a-a71d-5561a0b12388', 2, 5, 1,
+ 'Despesas de Custeio servem para a criação de novos serviços e ampliação de prédios.',
+ 'Despesas de Custeio apenas mantêm os serviços já existentes (Despesas Correntes).',
+ 'falso', NULL,
+ '{"id": "vf-custeio-criacao", "answer": "falso", "leftValue": "falso", "rightValue": "verdadeiro"}',
+ 'receita-despesa-publica,vf-receita-despesa,swipe', 1),
+
+(89, 'af5a9b10-7452-475a-a71d-5561a0b12389', 2, 5, 1,
+ 'Amortização do principal da dívida pública é uma Despesa de Capital.',
+ 'O pagamento do principal da dívida reduz o passivo e é despesa de capital.',
+ 'verdadeiro', NULL,
+ '{"id": "vf-amortizacao-capital", "answer": "verdadeiro", "leftValue": "falso", "rightValue": "verdadeiro"}',
+ 'receita-despesa-publica,vf-receita-despesa,swipe', 1);
 
 -- -----------------------------------------------------------------------
 -- Seção 4 — Transparência e Controle Social
@@ -1275,8 +1234,17 @@ INSERT INTO tb_phase_question (id, phase_id, question_id, order_index, weight, i
 (92, 7, 67, 11, 1.00, 0),
 (93, 7, 68, 12, 1.00, 0),
 
--- Fase 8: Swipe — Verdadeiro ou Falso: Receita e Despesa
--- (usa pool das questions 35–46 filtradas por is_required; sem phase_question específico no backup)
+-- Fase 8: Swipe — Verdadeiro ou Falso: Receita e Despesa (questions 80–89)
+(300, 8, 80,  1, 1.00, 1),
+(301, 8, 81,  2, 1.00, 1),
+(302, 8, 82,  3, 1.00, 1),
+(303, 8, 83,  4, 1.00, 1),
+(304, 8, 84,  5, 1.00, 1),
+(305, 8, 85,  6, 1.00, 1),
+(306, 8, 86,  7, 1.00, 1),
+(307, 8, 87,  8, 1.00, 1),
+(308, 8, 88,  9, 1.00, 1),
+(309, 8, 89, 10, 1.00, 1),
 
 -- Fase 9: Ordem correta — Caminho do Documento (questions 100–103)
 (200, 9, 100, 1, 1.00, 1),
@@ -1352,5 +1320,6 @@ INSERT INTO tb_phase_question (id, phase_id, question_id, order_index, weight, i
 (275, 16, 175, 6, 1.00, 1);
 
 -- =============================================================================
--- FIM DO SCHEMA
+-- FIM
+-- Observacao: este arquivo contem o schema corrigido e os cadastros estruturais.
 -- =============================================================================

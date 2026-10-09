@@ -5,20 +5,12 @@ import {
   useState,
 } from 'react';
 
-import {
-  TRAILS_BY_KEY,
-  TRAIL_KEYS,
-} from '../../../shared/constants/trails.js';
 import { useAuth } from '../../../shared/hooks/useAuth.js';
 
 import {
-  completeTrail,
   getReadingProgress,
-  saveReadingProgress,
+  redeemTrailItem,
 } from '../services/historiaService.js';
-
-const HISTORY_TRAIL =
-  TRAILS_BY_KEY[TRAIL_KEYS.HISTORIA];
 
 export function useReadingProgress(totalPages) {
   const { user, isGuest } = useAuth();
@@ -30,13 +22,12 @@ export function useReadingProgress(totalPages) {
   const [claiming, setClaiming] = useState(false);
 
   const lastSavedPageRef = useRef(0);
-  const pendingSaveRef = useRef(null);
 
   useEffect(() => {
     let active = true;
 
     async function restoreProgress() {
-      if (!user || isGuest || !totalPages) {
+      if (!user || isGuest) {
         setClaimed(false);
         setReadCompleted(false);
         return;
@@ -45,32 +36,16 @@ export function useReadingProgress(totalPages) {
       setRestoring(true);
 
       try {
-        const result = await getReadingProgress(
-          HISTORY_TRAIL.slug,
-          totalPages,
-        );
-
-        const lastPage = Math.max(
-          1,
-          Math.min(
-            totalPages,
-            Number(result?.lastPageNumber) || 1,
-          ),
-        );
-
-        lastSavedPageRef.current = lastPage;
-
+        const result = await getReadingProgress();
         if (active) {
           setClaimed(Boolean(result?.isCompleted));
-          setReadCompleted(Boolean(result?.isCompleted) || lastPage >= totalPages);
-
-          if (!result?.isCompleted) {
-            setInitialPage(lastPage - 1);
+          if (result?.isCompleted) {
+            setReadCompleted(true);
           }
         }
       } catch (error) {
         console.error(
-          '[História] Falha ao restaurar progresso:',
+          '[História] Falha ao carregar progresso:',
           error,
         );
       } finally {
@@ -85,10 +60,10 @@ export function useReadingProgress(totalPages) {
     return () => {
       active = false;
     };
-  }, [user, isGuest, totalPages]);
+  }, [user, isGuest]);
 
   const savePage = useCallback(
-    async (pageNumber) => {
+    (pageNumber) => {
       if (!totalPages) return;
 
       const normalizedPage = Math.max(
@@ -99,49 +74,17 @@ export function useReadingProgress(totalPages) {
         ),
       );
 
+      lastSavedPageRef.current = normalizedPage;
+
       if (normalizedPage >= totalPages) {
         setReadCompleted(true);
       }
-
-      if (!user || isGuest) return;
-
-      if (
-        lastSavedPageRef.current === normalizedPage
-      ) {
-        return;
-      }
-
-      const payload = {
-        trailSlug: HISTORY_TRAIL.slug,
-        readerSlug: HISTORY_TRAIL.readerSlug,
-        title: 'História do Balanço',
-        pageNumber: normalizedPage,
-        totalPages,
-        readSeconds: 0,
-        completed: false,
-      };
-
-      try {
-        pendingSaveRef.current =
-          saveReadingProgress(payload);
-
-        await pendingSaveRef.current;
-
-        lastSavedPageRef.current = normalizedPage;
-      } catch (error) {
-        console.error(
-          '[História] Falha ao salvar progresso:',
-          error,
-        );
-      } finally {
-        pendingSaveRef.current = null;
-      }
     },
-    [user, isGuest, totalPages],
+    [totalPages],
   );
 
   const claimMedal = useCallback(async () => {
-    if (claimed || !readCompleted) return;
+    if (claimed) return { success: true };
 
     if (!user || isGuest) {
       window.dispatchEvent(
@@ -152,29 +95,18 @@ export function useReadingProgress(totalPages) {
 
     setClaiming(true);
 
-    const payload = {
-      trailSlug: HISTORY_TRAIL.slug,
-      readerSlug: HISTORY_TRAIL.readerSlug,
-      title: 'História do Balanço',
-      pageNumber: totalPages,
-      totalPages,
-      readSeconds: 0,
-      completed: true,
-    };
-
     try {
-      await saveReadingProgress(payload);
-      await completeTrail(HISTORY_TRAIL.slug);
+      await redeemTrailItem('HISTORIA_HQ');
 
       setClaimed(true);
-      lastSavedPageRef.current = totalPages;
+      setReadCompleted(true);
 
       window.dispatchEvent(
         new CustomEvent(
           'bc:trail-progress-changed',
           {
             detail: {
-              slug: HISTORY_TRAIL.slug,
+              itemKey: 'HISTORIA_HQ',
               status: 'completed',
               progressPercent: 100,
             },
@@ -189,76 +121,30 @@ export function useReadingProgress(totalPages) {
     } finally {
       setClaiming(false);
     }
-  }, [claimed, readCompleted, user, isGuest, totalPages]);
+  }, [claimed, user, isGuest]);
 
   const finishReading = useCallback(async () => {
+    setReadCompleted(true);
+
     if (!user || isGuest) {
-      window.dispatchEvent(
-        new CustomEvent('bc:open-login'),
-      );
-
-      return {
-        requiresLogin: true,
-      };
+      return { requiresLogin: false };
     }
 
-    if (pendingSaveRef.current) {
-      try {
-        await pendingSaveRef.current;
-      } catch {
-        // A conclusão fará uma nova gravação completa.
-      }
+    if (!claimed) {
+      return claimMedal();
     }
 
-    const payload = {
-      trailSlug: HISTORY_TRAIL.slug,
-      readerSlug: HISTORY_TRAIL.readerSlug,
-      title: 'História do Balanço',
-      pageNumber: totalPages,
-      totalPages,
-      readSeconds: 0,
-      completed: true,
-    };
-
-    try {
-      await saveReadingProgress(payload);
-      await completeTrail(HISTORY_TRAIL.slug);
-
-      setClaimed(true);
-      lastSavedPageRef.current = totalPages;
-
-      window.dispatchEvent(
-        new CustomEvent(
-          'bc:trail-progress-changed',
-          {
-            detail: {
-              slug: HISTORY_TRAIL.slug,
-              status: 'completed',
-              progressPercent: 100,
-            },
-          },
-        ),
-      );
-
-      return {
-        saved: true,
-      };
-    } catch (error) {
-      console.error(
-        '[História] Falha ao concluir leitura:',
-        error,
-      );
-
-      throw error;
-    }
-  }, [user, isGuest, totalPages]);
+    return { saved: true };
+  }, [user, isGuest, claimed, claimMedal]);
 
   return {
     initialPage,
     restoring,
     claimed,
     readCompleted,
+    claiming,
     savePage,
     finishReading,
+    claimMedal,
   };
 }

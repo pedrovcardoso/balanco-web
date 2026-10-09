@@ -200,7 +200,9 @@ export default function HistoriaPage() {
           medalIcon="fa6-solid:book-open"
           reachedEnd={readCompleted}
           claimed={claimed}
-          showClaimButton={false}
+          loading={claiming}
+          onClaim={claimMedal}
+          showClaimButton={true}
           statusLockedText="Em leitura"
           statusReadyText="Aguardando resgate"
           statusClaimedText="Medalha conquistada"

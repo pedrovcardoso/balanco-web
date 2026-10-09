@@ -28,14 +28,41 @@ export function SwipeEngine({ phase, onUpdateHud, onFeedback, onComplete }) {
   const nextButtonRef = useRef(null);
   const answerAnimationRef = useRef(null);
 
-  const labels = { corrente: 'Corrente', capital: 'Capital' };
+  const rawRows = phase.rows || [];
+  const sampleAnswers = rawRows.map(r => {
+    let meta = r.metadataJson || r.metadata_json || r.metadata || {};
+    if (typeof meta === 'string') { try { meta = JSON.parse(meta); } catch {} }
+    return String(meta.answer || r.correctAnswer || r.correct_answer || '').toLowerCase().trim();
+  }).filter(Boolean);
+
+  const uniqueAnswers = Array.from(new Set(sampleAnswers));
+
+  const config = phase.metadata || phase.config_json || {};
+  const leftKey = String(config.left || uniqueAnswers[0] || 'corrente').toLowerCase().trim();
+  const rightKey = String(config.right || uniqueAnswers[1] || 'capital').toLowerCase().trim();
+
+  const formatLabel = (key) => {
+    if (!key) return '';
+    if (key === 'corrente') return 'Corrente';
+    if (key === 'capital') return 'Capital';
+    if (key === 'falso') return 'Falso';
+    if (key === 'verdadeiro') return 'Verdadeiro';
+    return key.charAt(0).toUpperCase() + key.slice(1);
+  };
+
+  const leftLabel = config.leftLabel || config.left_label || formatLabel(leftKey);
+  const rightLabel = config.rightLabel || config.right_label || formatLabel(rightKey);
+
+  const labels = {
+    [leftKey]: leftLabel,
+    [rightKey]: rightLabel,
+  };
 
   useEffect(() => () => {
     if (answerAnimationRef.current) clearTimeout(answerAnimationRef.current);
   }, []);
 
   useEffect(() => {
-    const rawRows = phase.rows || [];
     const normalized = rawRows
       .map((row, i) => {
         let meta = row.metadataJson || row.metadata_json || row.metadata || {};
@@ -49,11 +76,11 @@ export function SwipeEngine({ phase, onUpdateHud, onFeedback, onComplete }) {
           explanation: row.simpleExplanation || row.simple_explanation || meta.explanation || '',
         };
       })
-      .filter((x) => x.prompt && ['corrente', 'capital'].includes(x.answer));
+      .filter((x) => x.prompt && (x.answer === leftKey || x.answer === rightKey || !leftKey || !rightKey));
 
     const shuffled = [...normalized].sort(() => Math.random() - 0.5).slice(0, Math.min(count, normalized.length));
     setItems(shuffled);
-  }, [phase]);
+  }, [phase, leftKey, rightKey]);
 
   useEffect(() => {
     if (!items.length) return;
@@ -91,11 +118,11 @@ export function SwipeEngine({ phase, onUpdateHud, onFeedback, onComplete }) {
       if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
       if (!reviewReady && !locked && event.key === 'ArrowLeft') {
         event.preventDefault();
-        handleAnswer('corrente');
+        handleAnswer(leftKey);
       }
       if (!reviewReady && !locked && event.key === 'ArrowRight') {
         event.preventDefault();
-        handleAnswer('capital');
+        handleAnswer(rightKey);
       }
     }
     window.addEventListener('keydown', handleKeyDown);
@@ -163,7 +190,7 @@ export function SwipeEngine({ phase, onUpdateHud, onFeedback, onComplete }) {
       return;
     }
 
-    const direction = value === 'capital' ? 1 : -1;
+    const direction = value === rightKey ? 1 : -1;
     const exitDistance = Math.min(Math.max(window.innerWidth * 0.34, 260), 420);
 
     setIsDragging(false);
@@ -234,7 +261,7 @@ export function SwipeEngine({ phase, onUpdateHud, onFeedback, onComplete }) {
     setIsDragging(false);
 
     if (Math.abs(finalOffset) >= threshold) {
-      handleAnswer(finalOffset > 0 ? 'capital' : 'corrente');
+      handleAnswer(finalOffset > 0 ? rightKey : leftKey);
       return;
     }
 
@@ -288,8 +315,8 @@ export function SwipeEngine({ phase, onUpdateHud, onFeedback, onComplete }) {
 
       <div className="relative overflow-visible rounded-[26px] border border-white/65 bg-white/18 p-2.5 shadow-lg backdrop-blur-[2px]">
         <div className="pointer-events-none absolute inset-x-3 top-1/2 z-[1] flex -translate-y-1/2 justify-between text-xs font-black uppercase tracking-wider text-[#5d2b0a]/55" aria-hidden="true">
-          <span className={dragOffset < -42 ? 'opacity-100' : 'opacity-0'}>Corrente</span>
-          <span className={dragOffset > 42 ? 'opacity-100' : 'opacity-0'}>Capital</span>
+          <span className={dragOffset < -42 ? 'opacity-100' : 'opacity-0'}>{labels[leftKey]}</span>
+          <span className={dragOffset > 42 ? 'opacity-100' : 'opacity-0'}>{labels[rightKey]}</span>
         </div>
 
         <div
@@ -317,7 +344,7 @@ export function SwipeEngine({ phase, onUpdateHud, onFeedback, onComplete }) {
           }}
           className={`swipePlayCard relative z-[2] grid min-h-[260px] select-none place-items-center rounded-[22px] border border-white/80 bg-gradient-to-br from-white/95 via-[#fff8df] to-[#f7e9b9] px-6 py-8 text-center shadow-xl touch-none ${isExiting ? 'pointer-events-none cursor-default' : 'cursor-grab active:cursor-grabbing'}`}
           tabIndex={0}
-          aria-label={`${currentItem.prompt}. Use seta para esquerda para Corrente ou seta para direita para Capital.`}
+          aria-label={`${currentItem.prompt}. Use seta para esquerda para ${labels[leftKey]} ou seta para direita para ${labels[rightKey]}.`}
         >
           <div className="font-display text-[clamp(1.35rem,6vw,2.25rem)] font-bold leading-tight text-[#5d2b0a]">
             {currentItem.prompt}
@@ -332,7 +359,7 @@ export function SwipeEngine({ phase, onUpdateHud, onFeedback, onComplete }) {
                   </div>
                   <div className="mt-0.5 flex items-center justify-center gap-2 font-display text-lg font-bold text-[#5d2b0a]">
                     <span>
-                      {selectedAnswer === '__timeout__' ? 'Tempo esgotado' : labels[selectedAnswer]}
+                      {selectedAnswer === '__timeout__' ? 'Tempo esgotado' : (labels[selectedAnswer] || selectedAnswer)}
                     </span>
                     <span className="sr-only">
                       {selectedAnswer === '__timeout__'
@@ -357,7 +384,7 @@ export function SwipeEngine({ phase, onUpdateHud, onFeedback, onComplete }) {
                     Classificação correta
                   </div>
                   <div className="mt-0.5 font-display text-lg font-bold text-[#5d2b0a]">
-                    {labels[currentItem.answer]}
+                    {labels[currentItem.answer] || currentItem.answer}
                   </div>
                 </div>
               </div>
@@ -373,23 +400,23 @@ export function SwipeEngine({ phase, onUpdateHud, onFeedback, onComplete }) {
         <div className="grid grid-cols-2 gap-3" role="group" aria-label="Opções de classificação">
           <button
             ref={leftButtonRef}
-            onClick={() => handleAnswer('corrente')}
+            onClick={() => handleAnswer(leftKey)}
             onKeyDown={(event) => handleChoiceKeyDown(event, 'left')}
             disabled={locked}
             type="button"
             className="flex min-h-12 items-center justify-center gap-2 rounded-[18px] border-2 border-[#5d2b0a]/20 bg-[#fff7dc]/85 p-3.5 font-black text-[#5d2b0a] shadow-md transition hover:-translate-y-0.5 hover:border-[#9e1f28]/55 hover:bg-white focus:outline-none focus:ring-4 focus:ring-[#f5a800]/60 disabled:cursor-default disabled:opacity-55"
           >
-            <Icon icon="fa6-solid:arrow-left" aria-hidden="true" /> Corrente
+            <Icon icon="fa6-solid:arrow-left" aria-hidden="true" /> {labels[leftKey]}
           </button>
           <button
             ref={rightButtonRef}
-            onClick={() => handleAnswer('capital')}
+            onClick={() => handleAnswer(rightKey)}
             onKeyDown={(event) => handleChoiceKeyDown(event, 'right')}
             disabled={locked}
             type="button"
             className="flex min-h-12 items-center justify-center gap-2 rounded-[18px] border-2 border-[#5d2b0a]/20 bg-[#fff7dc]/85 p-3.5 font-black text-[#5d2b0a] shadow-md transition hover:-translate-y-0.5 hover:border-[#9e1f28]/55 hover:bg-white focus:outline-none focus:ring-4 focus:ring-[#f5a800]/60 disabled:cursor-default disabled:opacity-55"
           >
-            Capital <Icon icon="fa6-solid:arrow-right" aria-hidden="true" />
+            {labels[rightKey]} <Icon icon="fa6-solid:arrow-right" aria-hidden="true" />
           </button>
         </div>
       ) : (
@@ -404,8 +431,8 @@ export function SwipeEngine({ phase, onUpdateHud, onFeedback, onComplete }) {
       )}
 
       {!locked && !reviewReady && (
-        <div className="flex items-center justify-center gap-1.5 text-center text-xs font-black text-[#7a4b13]">
-          <span>Arraste o card, use os botões ou pressione</span>
+        <div className="flex flex-wrap items-center justify-center gap-1.5 text-center text-xs font-black text-[#7a4b13]">
+          <span>Arraste para a esquerda ({labels[leftKey]}) ou direita ({labels[rightKey]}), use os botões ou as setas</span>
           <Icon icon="fa6-solid:arrow-left" aria-hidden="true" />
           <span>e</span>
           <Icon icon="fa6-solid:arrow-right" aria-hidden="true" />

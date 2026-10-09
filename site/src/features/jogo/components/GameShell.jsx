@@ -43,18 +43,18 @@ export function GameShell({ phase }) {
     }, 850);
   }
 
-  async function resolveNextPhaseId(userId, currentPhaseId) {
+  async function resolveNextPhaseId(currentPhaseId) {
     try {
-      const nextData = await getNextPhaseForPhase(userId || 'guest', currentPhaseId);
-      if (nextData?.publicPhaseId || nextData?.phase_id || nextData?.id) {
-        return nextData.publicPhaseId || nextData.phase_id || nextData.id;
+      const nextData = await getNextPhaseForPhase(currentPhaseId);
+      if (nextData?.publicPhaseId || nextData?.nextPhaseId || nextData?.phase_id || nextData?.id) {
+        return nextData.publicPhaseId || nextData.nextPhaseId || nextData.phase_id || nextData.id;
       }
     } catch (err) {
       console.warn('[GameShell] getNextPhaseForPhase retornou nulo, buscando no mapa...', err);
     }
 
     try {
-      const map = await getGameMap(userId || 'guest');
+      const map = await getGameMap();
       if (Array.isArray(map)) {
         const idx = map.findIndex(
           (p) => String(p.publicPhaseId || p.phase_id || p.id) === String(currentPhaseId)
@@ -73,8 +73,6 @@ export function GameShell({ phase }) {
   async function handleComplete(gameResult) {
     const finalScore = gameResult.score ?? 100;
     const stars = finalScore >= 95 ? 3 : finalScore >= 80 ? 2 : finalScore >= 60 ? 1 : 0;
-
-    const userId = user?.publicUserId || 'guest';
 
     // Salva progresso localmente para liberar no mapa de jogos
     saveStoredGamePhaseProgress(phase.id, {
@@ -97,18 +95,21 @@ export function GameShell({ phase }) {
     setGameState('FINISH');
 
     // ── API calls em background enquanto o confete toca ──
-    const savePromise = user?.publicUserId
-      ? registerGameAttempt(user.publicUserId, phase.id, {
+    const savePromise = user?.publicUserId || user?.id
+      ? registerGameAttempt(phase.id, {
           score: finalScore,
           stars,
-          attemptsUsed: gameResult.attempts || 1,
-          correctCount: gameResult.correctCount,
-          totalCount: gameResult.totalCount,
-          answers: gameResult.answers,
+          timeSeconds: gameResult.timeSeconds || null,
+          details: {
+            attemptsUsed: gameResult.attempts || 1,
+            correctCount: gameResult.correctCount,
+            totalCount: gameResult.totalCount,
+            answers: gameResult.answers,
+          },
         })
       : Promise.resolve(null);
 
-    const nextPromise = resolveNextPhaseId(userId, phase.id);
+    const nextPromise = resolveNextPhaseId(phase.id);
 
     const [saveResult, nextResult] = await Promise.allSettled([savePromise, nextPromise]);
 

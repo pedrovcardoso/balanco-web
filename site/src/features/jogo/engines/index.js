@@ -18,11 +18,11 @@ export const ENGINE_REGISTRY = {
   },
   'swipe': {
     slug: 'swipe',
-    name: 'Verdadeiro ou Falso',
+    name: 'Classificação Rápida / Swipe',
     component: SwipeEngine,
     instructions: [
-      { text: 'Arraste para a esquerda ou para a direita para classificar.' },
-      { text: 'Ou use os botões Corrente e Capital.' },
+      { text: 'Arraste o card para a esquerda ou para a direita para classificar.' },
+      { text: 'Ou utilize os botões de opção e as setas do teclado.' },
       { text: 'Responda antes do tempo esgotar.' }
     ]
   },

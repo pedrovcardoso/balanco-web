@@ -3,12 +3,19 @@ from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8', case_sensitive=False, extra='ignore')
+    model_config = SettingsConfigDict(
+        env_file=('.env', 'backend/.env'),
+        env_file_encoding='utf-8',
+        case_sensitive=False,
+        extra='ignore'
+    )
     app_name: str = 'Balanço Cidadão API'
     environment: str = 'development'
-    flow_url: str = ''
-    fabric_warehouse: str = ''
-    fabric_database: str = 'warehouse_balanco_cidadao'
+    db_host: str = '127.0.0.1'
+    db_port: int = 3307
+    db_name: str = 'sc_balanco_web'
+    db_user: str = 'balanco_user'
+    db_password: str = 'senha_segura_balanco_v2'
     sigplan_database: str = 'lh_Sigplan'
     secret_key: str = 'change-me-with-at-least-32-random-characters'
     access_token_expire_minutes: int = 480
@@ -17,10 +24,12 @@ class Settings(BaseSettings):
 
     @field_validator('cors_origins', mode='before')
     @classmethod
-    def split_origins(cls, value):
-        if isinstance(value, str): return [x.strip() for x in value.split(',') if x.strip()]
-        return value
+    def split_origins(cls, v):
+        return [x.strip() for x in v.split(',') if x.strip()] if isinstance(v, str) else v
 
 @lru_cache
-def get_settings() -> Settings: return Settings()
+def get_settings():
+    return Settings()
+
 settings = get_settings()
+

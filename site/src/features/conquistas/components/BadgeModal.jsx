@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { Icon } from '@iconify/react';
 import { useFocusTrap } from '../../../shared/hooks/useFocusTrap.js';
 
@@ -23,40 +24,62 @@ export default function BadgeModal({ medal, onClose }) {
   useFocusTrap(modalRef, Boolean(medal));
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+    if (!medal) return undefined;
 
-  if (!medal) return null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') onClose();
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [medal, onClose]);
+
+  if (!medal || typeof document === 'undefined') return null;
 
   const isUnlocked = Boolean(medal.unlocked);
   const ribbonClass = ribbonStyles[isUnlocked ? medal.ribbon : 'locked'] || ribbonStyles.locked;
   const coinClass = coinStyles[isUnlocked ? medal.coin : 'locked'] || coinStyles.locked;
   const iconName = isUnlocked ? medal.icon : 'lock';
 
-  return (
+  return createPortal(
     <div
-      ref={modalRef}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modalMedalTitle"
-      className="fixed inset-0 z-[99999] flex items-center justify-center bg-[#18211a]/60 p-4 backdrop-blur-lg animate-in fade-in duration-200"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+      role="presentation"
+      className="fixed inset-0 z-[2147483647] grid h-[100dvh] w-screen place-items-center overflow-y-auto bg-[#18211a]/65 p-4 backdrop-blur-lg"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose();
       }}
     >
-      <div className="w-[min(100%,430px)] overflow-hidden rounded-[30px] border-[3px] border-[#8b6914] bg-[linear-gradient(135deg,#fdf6e3,#f5e6c0_58%,#edd9a3)] shadow-[0_24px_60px_rgba(0,0,0,.34)]">
-        <div className="p-5 text-center">
+      <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalMedalTitle"
+        aria-describedby="modalMedalDescription"
+        className="relative my-auto max-h-[calc(100dvh-2rem)] w-[min(100%,430px)] overflow-y-auto rounded-[30px] border-[3px] border-[#8b6914] bg-[linear-gradient(135deg,#fdf6e3,#f5e6c0_58%,#edd9a3)] shadow-[0_24px_60px_rgba(0,0,0,.34)]"
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Fechar detalhes da medalha"
+          className="absolute right-3 top-3 z-10 grid size-10 place-items-center rounded-full bg-white/80 text-[#5d351d] shadow-md transition hover:bg-white"
+        >
+          <Icon icon="fa6-solid:xmark" aria-hidden="true" />
+        </button>
+
+        <div className="p-5 pt-7 text-center">
           <div
             aria-hidden="true"
-            className={`modal-medal-ribbon w-[58px] h-[62px] mx-auto -mb-[21px] rounded-t-[7px] [clip-path:polygon(0_0,100%_0,86%_100%,50%_76%,14%_100%)] shadow-md ${ribbonClass}`}
+            className={`mx-auto -mb-[21px] h-[62px] w-[58px] rounded-t-[7px] shadow-md [clip-path:polygon(0_0,100%_0,86%_100%,50%_76%,14%_100%)] ${ribbonClass}`}
           />
           <div
             aria-hidden="true"
-            className={`modal-medal-coin relative grid w-[112px] h-[112px] mx-auto place-items-center rounded-full border-[6px] text-[2.75rem] shadow-[inset_0_5px_0_rgba(255,255,255,.42),inset_0_-10px_18px_rgba(92,52,8,.28),0_12px_20px_rgba(0,0,0,.24)] ${coinClass}`}
+            className={`relative mx-auto grid size-[112px] place-items-center rounded-full border-[6px] text-[2.75rem] shadow-[inset_0_5px_0_rgba(255,255,255,.42),inset_0_-10px_18px_rgba(92,52,8,.28),0_12px_20px_rgba(0,0,0,.24)] ${coinClass}`}
           >
             <Icon icon={`fa6-solid:${iconName}`} />
           </div>
@@ -67,7 +90,7 @@ export default function BadgeModal({ medal, onClose }) {
           <h3 id="modalMedalTitle" className="mt-1 font-display text-3xl font-black text-[#2d6a4f]">
             {medal.title}
           </h3>
-          <p className="mt-3 text-sm font-extrabold leading-relaxed text-[#6b3a1f]">
+          <p id="modalMedalDescription" className="mt-3 text-sm font-extrabold leading-relaxed text-[#6b3a1f]">
             {medal.description}
           </p>
 
@@ -80,13 +103,13 @@ export default function BadgeModal({ medal, onClose }) {
           <button
             type="button"
             onClick={onClose}
-            className="mt-5 w-full rounded-2xl bg-gradient-to-r from-[#2d6a4f] to-emerald-700 px-5 py-3 font-display text-lg font-black text-white shadow-lg transition hover:opacity-95 active:scale-[.98] cursor-pointer"
+            className="mt-5 w-full rounded-2xl bg-gradient-to-r from-[#2d6a4f] to-emerald-700 px-5 py-3 font-display text-lg font-black text-white shadow-lg transition hover:opacity-95 active:scale-[.98]"
           >
             Fechar
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
-

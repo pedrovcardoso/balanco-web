@@ -1,10 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { TRAILS_BY_KEY, TRAIL_KEYS } from '../../../shared/constants/trails.js';
+import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../../../shared/hooks/useAuth.js';
-import { completeTrail, getTrailProgress } from '../services/saibaMaisService.js';
+import { getTrailProgress, redeemTrailItem } from '../services/saibaMaisService.js';
 
-const CREDITOS_TRAIL = TRAILS_BY_KEY[TRAIL_KEYS.CREDITOS];
-const STORAGE_KEY = `bc_trail_completed_${CREDITOS_TRAIL.slug}`;
+const STORAGE_KEY = 'bc_trail_completed_creditos-saiba-mais';
 
 export function useSaibaMaisProgress() {
   const { user, isGuest } = useAuth();
@@ -23,11 +21,9 @@ export function useSaibaMaisProgress() {
     setFetchingStatus(true);
     try {
       const rows = await getTrailProgress();
-      const trailData = (rows || []).find((r) => r.slug === CREDITOS_TRAIL.slug);
+      const itemData = (rows || []).find((r) => r.itemKey === 'SAIBA_MAIS');
 
-      const isCompleted =
-        String(trailData?.status || '').toLowerCase() === 'completed' ||
-        Number(trailData?.progressPercent) >= 100;
+      const isCompleted = Boolean(itemData && itemData.redeemed);
 
       setClaimed(isCompleted);
       if (isCompleted) {
@@ -59,14 +55,14 @@ export function useSaibaMaisProgress() {
     setLoading(true);
 
     try {
-      await completeTrail(CREDITOS_TRAIL.slug);
+      await redeemTrailItem('SAIBA_MAIS');
       setClaimed(true);
       sessionStorage.setItem(STORAGE_KEY, '1');
 
       window.dispatchEvent(
         new CustomEvent('bc:trail-progress-changed', {
           detail: {
-            slug: CREDITOS_TRAIL.slug,
+            itemKey: 'SAIBA_MAIS',
             status: 'completed',
             progressPercent: 100,
           },
@@ -96,4 +92,5 @@ export function useSaibaMaisProgress() {
     claimMedal,
   };
 }
+
 

@@ -1,15 +1,82 @@
 import secrets
-from datetime import datetime,timezone
-from uuid import uuid4
-from app.utils.sql_helpers import sql_guid,sql_string,first
+from datetime import datetime, timezone
 from app.utils.pdf_generator import generate_certificate
-async def generate(db,uid,name,year):
- status=first(await db.execute_sql(f"DECLARE @u UNIQUEIDENTIFIER=(SELECT TOP 1 user_id FROM bc.app_user WHERE public_user_id={sql_guid(uid)});SELECT (SELECT COUNT(*) FROM bc.main_trail WHERE is_active=1) total,(SELECT COUNT(*) FROM bc.user_main_trail_progress WHERE user_id=@u AND status='completed') done;"))
- if not status or status['done']<status['total']: raise ValueError(f"Conclua todas as trilhas para gerar o certificado. ({status['done'] if status else 0}/{status['total'] if status else '?'} concluidas)")
- existing=first(await db.execute_sql(f"DECLARE @u UNIQUEIDENTIFIER=(SELECT TOP 1 user_id FROM bc.app_user WHERE public_user_id={sql_guid(uid)});SELECT TOP 1 CAST(public_certificate_id AS VARCHAR(36)) publicCertificateId,verification_code verificationCode,issued_at issuedAt FROM bc.certificate_issue WHERE user_id=@u AND revoked_at IS NULL ORDER BY issued_at DESC;"))
- if existing: return {'publicCertificateId':existing['publicCertificateId'],'verificationCode':existing['verificationCode'],'issuedAt':str(existing['issuedAt']),'pdfBase64':generate_certificate(name,year or datetime.now().year,existing['verificationCode'])}
- cid=str(uuid4()); code=secrets.token_hex(6).upper(); issued=datetime.now(timezone.utc).isoformat(); fy=year or datetime.now().year
- await db.execute_sql(f"DECLARE @u UNIQUEIDENTIFIER=(SELECT TOP 1 user_id FROM bc.app_user WHERE public_user_id={sql_guid(uid)});INSERT INTO bc.certificate_issue(public_certificate_id,user_id,participant_name,fiscal_year,verification_code,issued_at) VALUES({sql_guid(cid)},@u,{sql_string(name,160)},{fy},{sql_string(code,12)},SYSUTCDATETIME());")
- return {'publicCertificateId':cid,'verificationCode':code,'issuedAt':issued,'pdfBase64':generate_certificate(name,fy,code)}
-async def status(db,uid): return first(await db.execute_sql(f"DECLARE @u UNIQUEIDENTIFIER=(SELECT TOP 1 user_id FROM bc.app_user WHERE public_user_id={sql_guid(uid)});SELECT COUNT(*) certificateCount,MAX(issued_at) lastIssuedAt FROM bc.certificate_issue WHERE user_id=@u AND revoked_at IS NULL;"))
-async def verify(db,code): return first(await db.execute_sql(f"SELECT TOP 1 CAST(public_certificate_id AS VARCHAR(36)) publicCertificateId,participant_name participantName,fiscal_year fiscalYear,verification_code verificationCode,issued_at issuedAt,CAST(CASE WHEN revoked_at IS NULL THEN 1 ELSE 0 END AS BIT) isValid FROM bc.certificate_issue WHERE verification_code={sql_string(code.upper(),12)};"))
+
+async def eligibility(db, uid):
+    user_id = int(uid)
+    row = await db.fetch_one(
+        "SELECT "
+        "(SELECT COUNT(*) FROM tb_trail_redemption WHERE user_id=%s) AS redemptions, "
+        "(SELECT COUNT(*) FROM tb_phase WHERE is_active=1) AS totalPhases, "
+        "(SELECT COUNT(*) FROM tb_game_progress g "
+        " JOIN tb_phase p ON p.id=g.phase_id "
+        " WHERE g.user_id=%s AND p.is_active=1 AND g.best_score>=p.pass_score) AS completedPhases, "
+        "(SELECT COUNT(*) FROM tb_certificate WHERE user_id=%s) AS certificateCount",
+        (user_id, user_id, user_id),
+    ) or {}
+
+    redemptions = int(row.get('redemptions') or 0)
+    total_phases = int(row.get('totalPhases') or 0)
+    completed_phases = int(row.get('completedPhases') or 0)
+    required_redemptions = 6
+
+    return {
+        'redemptions': redemptions,
+        'requiredRedemptions': required_redemptions,
+        'totalPhases': total_phases,
+        'completedPhases': completed_phases,
+        'remainingPhases': max(0, total_phases - completed_phases),
+        'remainingRedemptions': max(0, required_redemptions - redemptions),
+        'certificateCount': int(row.get('certificateCount') or 0),
+        'eligible': (
+            total_phases > 0
+            and completed_phases >= total_phases
+            and redemptions >= required_redemptions
+        ),
+    }
+
+async def generate(db, uid, name, year):
+    status = await eligibility(db, uid)
+    if not status['eligible']:
+        raise ValueError(
+            f"Requisitos pendentes: {status['remainingPhases']} fase(s) e "
+            f"{status['remainingRedemptions']} item(ns) da trilha."
+        )
+
+    existing = await db.fetch_one(
+        "SELECT validation_code AS verificationCode, issued_at AS issuedAt "
+        "FROM tb_certificate WHERE user_id=%s ORDER BY issued_at DESC LIMIT 1",
+        (int(uid),),
+    )
+    if not existing:
+        code = secrets.token_hex(8).upper()
+        await db.execute(
+            "INSERT INTO tb_certificate(user_id,validation_code) VALUES(%s,%s)",
+            (int(uid), code),
+        )
+        existing = {
+            'verificationCode': code,
+            'issuedAt': datetime.now(timezone.utc).isoformat(),
+        }
+
+    return {
+        **existing,
+        'publicCertificateId': str(existing['verificationCode']),
+        'pdfBase64': generate_certificate(
+            name,
+            year or datetime.now().year,
+            existing['verificationCode'],
+        ),
+    }
+
+async def status(db, uid):
+    return await eligibility(db, uid)
+
+async def verify(db, code):
+    row = await db.fetch_one(
+        "SELECT validation_code AS verificationCode, issued_at AS issuedAt, "
+        "u.nome AS participantName FROM tb_certificate c "
+        "JOIN tb_user u ON u.id=c.user_id WHERE validation_code=%s",
+        (code.upper(),),
+    )
+    return {**row, 'isValid': True} if row else None

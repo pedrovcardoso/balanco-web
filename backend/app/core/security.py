@@ -1,3 +1,4 @@
+
 from datetime import datetime, timedelta, timezone
 from hashlib import sha256
 from uuid import uuid4
@@ -19,3 +20,4 @@ def decode_token(token: str) -> dict:
     except JWTError as exc: raise HTTPException(status.HTTP_401_UNAUTHORIZED,'Token inválido ou expirado.') from exc
 async def token_payload(credentials: HTTPAuthorizationCredentials | None=Depends(bearer)) -> dict | None:
     return decode_token(credentials.credentials) if credentials else None
+

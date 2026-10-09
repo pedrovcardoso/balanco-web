@@ -24,6 +24,7 @@ export const MAIN_TRAILS = Object.freeze([
   Object.freeze({
     key: TRAIL_KEYS.HISTORIA,
     slug: TRAIL_SLUGS.HISTORIA,
+    itemKey: 'HISTORIA_HQ',
     readerSlug: READER_SLUGS.HISTORIA,
     route: ROUTES.HISTORIA,
     title: 'Minas Gerais',
@@ -38,6 +39,7 @@ export const MAIN_TRAILS = Object.freeze([
   Object.freeze({
     key: TRAIL_KEYS.BALANCO,
     slug: TRAIL_SLUGS.BALANCO,
+    itemKey: 'LIVRO_1',
     readerSlug: null,
     route: ROUTES.BALANCO,
     title: 'Entendendo o Balanço',
@@ -52,6 +54,7 @@ export const MAIN_TRAILS = Object.freeze([
   Object.freeze({
     key: TRAIL_KEYS.DADOS,
     slug: TRAIL_SLUGS.DADOS,
+    itemKey: 'BALANCO_DADOS',
     readerSlug: null,
     route: ROUTES.DADOS,
     title: 'O Balanço na Prática',
@@ -66,6 +69,7 @@ export const MAIN_TRAILS = Object.freeze([
   Object.freeze({
     key: TRAIL_KEYS.JOGOS,
     slug: TRAIL_SLUGS.JOGOS,
+    itemKey: null,
     readerSlug: null,
     route: ROUTES.JOGOS,
     title: 'Jogue & Aprenda',
@@ -80,6 +84,7 @@ export const MAIN_TRAILS = Object.freeze([
   Object.freeze({
     key: TRAIL_KEYS.CREDITOS,
     slug: TRAIL_SLUGS.CREDITOS,
+    itemKey: 'SAIBA_MAIS',
     readerSlug: null,
     route: ROUTES.CREDITOS,
     title: 'Saiba Mais',
