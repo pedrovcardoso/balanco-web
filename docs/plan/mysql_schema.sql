@@ -1,16 +1,16 @@
 -- =============================================================================
--- sc_balanco_web - Schema MySQL corrigido
+-- sc_balanco_cidadao - Schema MySQL corrigido
 -- Charset: utf8mb4 | Collation: utf8mb4_unicode_ci | Engine: InnoDB
 -- Correcao: CURRENT_TIMESTAMP em campos automaticos e sessao UTC.
 -- =============================================================================
 
-DROP DATABASE IF EXISTS sc_balanco_web;
+DROP DATABASE IF EXISTS sc_balanco_cidadao;
 
-CREATE DATABASE sc_balanco_web
+CREATE DATABASE sc_balanco_cidadao
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 
-USE sc_balanco_web;
+USE sc_balanco_cidadao;
 SET time_zone = '+00:00';
 
 -- =============================================================================
