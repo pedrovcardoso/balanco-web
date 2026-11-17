@@ -9,6 +9,10 @@ export function useTrailProgress() {
   const [claimed, setClaimed] = useState(false);
   const [claiming, setClaiming] = useState(false);
   const [restoring, setRestoring] = useState(true);
+  const [restoreError, setRestoreError] = useState('');
+  const [restoreAttempt, setRestoreAttempt] = useState(0);
+  const [loadedUserId, setLoadedUserId] = useState(null);
+  const userId = user?.userId || user?.publicUserId;
 
   useEffect(() => {
     let active = true;
@@ -16,20 +20,31 @@ export function useTrailProgress() {
     async function restoreProgress() {
       if (!isLoggedIn) {
         setClaimed(false);
+        setRestoreError('');
+        setLoadedUserId(null);
         setRestoring(false);
         return;
       }
 
       setRestoring(true);
+      setRestoreError('');
       try {
         const { data } = await api.get('/trails/progress');
-        const items = Array.isArray(data) ? data : [];
-        const dadosItem = items.find((i) => i.itemKey === 'BALANCO_DADOS');
+        if (!Array.isArray(data)) throw new Error('Resposta inválida ao consultar o progresso.');
+        const dadosItem = data.find((i) => i.itemKey === 'BALANCO_DADOS');
+        if (!dadosItem || typeof dadosItem.redeemed !== 'boolean') {
+          throw new Error('Progresso do Balanço na Prática indisponível.');
+        }
         if (active) {
-          setClaimed(Boolean(dadosItem && dadosItem.redeemed));
+          setClaimed(dadosItem.redeemed);
+          setLoadedUserId(userId);
         }
       } catch (err) {
         console.warn('[BalancoNaPratica] Falha ao restaurar progresso:', err);
+        if (active) {
+          setRestoreError('Não foi possível consultar o progresso da trilha.');
+          setLoadedUserId(userId);
+        }
       } finally {
         if (active) setRestoring(false);
       }
@@ -37,7 +52,7 @@ export function useTrailProgress() {
 
     restoreProgress();
     return () => { active = false; };
-  }, [isLoggedIn]);
+  }, [isLoggedIn, userId, restoreAttempt]);
 
   const claimMedal = useCallback(async () => {
     if (claimed) return { success: true };
@@ -67,6 +82,13 @@ export function useTrailProgress() {
     }
   }, [claimed, isLoggedIn]);
 
-  return { claimed, claiming, restoring, claimMedal };
+  return {
+    claimed: Boolean(isLoggedIn && loadedUserId === userId && claimed),
+    claiming,
+    restoring: restoring || Boolean(isLoggedIn && loadedUserId !== userId),
+    restoreError,
+    claimMedal,
+    retryRestore: () => setRestoreAttempt((attempt) => attempt + 1),
+  };
 }
 

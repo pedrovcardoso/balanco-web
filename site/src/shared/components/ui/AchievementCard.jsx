@@ -25,6 +25,7 @@ export default function AchievementCard({
   const { user, isGuest } = useAuth();
   const isLoggedIn = user && !isGuest;
   const [celebrating, setCelebrating] = useState(false);
+  const [claimError, setClaimError] = useState('');
 
   const isUnlocked = isLoggedIn && claimed;
 
@@ -37,6 +38,7 @@ export default function AchievementCard({
   }, [isUnlocked]);
 
   const handleClaim = async () => {
+    setClaimError('');
     try {
       const res = await onClaim?.();
       if (res?.success) {
@@ -45,6 +47,8 @@ export default function AchievementCard({
       }
     } catch (error) {
       console.error('Falha ao resgatar medalha:', error);
+      const detail = error?.response?.data?.detail;
+      setClaimError(typeof detail === 'string' ? detail : 'Não foi possível resgatar a medalha. Tente novamente.');
     }
   };
 
@@ -108,6 +112,7 @@ export default function AchievementCard({
               {currentMessageText}
             </p>
           )}
+          {claimError && <p role="alert" className="text-sm font-bold text-red-700">{claimError}</p>}
 
           <div className="achievement-actions mt-4 flex flex-wrap gap-2">
             {showClaimButton && !isUnlocked && (

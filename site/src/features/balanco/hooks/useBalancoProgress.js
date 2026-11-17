@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../../shared/hooks/useAuth.js';
-import { ALLOWED_ITEM_KEYS, getReadingProgress, redeemTrailItem, TRAIL_ITEM_KEYS } from '../services/balancoService.js';
+import { getReadingProgress, redeemTrailItem, TRAIL_ITEM_KEYS } from '../services/balancoService.js';
 
 export function useBalancoProgress(totalSections) {
   const { user, isGuest } = useAuth();
-  const [restoring, setRestoring] = useState(false);
+  const [restoring, setRestoring] = useState(true);
+  const [restoreError, setRestoreError] = useState('');
+  const [restoreAttempt, setRestoreAttempt] = useState(0);
   const [initialSection] = useState(1);
   const [savedSection, setSavedSection] = useState(1);
   const [claimed, setClaimed] = useState(false);
@@ -25,9 +27,12 @@ export function useBalancoProgress(totalSections) {
       setReadCompleted(false);
       setSavedSection(1);
       setRedeemedBooks({ LIVRO_1: false, LIVRO_2: false, LIVRO_3: false });
+      setRestoreError('');
+      setRestoring(false);
       return undefined;
     }
     setRestoring(true);
+    setRestoreError('');
     getReadingProgress(TRAIL_ITEM_KEYS.LIVRO_1)
       .then((result) => {
         if (!active) return;
@@ -47,19 +52,20 @@ export function useBalancoProgress(totalSections) {
         else if (isL2) restoredSection = 18;
         else if (isL1) restoredSection = 5;
 
-        setSavedSection((prev) => Math.max(prev, restoredSection));
+        setSavedSection(restoredSection);
 
-        if (isL1 && isL2 && isL3) {
-          setReadCompleted(true);
-          setClaimed(true);
-        }
+        setReadCompleted(isL1 && isL2 && isL3);
+        setClaimed(Boolean(map.BALANCO_COMPLETO));
       })
-      .catch((error) => console.error('[Balanço] Falha ao restaurar progresso:', error))
+      .catch((error) => {
+        console.error('[Balanço] Falha ao restaurar progresso:', error);
+        if (active) setRestoreError('Não foi possível carregar o progresso dos cadernos.');
+      })
       .finally(() => active && setRestoring(false));
     return () => {
       active = false;
     };
-  }, [user, isGuest, totalSections]);
+  }, [user, isGuest, totalSections, restoreAttempt]);
 
   const saveSection = useCallback(
     (sectionNumber) => {
@@ -78,9 +84,9 @@ export function useBalancoProgress(totalSections) {
 
   const concludeBook = useCallback(
     async (itemKey) => {
-      if (!ALLOWED_ITEM_KEYS.includes(itemKey)) return;
-      setRedeemedBooks((prev) => ({ ...prev, [itemKey]: true }));
-
+      if (![TRAIL_ITEM_KEYS.LIVRO_1, TRAIL_ITEM_KEYS.LIVRO_2, TRAIL_ITEM_KEYS.LIVRO_3].includes(itemKey)) {
+        throw new Error('Caderno inválido.');
+      }
       if (user && !isGuest) {
         try {
           await redeemTrailItem(itemKey);
@@ -95,8 +101,10 @@ export function useBalancoProgress(totalSections) {
           } else {
             console.error(`[Balanço] Falha ao salvar ${itemKey} no banco:`, error);
           }
+          throw error;
         }
       }
+      setRedeemedBooks((prev) => ({ ...prev, [itemKey]: true }));
     },
     [user, isGuest]
   );
@@ -116,11 +124,12 @@ export function useBalancoProgress(totalSections) {
 
     setClaiming(true);
     try {
+      await redeemTrailItem(TRAIL_ITEM_KEYS.BALANCO_COMPLETO);
       setClaimed(true);
       setReadCompleted(true);
       window.dispatchEvent(
         new CustomEvent('bc:trail-progress-changed', {
-          detail: { itemKey: TRAIL_ITEM_KEYS.LIVRO_3, status: 'completed', progressPercent: 100 },
+          detail: { itemKey: TRAIL_ITEM_KEYS.BALANCO_COMPLETO, status: 'completed', progressPercent: 100 },
         })
       );
       return { success: true };
@@ -149,6 +158,8 @@ export function useBalancoProgress(totalSections) {
 
   return {
     restoring,
+    restoreError,
+    retryRestore: () => setRestoreAttempt((attempt) => attempt + 1),
     initialSection,
     savedSection,
     saveSection,

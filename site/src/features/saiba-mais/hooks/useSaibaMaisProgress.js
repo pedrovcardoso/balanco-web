@@ -2,8 +2,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../../../shared/hooks/useAuth.js';
 import { getTrailProgress, redeemTrailItem } from '../services/saibaMaisService.js';
 
-const STORAGE_KEY = 'bc_trail_completed_creditos-saiba-mais';
-
 export function useSaibaMaisProgress() {
   const { user, isGuest } = useAuth();
   const [reachedEnd, setReachedEnd] = useState(true);
@@ -26,11 +24,6 @@ export function useSaibaMaisProgress() {
       const isCompleted = Boolean(itemData && itemData.redeemed);
 
       setClaimed(isCompleted);
-      if (isCompleted) {
-        sessionStorage.setItem(STORAGE_KEY, '1');
-      } else {
-        sessionStorage.removeItem(STORAGE_KEY);
-      }
       return isCompleted;
     } catch (error) {
       console.warn('[Saiba Mais] Falha ao consultar conquista no banco:', error);
@@ -57,7 +50,6 @@ export function useSaibaMaisProgress() {
     try {
       await redeemTrailItem('SAIBA_MAIS');
       setClaimed(true);
-      sessionStorage.setItem(STORAGE_KEY, '1');
 
       window.dispatchEvent(
         new CustomEvent('bc:trail-progress-changed', {

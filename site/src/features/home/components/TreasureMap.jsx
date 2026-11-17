@@ -16,7 +16,8 @@ export default function TreasureMap({
     return isTrailCompleted(progress);
   });
 
-  const isLoading = progressStatus === 'loading';
+  const isLoading = progressStatus === 'idle' || progressStatus === 'loading';
+  const hasError = progressStatus === 'error';
 
   return (
     <section
@@ -97,12 +98,13 @@ export default function TreasureMap({
               index={index}
               progress={progressBySlug.get(trail.slug)}
               loading={isLoading}
+              error={hasError}
               onProtectedNavigation={onProtectedNavigation}
             />
           ))}
 
           <div className="self-center">
-            <TrophyEnd unlocked={allCompleted} />
+            <TrophyEnd unlocked={allCompleted} statusUnavailable={isLoading || hasError} />
           </div>
         </div>
       </div>

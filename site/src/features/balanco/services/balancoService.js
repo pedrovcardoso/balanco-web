@@ -5,6 +5,7 @@ export const TRAIL_ITEM_KEYS = Object.freeze({
   LIVRO_1: 'LIVRO_1',
   LIVRO_2: 'LIVRO_2',
   LIVRO_3: 'LIVRO_3',
+  BALANCO_COMPLETO: 'BALANCO_COMPLETO',
   BALANCO_DADOS: 'BALANCO_DADOS',
   SAIBA_MAIS: 'SAIBA_MAIS',
 });
@@ -33,9 +34,6 @@ export async function getReadingProgress(targetItemKey = TRAIL_ITEM_KEYS.LIVRO_1
       redeemedAt: targetItem?.redeemedAt || null,
     };
   } catch (error) {
-    if (error?.response?.status === 401) {
-      return { items: [], redeemedMap: {}, isCompleted: false, redeemedAt: null };
-    }
     console.error('[balancoService] Erro ao obter progresso de trilhas:', error);
     throw error;
   }

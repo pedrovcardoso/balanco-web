@@ -1,46 +1,34 @@
 import secrets
 from datetime import datetime, timezone
+from app.features.trails.service import MAIN_TRAIL_KEYS
 from app.utils.pdf_generator import generate_certificate
 
 async def eligibility(db, uid):
     user_id = int(uid)
     row = await db.fetch_one(
         "SELECT "
-        "(SELECT COUNT(*) FROM tb_trail_redemption WHERE user_id=%s) AS redemptions, "
-        "(SELECT COUNT(*) FROM tb_phase WHERE is_active=1) AS totalPhases, "
-        "(SELECT COUNT(*) FROM tb_game_progress g "
-        " JOIN tb_phase p ON p.id=g.phase_id "
-        " WHERE g.user_id=%s AND p.is_active=1 AND g.best_score>=p.pass_score) AS completedPhases, "
+        "(SELECT COUNT(*) FROM tb_trail_redemption WHERE user_id=%s "
+        " AND item_key IN (%s,%s,%s,%s,%s)) AS redemptions, "
         "(SELECT COUNT(*) FROM tb_certificate WHERE user_id=%s) AS certificateCount",
-        (user_id, user_id, user_id),
+        (user_id, *MAIN_TRAIL_KEYS, user_id),
     ) or {}
 
     redemptions = int(row.get('redemptions') or 0)
-    total_phases = int(row.get('totalPhases') or 0)
-    completed_phases = int(row.get('completedPhases') or 0)
-    required_redemptions = 6
+    required_redemptions = len(MAIN_TRAIL_KEYS)
 
     return {
         'redemptions': redemptions,
         'requiredRedemptions': required_redemptions,
-        'totalPhases': total_phases,
-        'completedPhases': completed_phases,
-        'remainingPhases': max(0, total_phases - completed_phases),
         'remainingRedemptions': max(0, required_redemptions - redemptions),
         'certificateCount': int(row.get('certificateCount') or 0),
-        'eligible': (
-            total_phases > 0
-            and completed_phases >= total_phases
-            and redemptions >= required_redemptions
-        ),
+        'eligible': redemptions == required_redemptions,
     }
 
 async def generate(db, uid, name, year):
     status = await eligibility(db, uid)
     if not status['eligible']:
         raise ValueError(
-            f"Requisitos pendentes: {status['remainingPhases']} fase(s) e "
-            f"{status['remainingRedemptions']} item(ns) da trilha."
+            f"Requisitos pendentes: {status['remainingRedemptions']} medalha(s) da trilha."
         )
 
     existing = await db.fetch_one(

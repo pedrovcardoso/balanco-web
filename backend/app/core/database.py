@@ -5,7 +5,7 @@ class Database:
  def __init__(self): self.pool=None
  async def connect(self):
   try:
-   self.pool=await aiomysql.create_pool(host=settings.db_host,port=settings.db_port,user=settings.db_user,password=settings.db_password,db=settings.db_name,charset='utf8mb4',autocommit=False,minsize=1,maxsize=10,cursorclass=aiomysql.DictCursor,connect_timeout=5)
+   self.pool=await aiomysql.create_pool(host=settings.db_host,port=settings.db_port,user=settings.db_user,password=settings.db_password,db=settings.db_name,charset='utf8mb4',autocommit=True,minsize=1,maxsize=10,cursorclass=aiomysql.DictCursor,connect_timeout=5)
    await self.fetch_one('SELECT 1 ok')
    print("✅ Conectado ao banco de dados MySQL com sucesso.")
   except Exception as e:
@@ -17,9 +17,13 @@ class Database:
  async def transaction(self):
   if not self.pool: raise RuntimeError('Banco não inicializado.')
   async with self.pool.acquire() as conn:
-   async with conn.cursor() as cur:
-    try: yield cur; await conn.commit()
-    except Exception: await conn.rollback(); raise
+   await conn.begin()
+   try:
+    async with conn.cursor() as cur: yield cur
+    await conn.commit()
+   except BaseException:
+    await conn.rollback()
+    raise
  async def fetch_all(self,q,p=()):
   if not self.pool: raise RuntimeError('Banco não inicializado.')
   async with self.pool.acquire() as conn:

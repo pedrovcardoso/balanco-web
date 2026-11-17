@@ -32,7 +32,7 @@ Armazena apenas o mínimo necessário vindo da autenticação Gov.br.
 
 ### `tb_trail_redemption` — Resgates de Trilhas
 
-Registra cada ação de "Resgatar" nas seções do site. Uma linha por usuário por seção — sem duplicatas.
+Registra as conclusões individuais dos cadernos e os resgates das medalhas principais. Uma linha por usuário e item, sem duplicatas.
 
 | Coluna | Tipo | Restrições | Descrição |
 | :--- | :--- | :--- | :--- |
@@ -50,7 +50,9 @@ Registra cada ação de "Resgatar" nas seções do site. Uma linha por usuário 
 | `LIVRO_1` | Entendendo o Balanço — Livro 1 |
 | `LIVRO_2` | Entendendo o Balanço — Livro 2 |
 | `LIVRO_3` | Entendendo o Balanço — Livro 3 |
+| `BALANCO_COMPLETO` | Medalha de Entendendo o Balanço, após os três cadernos |
 | `BALANCO_DADOS` | Balanço em Dados |
+| `JOGOS_COMPLETOS` | Medalha de Jogos, após ao menos uma estrela em cada fase ativa |
 | `SAIBA_MAIS` | Saiba Mais |
 
 ---
@@ -92,8 +94,9 @@ Melhor resultado do usuário por fase. Atualizada via UPSERT a cada tentativa �
 | `issued_at` | DATETIME | NOT NULL, DEFAULT UTC_TIMESTAMP() | Data de emissão |
 
 **Critério para emissão do certificado:**
-- 6 resgates presentes em `tb_trail_redemption` (todos os `item_key`)
-- Todas as fases ativas (`is_active = 1`) com `best_score >= 60` em `tb_game_progress`
+- As cinco medalhas `HISTORIA_HQ`, `BALANCO_COMPLETO`, `BALANCO_DADOS`, `JOGOS_COMPLETOS` e `SAIBA_MAIS` resgatadas em `tb_trail_redemption`.
+- Os cadernos e as fases são pré-requisitos para os resgates de Balanço e Jogos, respectivamente; não contam como medalhas principais adicionais.
+- Registros anteriores de cadernos e fases são preservados. Usuários que já os concluíram devem resgatar as medalhas de Balanço e Jogos nos respectivos cards.
 
 ---
 
@@ -212,7 +215,7 @@ SITE (progresso dos usuários)
 ──────────────────────────────────────────────────────
 tb_user (cpf + nome)
   │
-  ├──► tb_trail_redemption    item_key: HISTORIA_HQ | LIVRO_1..3 | BALANCO_DADOS | SAIBA_MAIS
+  ├──► tb_trail_redemption    item_key: HISTORIA_HQ | LIVRO_1..3 | BALANCO_COMPLETO | BALANCO_DADOS | JOGOS_COMPLETOS | SAIBA_MAIS
   │
   ├──► tb_game_progress ─────► tb_phase
   │    best_score, best_stars,
@@ -263,7 +266,7 @@ CREATE TABLE tb_trail_redemption (
   id          INT UNSIGNED  NOT NULL AUTO_INCREMENT,
   user_id     INT UNSIGNED  NOT NULL,
   item_key    VARCHAR(50)   NOT NULL
-                              COMMENT 'HISTORIA_HQ | LIVRO_1 | LIVRO_2 | LIVRO_3 | BALANCO_DADOS | SAIBA_MAIS',
+                              COMMENT 'HISTORIA_HQ | LIVRO_1..3 | BALANCO_COMPLETO | BALANCO_DADOS | JOGOS_COMPLETOS | SAIBA_MAIS',
   redeemed_at DATETIME      NOT NULL DEFAULT (UTC_TIMESTAMP()),
   PRIMARY KEY (id),
   UNIQUE KEY uq_redemption (user_id, item_key),

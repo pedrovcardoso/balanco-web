@@ -138,8 +138,8 @@ export default function SaibaMaisPage() {
           id="readingAchievement"
           kicker="Conquista de leitura"
           title="Leitura Nota A!"
-          description="Chegue ao final da página para habilitar o botão e resgate manualmente esta medalha pela leitura das informações, referências e créditos do projeto."
-          messageText="Chegue até o final da página para resgatar sua medalha."
+          description="Resgate sua medalha pelas informações, referências e créditos do projeto."
+          messageText="Clique no botão para resgatar sua medalha."
           medalIcon="fa6-solid:book-open-reader"
           reachedEnd={reachedEnd}
           claimed={claimed}

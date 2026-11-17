@@ -5,7 +5,7 @@ import { useAuth } from '../../shared/hooks/useAuth.js';
 
 export default function HomePage() {
   const { isGuest } = useAuth();
-  const { progressBySlug, status } = useTrailProgress();
+  const { progressBySlug, status, refresh } = useTrailProgress();
 
   const requireIdentification = () => {
     if (!isGuest) return true;
@@ -26,6 +26,12 @@ export default function HomePage() {
           </div>
         </div>
         <MissionBox />
+        {status === 'error' && (
+          <div role="alert" className="rounded-xl border-2 border-red-300 bg-red-50 p-3 text-sm font-bold text-red-800">
+            Não foi possível consultar o progresso das trilhas.
+            <button type="button" onClick={refresh} className="ml-2 underline">Tentar novamente</button>
+          </div>
+        )}
       </section>
 
       <TreasureMap

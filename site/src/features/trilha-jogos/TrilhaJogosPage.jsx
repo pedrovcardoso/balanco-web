@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useGameMap } from './hooks/useGameMap.js';
@@ -6,6 +6,7 @@ import GameMap from './components/GameMap.jsx';
 import LevelModal from './components/LevelModal.jsx';
 import MedalModal from './components/MedalModal.jsx';
 import AchievementCard from '../../shared/components/ui/AchievementCard.jsx';
+import api from '../../lib/api.js';
 import { Loading } from '../../shared/components/loading/index.js';
 import './trilhaJogos.css';
 
@@ -23,17 +24,12 @@ export default function TrilhaJogosPage() {
     user,
     isGuest,
     allGamesCompleted,
+    claimed,
+    setClaimed,
     reloadMap,
   } = useGameMap();
 
-  const [claimed, setClaimed] = useState(false);
   const [claiming, setClaiming] = useState(false);
-
-  useEffect(() => {
-    if (allGamesCompleted && user && !isGuest) {
-      setClaimed(true);
-    }
-  }, [allGamesCompleted, user, isGuest]);
 
   const handleClaimMedal = useCallback(async () => {
     if (claimed) return { success: true };
@@ -45,6 +41,7 @@ export default function TrilhaJogosPage() {
 
     setClaiming(true);
     try {
+      await api.post('/trails/redeem', { itemKey: 'JOGOS_COMPLETOS' });
       setClaimed(true);
       window.dispatchEvent(
         new CustomEvent('bc:trail-progress-changed', {
@@ -58,7 +55,7 @@ export default function TrilhaJogosPage() {
     } finally {
       setClaiming(false);
     }
-  }, [claimed, user, isGuest]);
+  }, [claimed, user, isGuest, setClaimed]);
 
   const handleSelectLevel = (sectionIndex, phaseIndex) => {
     const section = mapSections[sectionIndex];

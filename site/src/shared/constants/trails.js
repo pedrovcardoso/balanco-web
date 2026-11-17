@@ -39,7 +39,7 @@ export const MAIN_TRAILS = Object.freeze([
   Object.freeze({
     key: TRAIL_KEYS.BALANCO,
     slug: TRAIL_SLUGS.BALANCO,
-    itemKey: 'LIVRO_1',
+    itemKey: 'BALANCO_COMPLETO',
     readerSlug: null,
     route: ROUTES.BALANCO,
     title: 'Entendendo o Balanço',
@@ -69,7 +69,7 @@ export const MAIN_TRAILS = Object.freeze([
   Object.freeze({
     key: TRAIL_KEYS.JOGOS,
     slug: TRAIL_SLUGS.JOGOS,
-    itemKey: null,
+    itemKey: 'JOGOS_COMPLETOS',
     readerSlug: null,
     route: ROUTES.JOGOS,
     title: 'Jogue & Aprenda',

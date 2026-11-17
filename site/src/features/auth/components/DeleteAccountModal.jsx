@@ -4,7 +4,7 @@ import { useAuth } from '../../../shared/hooks/useAuth.js';
 import { useFocusTrap } from '../../../shared/hooks/useFocusTrap.js';
 
 export default function DeleteAccountModal() {
-  const { logout, deleteAccount } = useAuth();
+  const { deleteAccount } = useAuth();
   const [open, setOpen] = useState(false);
   const [confirmText, setConfirmText] = useState('');
   const [error, setError] = useState('');
@@ -43,11 +43,7 @@ export default function DeleteAccountModal() {
     setError('');
 
     try {
-      if (typeof deleteAccount === 'function') {
-        await deleteAccount();
-      } else {
-        await logout();
-      }
+      await deleteAccount();
       setOpen(false);
     } catch (requestError) {
       setError(
@@ -102,6 +98,7 @@ export default function DeleteAccountModal() {
 
           <p className="mb-4 text-xs md:text-sm font-bold leading-relaxed text-[#6b3a1f]">
             Esta ação removerá todo o seu histórico de leitura, progresso de jogos, conquistas e certificados salvos neste navegador/servidor.
+            O progresso local de jogos é compartilhado neste navegador e também será removido. PDFs já baixados não serão apagados.
           </p>
 
           <label className="mb-1 block text-sm font-black text-[#5d2b0a]" htmlFor="confirm-delete">

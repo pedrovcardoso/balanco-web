@@ -13,6 +13,7 @@ import { useBalancoProgress } from './hooks/useBalancoProgress.js';
 import { TRAIL_ITEM_KEYS } from './services/balancoService.js';
 import { Loading } from '../../shared/components/loading/index.js';
 import { useLoadingProgress } from '../../shared/hooks/useLoadingProgress.js';
+import { useAuth } from '../../shared/hooks/useAuth.js';
 import './balanco.css';
 
 import imgMinas3d from '@assets/images/balanco/1_minasgerais3d.png';
@@ -41,6 +42,7 @@ const BALANCO_MESSAGES = [
 ];
 
 export default function BalancoPage() {
+  const { isGuest } = useAuth();
   const contentRef = useRef(null);
   const [scale] = useState(() => Number(localStorage.getItem(SCALE_KEY)) || 1);
   const [activeSection, setActiveSection] = useState('administracao-publica');
@@ -51,6 +53,7 @@ export default function BalancoPage() {
   // Estado para controlar a visão da Estante vs Leitura do Livro
   const [selectedBook, setSelectedBook] = useState(null); // null = visão estante; 'chapter-1' | 'chapter-2' | 'chapter-3'
   const [viewTransitioning, setViewTransitioning] = useState(false);
+  const [saveError, setSaveError] = useState('');
 
   const {
     progress: loadingProgress,
@@ -65,6 +68,8 @@ export default function BalancoPage() {
   const totalSections = Object.keys(SECTION_TITLES).length;
   const {
     restoring,
+    restoreError,
+    retryRestore,
     initialSection,
     savedSection,
     saveSection,
@@ -195,18 +200,22 @@ export default function BalancoPage() {
     const currentChapter = selectedBook;
     if (!currentChapter) return;
 
-    if (currentChapter === 'chapter-1') {
-      saveSection(5);
-      await concludeBook(TRAIL_ITEM_KEYS.LIVRO_1);
-    } else if (currentChapter === 'chapter-2') {
-      saveSection(18);
-      await concludeBook(TRAIL_ITEM_KEYS.LIVRO_2);
-    } else if (currentChapter === 'chapter-3') {
-      saveSection(21);
-      await concludeBook(TRAIL_ITEM_KEYS.LIVRO_3);
+    setSaveError('');
+    try {
+      if (currentChapter === 'chapter-1') {
+        await concludeBook(TRAIL_ITEM_KEYS.LIVRO_1);
+        saveSection(5);
+      } else if (currentChapter === 'chapter-2') {
+        await concludeBook(TRAIL_ITEM_KEYS.LIVRO_2);
+        saveSection(18);
+      } else if (currentChapter === 'chapter-3') {
+        await concludeBook(TRAIL_ITEM_KEYS.LIVRO_3);
+        saveSection(21);
+      }
+      changeBookView(null);
+    } catch {
+      setSaveError('Não foi possível salvar a conclusão do caderno. Tente novamente.');
     }
-
-    changeBookView(null);
   }, [selectedBook, saveSection, concludeBook, changeBookView]);
 
   useEffect(() => {
@@ -269,7 +278,7 @@ export default function BalancoPage() {
     );
   }, [claimed, redeemedBooks]);
 
-  if (fadeState !== 'ready') {
+  if (isPageLoading || fadeState !== 'ready') {
     return (
       <Loading
         animation="random"
@@ -278,6 +287,15 @@ export default function BalancoPage() {
         status={loadingStatus}
         className={fadeState === 'fading' ? 'loading-fade-out' : ''}
       />
+    );
+  }
+
+  if (restoreError) {
+    return (
+      <div role="alert" className="mx-auto max-w-4xl p-6 text-center">
+        <p>{restoreError}</p>
+        <button type="button" onClick={retryRestore}>Tentar novamente</button>
+      </div>
     );
   }
 
@@ -328,6 +346,11 @@ export default function BalancoPage() {
       </header>
 
       {/* CONTAINER COM TRANSIÇÃO FADE SUAVE ENTRE VISÕES */}
+      {isGuest && (
+        <p role="status" className="mb-3 rounded-xl bg-amber-50 p-3 text-sm font-bold text-amber-900">
+          Identifique-se para salvar a leitura dos cadernos no banco de dados.
+        </p>
+      )}
       <div className={`transition-all duration-150 ease-in-out ${viewTransitioning ? 'opacity-0 scale-[0.99]' : 'opacity-100 scale-100'}`}>
         {/* VISÃO 1: ESTANTE DE LIVROS + CARD DE CONQUISTAS ABAIXO (TELA INICIAL) */}
         {!selectedBook && (
@@ -401,6 +424,7 @@ export default function BalancoPage() {
             </article>
 
             {/* AÇÃO DO FINAL DO CAPÍTULO */}
+            {saveError && <p role="alert" className="mt-4 font-bold text-red-700">{saveError}</p>}
             <div className="mt-10 pt-6 border-t border-amber-900/15 flex flex-col sm:flex-row items-center justify-between gap-4 bg-amber-50/60 p-5 rounded-2xl border border-amber-800/20">
               <div>
                 <h4 className="text-[#3d1a00] font-black text-sm sm:text-base">

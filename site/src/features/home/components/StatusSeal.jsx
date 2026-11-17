@@ -4,6 +4,7 @@ export default function StatusSeal({
   status = 'available',
   progressPercent = 0,
   loading = false,
+  error = false,
 }) {
   if (loading) {
     return (
@@ -22,6 +23,19 @@ export default function StatusSeal({
       >
         <Icon icon="fa6-solid:circle-notch" className="animate-spin" aria-hidden="true" />
         Carregando
+      </span>
+    );
+  }
+
+  if (error) {
+    return (
+      <span
+        className="absolute -right-2 -top-2 z-20 inline-flex h-7 items-center gap-1.5 rounded-full border-2 border-white bg-red-100 px-2.5 text-[10px] font-black text-red-900 shadow-md"
+        role="status"
+        aria-label="Status da trilha indisponível"
+      >
+        <Icon icon="fa6-solid:triangle-exclamation" aria-hidden="true" />
+        Indisponível
       </span>
     );
   }

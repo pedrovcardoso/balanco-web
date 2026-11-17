@@ -1,11 +1,14 @@
 from datetime import date, datetime
+from app.features.trails.service import MAIN_TRAIL_KEYS
 
 TRAIL_DEFINITIONS = [
     ('HISTORIA_HQ', 'História em Quadrinhos', 'book-open', 'red', 'bronze'),
     ('LIVRO_1', 'Livro 1', 'book', 'blue', 'bronze'),
     ('LIVRO_2', 'Livro 2', 'book', 'purple', 'silver'),
     ('LIVRO_3', 'Livro 3', 'book', 'green', 'gold'),
+    ('BALANCO_COMPLETO', 'Entendendo o Balanço', 'book', 'blue', 'gold'),
     ('BALANCO_DADOS', 'Balanço em Dados', 'chart-column', 'blue', 'silver'),
+    ('JOGOS_COMPLETOS', 'Jogos', 'gamepad', 'purple', 'gold'),
     ('SAIBA_MAIS', 'Saiba Mais', 'graduation-cap', 'gold', 'gold'),
 ]
 
@@ -73,6 +76,7 @@ async def get_achievements(db, uid):
         (user_id,),
     )
     redemption_map = {row['itemKey']: row for row in redemptions}
+    main_trails_completed = sum(key in redemption_map for key in MAIN_TRAIL_KEYS)
 
     certificate = await db.fetch_one(
         "SELECT validation_code AS verificationCode, issued_at AS issuedAt "
@@ -267,10 +271,10 @@ async def get_achievements(db, uid):
         'road',
         'blue',
         'gold',
-        len(redemption_map),
-        len(TRAIL_DEFINITIONS),
+        main_trails_completed,
+        len(MAIN_TRAIL_KEYS),
         'Liberada ao concluir todas as etapas da trilha principal.',
-        f'{len(redemption_map)} de {len(TRAIL_DEFINITIONS)} etapas concluídas',
+        f'{main_trails_completed} de {len(MAIN_TRAIL_KEYS)} etapas concluídas',
     )
 
     unlocked_count = sum(1 for item in medals if item['unlocked'])
@@ -284,7 +288,7 @@ async def get_achievements(db, uid):
             'possibleStars': possible_stars,
             'completedGameTrails': completed_sections,
             'totalGameTrails': total_game_trails,
-            'completedMainTrails': len(redemption_map),
-            'totalMainTrails': len(TRAIL_DEFINITIONS),
+            'completedMainTrails': main_trails_completed,
+            'totalMainTrails': len(MAIN_TRAIL_KEYS),
         },
     }

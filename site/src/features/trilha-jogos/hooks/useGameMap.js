@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import { getGameMap, getUserProgress } from '../services/trilhaService.js';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { getGameMap } from '../services/trilhaService.js';
+import { getMainTrailProgress } from '../../home/services/homeService.js';
 import { useAuth } from '../../../shared/hooks/useAuth.js';
 
 export const MAP_WIDTH = 760;
@@ -178,49 +179,36 @@ export function useGameMap() {
   const [mapSections, setMapSections] = useState([]);
   const [levelPositions, setLevelPositions] = useState([]);
   const [mapHeight, setMapHeight] = useState(620);
+  const [allGamesCompleted, setAllGamesCompleted] = useState(false);
+  const [claimed, setClaimed] = useState(false);
+  const loadRequestRef = useRef(0);
 
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [selectedMedalSection, setSelectedMedalSection] = useState(null);
 
   const loadMap = useCallback(async () => {
+    const requestId = ++loadRequestRef.current;
     setLoading(true);
     setError(null);
     try {
       const rawRows = await getGameMap();
-      const localProgress = getStoredGameProgress();
-      let remoteProgressMap = {};
+      const redemptions = user && !isGuest ? await getMainTrailProgress() : [];
+      if (requestId !== loadRequestRef.current) return;
+      const localProgress = user && !isGuest ? {} : getStoredGameProgress();
+      setClaimed(redemptions.some((item) => item.itemKey === 'JOGOS_COMPLETOS' && item.redeemed));
+      setAllGamesCompleted(Boolean(
+        user && !isGuest && rawRows.length > 0 &&
+        rawRows.every((row) => Number(row.bestStars || 0) >= 1)
+      ));
 
-      if (user && !isGuest) {
-        try {
-          const remoteList = await getUserProgress();
-          (remoteList || []).forEach((item) => {
-            const key = String(item.publicPhaseId || item.phaseId || item.phase_id || item.id || '');
-            if (key) {
-              remoteProgressMap[key] = item;
-            }
-          });
-        } catch (e) {
-          console.warn('[useGameMap] Falha ao carregar progresso remoto:', e);
-        }
-      }
-
-      // Incorpora progresso salvo remotamente no banco e localmente no localStorage
+      // Usuários identificados veem o progresso salvo no banco.
       const rows = (rawRows || []).map((row) => {
         const pId = String(row.publicPhaseId || row.gamePhaseId || row.id || '');
         const local = localProgress[pId];
-        const remote = remoteProgressMap[pId];
 
         let status = row.status;
         let bestScore = Number(row.bestScore || 0);
         let bestStars = Number(row.bestStars || 0);
-
-        if (remote) {
-          bestScore = Math.max(bestScore, Number(remote.bestScore || remote.best_score || 0));
-          bestStars = Math.max(bestStars, Number(remote.bestStars || remote.best_stars || 0));
-          if (bestStars >= 1 || bestScore >= 60 || remote.completedAt) {
-            status = 'completed';
-          }
-        }
 
         if (local) {
           bestScore = Math.max(bestScore, Number(local.bestScore || 0));
@@ -282,24 +270,19 @@ export function useGameMap() {
       setLevelPositions(allLevelPositions);
       setMapHeight(calculatedHeight);
     } catch (err) {
-      console.warn('[useGameMap] Falha ao carregar mapa:', err);
-      setError('Não foi possível carregar a trilha de jogos.');
+      if (requestId === loadRequestRef.current) {
+        console.warn('[useGameMap] Falha ao carregar mapa:', err);
+        setError('Não foi possível carregar a trilha de jogos.');
+      }
     } finally {
-      setLoading(false);
+      if (requestId === loadRequestRef.current) setLoading(false);
     }
   }, [user, isGuest]);
 
   useEffect(() => {
     loadMap();
+    return () => { loadRequestRef.current += 1; };
   }, [loadMap]);
-
-  // Calcula se TODAS as fases de TODAS as seções foram concluídas
-  const allGamesCompleted = Boolean(
-    mapSections.length > 0 &&
-      mapSections.every((section) =>
-        (section.phases || []).every((phase) => normalizeState(phase) === 'completed')
-      )
-  );
 
   return {
     loading,
@@ -314,6 +297,8 @@ export function useGameMap() {
     user,
     isGuest,
     allGamesCompleted,
+    claimed,
+    setClaimed,
     reloadMap: loadMap,
   };
 }

@@ -45,6 +45,7 @@ export default function TrailCard({
   index,
   progress,
   loading = false,
+  error = false,
   onProtectedNavigation,
 }) {
   const iconName = TRAIL_ICONS[trail.key] || 'fa6-solid:circle-info';
@@ -171,6 +172,7 @@ export default function TrailCard({
           status={progress?.status}
           progressPercent={progress?.progressPercent}
           loading={loading}
+          error={error}
         />
       </Link>
     </div>

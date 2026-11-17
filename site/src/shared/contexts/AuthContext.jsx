@@ -1,6 +1,6 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import api from '../../lib/api.js';
-import { clearSession, getStoredUser, setStoredUser, setToken } from '../../lib/auth.js';
+import { clearAccountProgress, clearSession, getStoredUser, getToken, setStoredUser, setToken, TOKEN_KEY } from '../../lib/auth.js';
 
 export const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
@@ -25,7 +25,9 @@ export function AuthProvider({ children }) {
     }
   }, []);
   const deleteAccount = useCallback(async () => {
-    try { await api.delete('/auth/account'); } finally {
+    const { data } = await api.delete('/auth/account');
+    if (!data?.ok) throw new Error('A exclusão da conta não foi confirmada.');
+    try { clearAccountProgress(); } finally {
       clearSession();
       setUser(null);
       window.dispatchEvent(new CustomEvent('bc:auth-changed', { detail: null }));
@@ -36,8 +38,18 @@ export function AuthProvider({ children }) {
       setUser(null);
       window.dispatchEvent(new CustomEvent('bc:auth-changed', { detail: null }));
     };
+    const syncSession = (event) => {
+      if (event.key === TOKEN_KEY && !event.newValue && !getToken()) {
+        clearSession();
+        expire();
+      }
+    };
     window.addEventListener('bc:session-expired', expire);
-    return () => window.removeEventListener('bc:session-expired', expire);
+    window.addEventListener('storage', syncSession);
+    return () => {
+      window.removeEventListener('bc:session-expired', expire);
+      window.removeEventListener('storage', syncSession);
+    };
   }, []);
   const value = useMemo(() => ({ user, isGuest: !user || Boolean(user.isGuest), login, loginAsGuest, logout, deleteAccount }), [user, login, loginAsGuest, logout, deleteAccount]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

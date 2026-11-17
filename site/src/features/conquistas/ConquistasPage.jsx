@@ -104,15 +104,10 @@ export default function ConquistasPage() {
   }, [achievementSummary, certData, medals]);
 
   const isCertificateUnlocked = Boolean(certData?.eligible);
-  const remainingPhases = Number(certData?.remainingPhases || 0);
   const remainingRedemptions = Number(certData?.remainingRedemptions || 0);
-  const missingRequirements = remainingPhases + remainingRedemptions;
-  const totalRequirements =
-    Number(certData?.totalPhases || 0) +
-    Number(certData?.requiredRedemptions || 0);
-  const completedRequirements =
-    Number(certData?.completedPhases || 0) +
-    Number(certData?.redemptions || 0);
+  const missingRequirements = remainingRedemptions;
+  const totalRequirements = Number(certData?.requiredRedemptions || 0);
+  const completedRequirements = Number(certData?.redemptions || 0);
   const progressPercent = totalRequirements > 0
     ? Math.min(100, Math.round((completedRequirements / totalRequirements) * 100))
     : 0;

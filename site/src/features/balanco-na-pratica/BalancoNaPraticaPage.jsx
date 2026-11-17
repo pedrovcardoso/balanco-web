@@ -41,7 +41,7 @@ export default function BalancoNaPraticaPage() {
   const [dados, setDados] = useState(INITIAL_DATA);
   const [error, setError] = useState(null);
   const [fadeState, setFadeState] = useState('loading');
-  const { claimed, claiming, claimMedal } = useTrailProgress();
+  const { claimed, claiming, restoring, restoreError, retryRestore, claimMedal } = useTrailProgress();
 
   const {
     progress: loadingProgress,
@@ -119,7 +119,7 @@ export default function BalancoNaPraticaPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (fadeState !== 'ready') {
+  if (fadeState !== 'ready' || restoring) {
     return (
       <Loading
         animation="random"
@@ -190,7 +190,12 @@ export default function BalancoNaPraticaPage() {
         onRetry={carregarDados}
       />
 
-      <AchievementCard
+      {restoreError ? (
+        <div role="alert" className="mt-8 rounded-xl border-2 border-red-300 bg-red-50 p-4 text-sm font-bold text-red-800">
+          {restoreError}
+          <button type="button" onClick={retryRestore} className="ml-2 underline">Tentar novamente</button>
+        </div>
+      ) : <AchievementCard
         id="achievementBalancoNaPratica"
         kicker="Trilha 3 Concluída"
         title="Balanço na Prática"
@@ -200,7 +205,7 @@ export default function BalancoNaPraticaPage() {
         claimed={claimed}
         loading={claiming}
         onClaim={claimMedal}
-      />
+      />}
     </div>
   );
 }
