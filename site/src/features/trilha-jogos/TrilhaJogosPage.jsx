@@ -1,9 +1,11 @@
+import { useState, useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useGameMap } from './hooks/useGameMap.js';
 import GameMap from './components/GameMap.jsx';
 import LevelModal from './components/LevelModal.jsx';
 import MedalModal from './components/MedalModal.jsx';
+import AchievementCard from '../../shared/components/ui/AchievementCard.jsx';
 import { Loading } from '../../shared/components/loading/index.js';
 import './trilhaJogos.css';
 
@@ -19,8 +21,44 @@ export default function TrilhaJogosPage() {
     selectedMedalSection,
     setSelectedMedalSection,
     user,
+    isGuest,
+    allGamesCompleted,
     reloadMap,
   } = useGameMap();
+
+  const [claimed, setClaimed] = useState(false);
+  const [claiming, setClaiming] = useState(false);
+
+  useEffect(() => {
+    if (allGamesCompleted && user && !isGuest) {
+      setClaimed(true);
+    }
+  }, [allGamesCompleted, user, isGuest]);
+
+  const handleClaimMedal = useCallback(async () => {
+    if (claimed) return { success: true };
+
+    if (!user || isGuest) {
+      window.dispatchEvent(new CustomEvent('bc:open-login'));
+      return { requiresLogin: true };
+    }
+
+    setClaiming(true);
+    try {
+      setClaimed(true);
+      window.dispatchEvent(
+        new CustomEvent('bc:trail-progress-changed', {
+          detail: { itemKey: 'JOGOS_COMPLETOS', status: 'completed', progressPercent: 100 },
+        })
+      );
+      return { success: true };
+    } catch (err) {
+      console.error('[TrilhaJogosPage] Erro ao resgatar medalha:', err);
+      throw err;
+    } finally {
+      setClaiming(false);
+    }
+  }, [claimed, user, isGuest]);
 
   const handleSelectLevel = (sectionIndex, phaseIndex) => {
     const section = mapSections[sectionIndex];
@@ -93,13 +131,41 @@ export default function TrilhaJogosPage() {
           </button>
         </div>
       ) : (
-        <GameMap
-          mapSections={mapSections}
-          levelPositions={levelPositions}
-          mapHeight={mapHeight}
-          onSelectLevel={handleSelectLevel}
-          onOpenMedal={handleOpenMedal}
-        />
+        <>
+          <GameMap
+            mapSections={mapSections}
+            levelPositions={levelPositions}
+            mapHeight={mapHeight}
+            onSelectLevel={handleSelectLevel}
+            onOpenMedal={handleOpenMedal}
+          />
+
+          {/* Card de Medalha de Conquista da Trilha de Jogos */}
+          <div className="w-full mt-6">
+            <AchievementCard
+              id="trilhaJogosAchievement"
+              kicker="Conquista dos Jogos"
+              title="Mestre das Etapas!"
+              description="Complete todas as fases e seções dos jogos educativos para resgatar sua medalha especial da jornada."
+              messageText={
+                claimed
+                  ? 'Conquista registrada com sucesso! Ela já está disponível na sua estante de medalhas.'
+                  : allGamesCompleted
+                  ? 'Parabéns! Você concluiu todos os jogos da trilha. Clique no botão abaixo para resgatar sua medalha.'
+                  : 'Complete todas as fases de todas as seções para liberar o resgate da medalha.'
+              }
+              medalIcon="fa6-solid:gamepad"
+              reachedEnd={allGamesCompleted}
+              claimed={claimed}
+              loading={claiming}
+              onClaim={handleClaimMedal}
+              showClaimButton={true}
+              statusLockedText="Em progresso"
+              statusReadyText="Pronta para resgate"
+              statusClaimedText="Medalha conquistada"
+            />
+          </div>
+        </>
       )}
 
       {/* Modais */}
@@ -114,3 +180,4 @@ export default function TrilhaJogosPage() {
     </main>
   );
 }
+

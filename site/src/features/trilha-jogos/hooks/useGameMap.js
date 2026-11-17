@@ -287,11 +287,19 @@ export function useGameMap() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [user, isGuest]);
 
   useEffect(() => {
     loadMap();
   }, [loadMap]);
+
+  // Calcula se TODAS as fases de TODAS as seções foram concluídas
+  const allGamesCompleted = Boolean(
+    mapSections.length > 0 &&
+      mapSections.every((section) =>
+        (section.phases || []).every((phase) => normalizeState(phase) === 'completed')
+      )
+  );
 
   return {
     loading,
@@ -304,6 +312,9 @@ export function useGameMap() {
     selectedMedalSection,
     setSelectedMedalSection,
     user,
+    isGuest,
+    allGamesCompleted,
     reloadMap: loadMap,
   };
 }
+
