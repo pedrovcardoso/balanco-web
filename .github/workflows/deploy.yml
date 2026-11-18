@@ -29,4 +29,7 @@ jobs:
           docker compose build balanco_frontend balanco_backend
           docker compose up -d --no-deps balanco_frontend balanco_backend
           
+          # 3. Recarregar o nginx principal para atualizar o cache de IP interno do Docker (evita erro 502)
+          docker exec lepipe_nginx nginx -s reload
+          
           echo "Deploy finalizado com sucesso em $(date)!"
